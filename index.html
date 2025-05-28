@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bài Giảng Điện Tử - Bộ Vi Xử Lý</title>
+        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <!-- Three.js Library from local files using importmap -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./three.js-master/three.js-master/build/three.module.js",
+                    "three/addons/": "./three.js-master/three.js-master/examples/jsm/"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <!-- Loading Screen -->
+        <div id="loading-screen">
+            <div class="loading-content">
+                <div class="loading-logo-container">
+                    <div class="circular-progress">
+                        <svg class="progress-ring" width="200" height="200" viewBox="0 0 200 200">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #4caf50; stop-opacity: 1" />
+                                    <stop offset="50%" style="stop-color: #64b5f6; stop-opacity: 1" />
+                                    <stop offset="100%" style="stop-color: #9c27b0; stop-opacity: 1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-background" cx="100" cy="100" r="90" />
+                            <circle class="progress-ring-circle" cx="100" cy="100" r="90" />
+                        </svg>
+                        <div class="loading-percentage">0%</div>
+                    </div>
+                    <div class="school-logo-loading">
+                        <img id="loading-logo" src="images/TCDKTTT.png" alt="Logo Trường" />
+                        <div class="logo-placeholder">
+                            <div class="placeholder-icon">🎓</div>
+                            <div class="placeholder-text">LOGO</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-text">Đang tải bài giảng...</div>
+                <div class="loading-subtitle">Bộ Vi Xử Lý - CPU, RAM, ROM</div>
+            </div>
+        </div>
+
+        <!-- Main Banner -->
+        <div id="main-banner" class="banner-container">
+            <!-- Animated Background -->
+            <div class="animated-bg">
+                <div class="circuit-lines"></div>
+                <div class="floating-elements">
+                    <div class="element cpu-icon">CPU</div>
+                    <div class="element ram-icon">RAM</div>
+                    <div class="element rom-icon">ROM</div>
+                    <div class="element binary-code">01010101</div>
+                    <div class="element binary-code">11010011</div>
+                    <div class="element binary-code">10101010</div>
+                </div>
+            </div>
+
+            <!-- Header with Logo -->
+            <header class="banner-header">
+                <div class="logo-container">
+                    <img id="school-logo" src="images/TCDKTTT.png" alt="Logo Trường" class="school-logo" />
+                    <div class="school-info">
+                        <h3>TRƯỜNG CAO ĐẲNG KỸ THUẬT THÔNG TIN</h3>
+                        <p>KHOA CÔNG NGHỆ THÔNG TIN</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="banner-content">
+                <div class="title-section">
+                    <h1 class="main-title">
+                        <span class="title-line">BÀI GIẢNG ĐIỆN TỬ PHỤC VỤ TỰ HỌC CHO HỌC VIÊN</span>
+                        <span class="title-line highlight">BỘ VI XỬ LÝ</span>
+                    </h1>
+                    <div class="subtitle">
+                        <p>Tìm hiểu về CPU, RAM và ROM</p>
+                        <p class="tech-specs">Công nghệ - Kiến trúc - Ứng dụng</p>
+                    </div>
+                </div>
+
+                <!-- Action Section - Moved for better visibility -->
+                <div class="action-section hero-action">
+                    <div class="attention-grabber"></div>
+                    <button id="start-learning" class="start-btn hero-btn">
+                        <span class="btn-text">XEM NỘI DUNG</span>
+                        <span class="btn-icon">✨ ▶</span>
+                    </button>
+                    <div class="attention-grabber"></div>
+                </div>
+
+                <!-- 3D Models Section -->
+                <div class="models-3d-section">
+                    <div class="tab-container">
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" data-tab="cpu">CPU</button>
+                            <button class="tab-btn" data-tab="ram">RAM</button>
+                            <button class="tab-btn" data-tab="rom">ROM</button>
+                        </div>
+                        <div class="tab-content">
+                            <!-- CPU 3D Model -->
+                            <div class="tab-panel active" id="cpu-panel">
+                                <div class="model-3d cpu-3d">
+                                    <div class="threejs-container">
+                                        <canvas id="cpu-canvas"></canvas>
+                                        <div class="model-controls">
+                                            <button class="control-btn" data-action="rotate">🔄 Xoay</button>
+                                            <button class="control-btn" data-action="zoom">🔍 Phóng to</button>
+                                            <button class="control-btn" data-action="reset">↺ Reset</button>
+                                        </div>
+                                        <div class="loading-indicator">
+                                            <div class="spinner"></div>
+                                            <p>Đang tải mô hình 3D...</p>
+                                        </div>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>Central Processing Unit</h3>
+                                        <p>Bộ xử lý trung tâm - "bộ não" của máy tính</p>
+                                        <ul>
+                                            <li>Xử lý các phép tính logic và số học</li>
+                                            <li>Điều khiển hoạt động của các thành phần khác</li>
+                                            <li>Tốc độ đo bằng GHz (tỷ chu kỳ/giây)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RAM 3D Model -->
+                            <div class="tab-panel" id="ram-panel">
+                                <div class="model-3d ram-3d">
+                                    <div class="threejs-container">
+                                        <canvas id="ram-canvas"></canvas>
+                                        <div class="model-controls">
+                                            <button class="control-btn" data-action="rotate">🔄 Xoay</button>
+                                            <button class="control-btn" data-action="zoom">🔍 Phóng to</button>
+                                            <button class="control-btn" data-action="reset">↺ Reset</button>
+                                        </div>
+                                        <div class="loading-indicator">
+                                            <div class="spinner"></div>
+                                            <p>Đang tải mô hình 3D...</p>
+                                        </div>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>Random Access Memory</h3>
+                                        <p>Bộ nhớ truy cập ngẫu nhiên - lưu trữ tạm thời</p>
+                                        <ul>
+                                            <li>Lưu trữ dữ liệu và chương trình đang chạy</li>
+                                            <li>Truy cập nhanh, mất dữ liệu khi tắt nguồn</li>
+                                            <li>Dung lượng đo bằng GB (gigabyte)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ROM 3D Model -->
+                            <div class="tab-panel" id="rom-panel">
+                                <div class="model-3d rom-3d">
+                                    <div class="threejs-container">
+                                        <canvas id="rom-canvas"></canvas>
+                                        <div class="model-controls">
+                                            <button class="control-btn" data-action="rotate">🔄 Xoay</button>
+                                            <button class="control-btn" data-action="zoom">🔍 Phóng to</button>
+                                            <button class="control-btn" data-action="reset">↺ Reset</button>
+                                        </div>
+                                        <div class="loading-indicator">
+                                            <div class="spinner"></div>
+                                            <p>Đang tải mô hình 3D...</p>
+                                        </div>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>Read Only Memory</h3>
+                                        <p>Bộ nhớ chỉ đọc - lưu trữ vĩnh viễn</p>
+                                        <ul>
+                                            <li>Chứa firmware và BIOS của hệ thống</li>
+                                            <li>Dữ liệu không mất khi tắt nguồn</li>
+                                            <li>Không thể ghi đè trong điều kiện bình thường</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Action section moved to top for better visibility -->
+            </main>
+            <!-- Footer -->
+            <footer class="banner-footer">
+                <p>&copy; 2025 - Bài giảng điện tử - KTMT - K6</p>
+            </footer>
+        </div>
+        <!-- Content Section (Hidden initially) -->
+        <div id="content-section" class="content-container" style="display: none">
+            <nav class="content-nav">
+                <button id="back-to-home" class="nav-btn">◀ Về trang chủ</button>
+                <h2>Nội dung bài giảng</h2>
+            </nav>
+
+            <!-- Video Learning Section -->
+            <div class="video-learning-container">
+                <!-- Topic Navigation -->
+                <div class="topic-nav">
+                    <div class="topic-nav-header">
+                        <h3>📚 Danh mục bài học</h3>
+                    </div>
+                    <div class="topic-buttons">
+                        <button class="topic-btn active" data-topic="cpu">
+                            <span class="topic-icon">🔥</span>
+                            <span class="topic-name">CPU - Bộ Vi Xử Lý</span>
+                            <span class="topic-count">5 videos</span>
+                        </button>
+                        <button class="topic-btn" data-topic="ram">
+                            <span class="topic-icon">⚡</span>
+                            <span class="topic-name">RAM - Bộ Nhớ</span>
+                            <span class="topic-count">4 videos</span>
+                        </button>
+                        <button class="topic-btn" data-topic="rom">
+                            <span class="topic-icon">💾</span>
+                            <span class="topic-name">ROM - Bộ Nhớ Chỉ Đọc</span>
+                            <span class="topic-count">3 videos</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Video Content -->
+                <div class="video-main-content">
+                    <!-- Video Player -->
+                    <div class="video-player-container">
+                        <div class="video-player">
+                            <video
+                                id="main-video"
+                                poster="images/video-placeholder.jpg"
+                                aria-label="Video bài giảng chính"
+                                aria-describedby="current-video-title"
+                                preload="metadata"
+                            >
+                                <source src="" type="video/mp4" />
+                                <track kind="subtitles" src="" srclang="vi" label="Tiếng Việt" default />
+                                <track kind="descriptions" src="" srclang="vi" label="Mô tả âm thanh" />
+                                <p>Trình duyệt của bạn không hỗ trợ video HTML5.</p>
+                            </video>
+
+                            <!-- Custom Video Controls -->
+                            <div class="video-controls-overlay" id="video-controls">
+                                <!-- Progress Bar -->
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" id="progress-bar">
+                                        <div class="progress-filled" id="progress-filled"></div>
+                                        <div class="progress-buffer" id="progress-buffer"></div>
+                                        <div class="progress-handle" id="progress-handle"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Main Controls -->
+                                <div class="controls-main">
+                                    <div class="controls-left">
+                                        <button class="control-btn" id="play-pause-btn" title="Phát/Tạm dừng">
+                                            <span class="icon">▶️</span>
+                                        </button>
+                                        <button class="control-btn" id="backward-btn" title="Tua lùi 10s">
+                                            <span class="icon">↺</span>
+                                            <span class="time-label">10</span>
+                                        </button>
+                                        <button class="control-btn" id="forward-btn" title="Tua tiến 10s">
+                                            <span class="icon">↻</span>
+                                            <span class="time-label">10</span>
+                                        </button>
+                                        <div class="volume-container">
+                                            <button class="control-btn" id="volume-btn" title="Âm thanh">
+                                                <span class="icon">🔊</span>
+                                            </button>
+                                            <div class="volume-slider" id="volume-slider">
+                                                <input type="range" id="volume-range" min="0" max="100" value="100" />
+                                            </div>
+                                        </div>
+                                        <div class="time-display">
+                                            <span id="current-time">0:00</span>
+                                            <span>/</span>
+                                            <span id="duration">0:00</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="controls-right">
+                                        <button class="control-btn" id="prev-video-btn" title="Video trước">
+                                            <span class="icon">⏮️</span>
+                                        </button>
+                                        <button class="control-btn" id="next-video-btn" title="Video tiếp theo">
+                                            <span class="icon">⏭️</span>
+                                        </button>
+                                        <button class="control-btn" id="fullscreen-btn" title="Toàn màn hình">
+                                            <span class="icon">⛶</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="video-overlay">
+                                <div class="video-title-overlay">
+                                    <h3 id="current-video-title">Chọn video để bắt đầu học</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Playlist -->
+                </div>
+                <div class="video-playlist">
+                    <div class="playlist-header">
+                        <h4 id="playlist-title">Danh sách bài học - CPU</h4>
+                        <span id="playlist-progress">0/5 hoàn thành</span>
+                    </div>
+
+                    <!-- CPU Playlist -->
+                    <div class="video-list active" id="cpu-playlist">
+                        <div class="video-item" data-video="cpu-1" data-src="videos/cpu-intro.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/cpu-thumb-1.jpg" alt="CPU Intro" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">15:30</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>1. Giới thiệu về CPU</h5>
+                                <p>Tổng quan về bộ vi xử lý và vai trò trong máy tính</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="cpu-2" data-src="videos/cpu-architecture.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/cpu-thumb-2.jpg" alt="CPU Architecture" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">22:45</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>2. Kiến trúc CPU</h5>
+                                <p>Cấu trúc bên trong CPU: ALU, Control Unit, Registers</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="cpu-3" data-src="videos/cpu-instructions.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/cpu-thumb-3.jpg" alt="CPU Instructions" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">18:20</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>3. Bộ lệnh CPU</h5>
+                                <p>Các loại lệnh và cách CPU thực thi chương trình</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="cpu-4" data-src="videos/cpu-performance.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/cpu-thumb-4.jpg" alt="CPU Performance" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">25:10</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>4. Hiệu năng CPU</h5>
+                                <p>Clock speed, Cache, Pipeline và các yếu tố ảnh hưởng</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="cpu-5" data-src="videos/cpu-practical.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/cpu-thumb-5.jpg" alt="CPU Practical" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">30:15</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>5. Thực hành với CPU</h5>
+                                <p>Lắp ráp, cài đặt và tối ưu hóa CPU</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RAM Playlist -->
+                    <div class="video-list" id="ram-playlist">
+                        <div class="video-item" data-video="ram-1" data-src="videos/ram-intro.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/ram-thumb-1.jpg" alt="RAM Intro" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">12:30</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>1. Giới thiệu về RAM</h5>
+                                <p>Bộ nhớ truy cập ngẫu nhiên và vai trò trong hệ thống</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="ram-2" data-src="videos/ram-types.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/ram-thumb-2.jpg" alt="RAM Types" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">18:45</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>2. Các loại RAM</h5>
+                                <p>DDR3, DDR4, DDR5 và sự khác biệt giữa chúng</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="ram-3" data-src="videos/ram-performance.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/ram-thumb-3.jpg" alt="RAM Performance" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">20:15</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>3. Hiệu năng RAM</h5>
+                                <p>Tần số, Latency và cách tối ưu hóa RAM</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="ram-4" data-src="videos/ram-installation.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/ram-thumb-4.jpg" alt="RAM Installation" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">15:30</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>4. Lắp đặt RAM</h5>
+                                <p>Hướng dẫn lắp đặt và khắc phục sự cố RAM</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROM Playlist -->
+                    <div class="video-list" id="rom-playlist">
+                        <div class="video-item" data-video="rom-1" data-src="videos/rom-intro.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/rom-thumb-1.jpg" alt="ROM Intro" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">10:20</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>1. Giới thiệu về ROM</h5>
+                                <p>Bộ nhớ chỉ đọc và vai trò trong hệ thống</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="rom-2" data-src="videos/rom-bios.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/rom-thumb-2.jpg" alt="ROM BIOS" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">16:40</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>2. BIOS và UEFI</h5>
+                                <p>Firmware hệ thống và quá trình khởi động</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="video-item" data-video="rom-3" data-src="videos/rom-types.mp4">
+                            <div class="video-thumbnail">
+                                <img src="images/rom-thumb-3.jpg" alt="ROM Types" />
+                                <div class="play-overlay">▶️</div>
+                                <span class="video-duration">14:15</span>
+                            </div>
+                            <div class="video-info">
+                                <h5>3. Các loại ROM</h5>
+                                <p>PROM, EPROM, EEPROM và Flash Memory</p>
+                                <div class="video-meta">
+                                    <span class="video-status">chưa xem</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="scripts/threejs-models.js" type="module"></script>
+        <script src="scripts/custom-video-controls.js"></script>
+        <script src="scripts/video-player.js" type="module"></script>
+        <script src="scripts/video-test.js"></script>
+        <script src="scripts/script.js" type="module"></script>
+    </body>
+</html>
+
