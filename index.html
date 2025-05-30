@@ -254,12 +254,27 @@
 
                             <!-- Custom Video Controls -->
                             <div class="video-controls-overlay" id="video-controls">
+                                <!-- Chapter Info Display -->
+                                <div class="chapter-info" id="chapter-info" style="display: none">
+                                    <span class="chapter-title" id="current-chapter-title">Giới thiệu</span>
+                                    <span class="chapter-time" id="current-chapter-time">0:00 - 2:30</span>
+                                </div>
+
                                 <!-- Progress Bar -->
                                 <div class="progress-bar-container">
                                     <div class="progress-bar" id="progress-bar">
                                         <div class="progress-filled" id="progress-filled"></div>
                                         <div class="progress-buffer" id="progress-buffer"></div>
+                                        <!-- Chapter Markers -->
+                                        <div class="chapter-markers" id="chapter-markers"></div>
                                         <div class="progress-handle" id="progress-handle"></div>
+                                    </div>
+                                    <!-- Chapter Preview Tooltip -->
+                                    <div class="chapter-preview" id="chapter-preview" style="display: none">
+                                        <div class="preview-content">
+                                            <div class="preview-title"></div>
+                                            <div class="preview-time"></div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -293,24 +308,77 @@
                                     </div>
 
                                     <div class="controls-right">
+                                        <button
+                                            class="control-btn"
+                                            id="chapters-btn"
+                                            title="Hiển thị/Ẩn phân đoạn video"
+                                        >
+                                            <span class="icon">📑</span>
+                                            <span class="chapter-indicator" id="chapter-indicator" style="display: none"
+                                                >•</span
+                                            >
+                                        </button>
                                         <button class="control-btn" id="prev-video-btn" title="Video trước">
                                             <span class="icon">⏮️</span>
                                         </button>
                                         <button class="control-btn" id="next-video-btn" title="Video tiếp theo">
                                             <span class="icon">⏭️</span>
                                         </button>
+                                        <button class="control-btn" id="pip-btn" title="Picture-in-Picture">
+                                            <span class="icon">📱</span>
+                                        </button>
                                         <button class="control-btn" id="fullscreen-btn" title="Toàn màn hình">
                                             <span class="icon">⛶</span>
                                         </button>
                                     </div>
                                 </div>
+
+                                <!-- External Chapter Navigation Panel -->
+                                <div
+                                    class="chapter-navigation-panel"
+                                    id="chapter-navigation-panel"
+                                    style="display: none"
+                                >
+                                    <div class="chapter-nav-header">
+                                        <div class="chapter-nav-title">
+                                            <span class="chapter-nav-icon">📑</span>
+                                            <span class="chapter-nav-text">Phân đoạn video</span>
+                                            <span class="chapter-count" id="chapter-count">0 phần</span>
+                                        </div>
+                                        <button
+                                            class="chapter-nav-toggle"
+                                            id="chapter-nav-toggle"
+                                            title="Thu gọn/Mở rộng"
+                                        >
+                                            <span class="toggle-icon">▼</span>
+                                        </button>
+                                    </div>
+                                    <div class="chapter-nav-content" id="chapter-nav-content">
+                                        <div class="chapter-current-info" id="chapter-current-info">
+                                            <div class="current-chapter-title" id="current-chapter-display">
+                                                Chưa có phân đoạn
+                                            </div>
+                                            <div class="current-chapter-progress" id="current-chapter-progress">
+                                                <div class="chapter-progress-bar">
+                                                    <div class="chapter-progress-fill" id="chapter-progress-fill"></div>
+                                                </div>
+                                                <span class="chapter-time-info" id="chapter-time-info"
+                                                    >--:-- / --:--</span
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="chapters-list-external" id="chapters-list-external">
+                                            <!-- Chapters will be populated dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="video-overlay">
+                            <!-- <div class="video-overlay">
                                 <div class="video-title-overlay">
                                     <h3 id="current-video-title">Chọn video để bắt đầu học</h3>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
@@ -514,11 +582,14 @@
             </div>
         </div>
 
-        <script src="scripts/threejs-models.js" type="module"></script>
-        <script src="scripts/custom-video-controls.js"></script>
+        <script src="scripts/custom-video-controls.js" type="module"></script>
+        <script src="scripts/video-chapters.js" type="module"></script>
         <script src="scripts/video-player.js" type="module"></script>
+        <script src="scripts/video-state-manager.js" type="module"></script>
+        <script src="scripts/threejs-models.js" type="module"></script>
         <script src="scripts/video-test.js"></script>
         <script src="scripts/script.js" type="module"></script>
+        <script src="test-chapters-script.js"></script>
     </body>
 </html>
 
