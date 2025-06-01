@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Thực hành - CPU nâng cao</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                min-height: 100vh;
+            }
+            .quiz-container {
+                max-width: 1000px;
+                margin: 0 auto;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                padding: 30px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 2.2em;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .exercise-section {
+                margin-bottom: 40px;
+                background: rgba(255, 255, 255, 0.1);
+                padding: 25px;
+                border-radius: 10px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+            }
+            .exercise-title {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+                color: #ffd700;
+                font-weight: bold;
+            }
+            .pipeline-stages {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 10px;
+                margin: 20px 0;
+                padding: 20px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 8px;
+            }
+            .pipeline-stage {
+                background: #333;
+                border: 2px solid #555;
+                border-radius: 8px;
+                padding: 15px;
+                text-align: center;
+                font-weight: bold;
+                min-height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .pipeline-stage.fetch {
+                background: #e74c3c;
+            }
+            .pipeline-stage.decode {
+                background: #f39c12;
+            }
+            .pipeline-stage.execute {
+                background: #27ae60;
+            }
+            .pipeline-stage.memory {
+                background: #3498db;
+            }
+            .pipeline-stage.writeback {
+                background: #9b59b6;
+            }
+            .pipeline-stage:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+            .instruction-queue {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 20px 0;
+                min-height: 100px;
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px dashed rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+            }
+            .instruction {
+                background: rgba(33, 150, 243, 0.8);
+                padding: 10px 15px;
+                border-radius: 8px;
+                border: 2px solid #1976d2;
+                font-weight: bold;
+                cursor: move;
+                transition: all 0.3s ease;
+                user-select: none;
+            }
+            .instruction:hover {
+                background: rgba(33, 150, 243, 1);
+                transform: translateY(-2px);
+            }
+            .instruction.executing {
+                background: #4caf50;
+                border-color: #388e3c;
+            }
+            .instruction.stalled {
+                background: #f44336;
+                border-color: #d32f2f;
+            }
+            .cache-simulator {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin: 20px 0;
+            }
+            .cache-level {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 20px;
+                border-radius: 8px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+            }
+            .cache-level h4 {
+                color: #ffd700;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+            .memory-address {
+                background: rgba(0, 0, 0, 0.3);
+                padding: 10px;
+                border-radius: 4px;
+                margin: 5px 0;
+                font-family: "Courier New", monospace;
+                font-size: 0.9em;
+            }
+            .cache-line {
+                display: grid;
+                grid-template-columns: 1fr 3fr 1fr;
+                gap: 10px;
+                padding: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                margin: 5px 0;
+                font-family: "Courier New", monospace;
+                font-size: 0.85em;
+            }
+            .cache-line.hit {
+                background: rgba(76, 175, 80, 0.3);
+                border: 1px solid #4caf50;
+            }
+            .cache-line.miss {
+                background: rgba(244, 67, 54, 0.3);
+                border: 1px solid #f44336;
+            }
+            .interactive-button {
+                background: linear-gradient(45deg, #4caf50, #45a049);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 1em;
+                font-weight: bold;
+                margin: 10px 5px;
+                transition: all 0.3s ease;
+            }
+            .interactive-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            }
+            .stats-panel {
+                background: rgba(33, 150, 243, 0.2);
+                border: 2px solid #2196f3;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .stats-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+            .stat-item {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 10px;
+                border-radius: 4px;
+            }
+            .stat-value {
+                font-size: 1.5em;
+                font-weight: bold;
+                color: #ffd700;
+            }
+            .branch-predictor {
+                background: rgba(156, 39, 176, 0.2);
+                border: 2px solid #9c27b0;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 15px 0;
+            }
+            .prediction-history {
+                display: flex;
+                gap: 5px;
+                margin: 10px 0;
+                flex-wrap: wrap;
+            }
+            .prediction-bit {
+                width: 30px;
+                height: 30px;
+                border: 2px solid #9c27b0;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .prediction-bit.taken {
+                background: #4caf50;
+                color: white;
+            }
+            .prediction-bit.not-taken {
+                background: #f44336;
+                color: white;
+            }
+            .prediction-bit:hover {
+                transform: scale(1.1);
+            }
+            .info-box {
+                background: rgba(33, 150, 243, 0.2);
+                border: 2px solid #2196f3;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 15px 0;
+                color: #e3f2fd;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <h1>⚙️ Thực hành - CPU nâng cao</h1>
+
+            <div class="info-box">
+                <strong>Thực hành:</strong> Mô phỏng pipeline, cache hierarchy, và branch prediction<br />
+                <strong>Mục tiêu:</strong> Hiểu sâu về hoạt động bên trong CPU hiện đại
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-title">🔄 Mô phỏng Pipeline CPU</div>
+                <p>Thực hành pipeline 5 giai đoạn: Fetch → Decode → Execute → Memory → WriteBack</p>
+
+                <div class="pipeline-stages">
+                    <div class="pipeline-stage fetch" onclick="selectStage('fetch')">
+                        <div>Fetch<br /><small id="fetch-instr">-</small></div>
+                    </div>
+                    <div class="pipeline-stage decode" onclick="selectStage('decode')">
+                        <div>Decode<br /><small id="decode-instr">-</small></div>
+                    </div>
+                    <div class="pipeline-stage execute" onclick="selectStage('execute')">
+                        <div>Execute<br /><small id="execute-instr">-</small></div>
+                    </div>
+                    <div class="pipeline-stage memory" onclick="selectStage('memory')">
+                        <div>Memory<br /><small id="memory-instr">-</small></div>
+                    </div>
+                    <div class="pipeline-stage writeback" onclick="selectStage('writeback')">
+                        <div>WriteBack<br /><small id="writeback-instr">-</small></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4>Hàng đợi lệnh:</h4>
+                    <div class="instruction-queue" id="instructionQueue">
+                        <div class="instruction" onclick="executeInstruction(this)">ADD R1,R2</div>
+                        <div class="instruction" onclick="executeInstruction(this)">LOAD R3,[100]</div>
+                        <div class="instruction" onclick="executeInstruction(this)">MUL R4,R5</div>
+                        <div class="instruction" onclick="executeInstruction(this)">STORE [200],R6</div>
+                        <div class="instruction" onclick="executeInstruction(this)">BRANCH 0x1000</div>
+                        <div class="instruction" onclick="executeInstruction(this)">SUB R7,R8</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center">
+                    <button class="interactive-button" onclick="stepPipeline()">Thực hiện 1 chu kỳ</button>
+                    <button class="interactive-button" onclick="runPipeline()">Chạy tự động</button>
+                    <button class="interactive-button" onclick="resetPipeline()">Reset Pipeline</button>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-value" id="cycles">0</div>
+                            <div>Chu kỳ</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="completed">0</div>
+                            <div>Lệnh hoàn thành</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="ipc">0.00</div>
+                            <div>IPC</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-title">💾 Mô phỏng Cache Hierarchy</div>
+                <p>Thực hành truy cập bộ nhớ qua cache L1, L2, L3 và RAM</p>
+
+                <div class="cache-simulator">
+                    <div class="cache-level">
+                        <h4>🚀 L1 Cache (64KB)</h4>
+                        <div>Hit Rate: <span id="l1-hit-rate">0%</span></div>
+                        <div>Access Time: 1 cycle</div>
+                        <div id="l1-contents" class="cache-contents">
+                            <div class="cache-line"><span>Tag</span><span>Data</span><span>Valid</span></div>
+                        </div>
+                    </div>
+                    <div class="cache-level">
+                        <h4>⚡ L2 Cache (512KB)</h4>
+                        <div>Hit Rate: <span id="l2-hit-rate">0%</span></div>
+                        <div>Access Time: 8 cycles</div>
+                        <div id="l2-contents" class="cache-contents">
+                            <div class="cache-line"><span>Tag</span><span>Data</span><span>Valid</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4>Địa chỉ truy cập:</h4>
+                    <input
+                        type="text"
+                        id="memoryAddress"
+                        placeholder="Nhập địa chỉ hex (VD: 0x1000)"
+                        style="
+                            padding: 10px;
+                            margin: 10px;
+                            border-radius: 4px;
+                            border: none;
+                            background: rgba(255, 255, 255, 0.2);
+                            color: white;
+                        "
+                    />
+                    <button class="interactive-button" onclick="accessMemory()">Truy cập bộ nhớ</button>
+                    <button class="interactive-button" onclick="resetCache()">Reset Cache</button>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-value" id="total-accesses">0</div>
+                            <div>Tổng truy cập</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="cache-hits">0</div>
+                            <div>Cache Hits</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="avg-cycles">0</div>
+                            <div>Chu kỳ TB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-title">🎯 Branch Prediction Simulator</div>
+                <p>Thực hành dự đoán rẽ nhánh với 2-bit saturating counter</p>
+
+                <div class="branch-predictor">
+                    <h4>Trạng thái predictor: <span id="predictor-state">Strongly Not Taken</span></h4>
+                    <div class="prediction-history" id="predictionHistory">
+                        <!-- History will be populated by JavaScript -->
+                    </div>
+
+                    <div style="text-align: center; margin: 20px 0">
+                        <button class="interactive-button" onclick="branchTaken()">Branch Taken</button>
+                        <button class="interactive-button" onclick="branchNotTaken()">Branch Not Taken</button>
+                        <button class="interactive-button" onclick="resetPredictor()">Reset Predictor</button>
+                    </div>
+
+                    <div class="stats-panel">
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-value" id="predictions">0</div>
+                                <div>Dự đoán</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="correct-predictions">0</div>
+                                <div>Đúng</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="accuracy">0%</div>
+                                <div>Độ chính xác</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Pipeline simulation
+            let pipelineStages = ["", "", "", "", ""];
+            let instructionQueue = [
+                "ADD R1,R2",
+                "LOAD R3,[100]",
+                "MUL R4,R5",
+                "STORE [200],R6",
+                "BRANCH 0x1000",
+                "SUB R7,R8",
+            ];
+            let currentInstructionIndex = 0;
+            let cycles = 0;
+            let completedInstructions = 0;
+            let isRunning = false;
+
+            function stepPipeline() {
+                cycles++;
+
+                // Move instructions through pipeline (right to left)
+                if (pipelineStages[4] !== "") {
+                    completedInstructions++;
+                }
+
+                for (let i = 4; i > 0; i--) {
+                    pipelineStages[i] = pipelineStages[i - 1];
+                }
+
+                // Fetch new instruction
+                if (currentInstructionIndex < instructionQueue.length) {
+                    pipelineStages[0] = instructionQueue[currentInstructionIndex];
+                    currentInstructionIndex++;
+                } else {
+                    pipelineStages[0] = "";
+                }
+
+                updatePipelineDisplay();
+                updateStats();
+            }
+
+            function updatePipelineDisplay() {
+                const stages = ["fetch", "decode", "execute", "memory", "writeback"];
+                stages.forEach((stage, index) => {
+                    document.getElementById(`${stage}-instr`).textContent = pipelineStages[index] || "-";
+                });
+            }
+
+            function updateStats() {
+                document.getElementById("cycles").textContent = cycles;
+                document.getElementById("completed").textContent = completedInstructions;
+                document.getElementById("ipc").textContent =
+                    cycles > 0 ? (completedInstructions / cycles).toFixed(2) : "0.00";
+            }
+
+            function runPipeline() {
+                if (isRunning) return;
+                isRunning = true;
+
+                const interval = setInterval(() => {
+                    stepPipeline();
+                    if (
+                        currentInstructionIndex >= instructionQueue.length &&
+                        pipelineStages.every((stage) => stage === "")
+                    ) {
+                        clearInterval(interval);
+                        isRunning = false;
+                    }
+                }, 1000);
+            }
+
+            function resetPipeline() {
+                pipelineStages = ["", "", "", "", ""];
+                currentInstructionIndex = 0;
+                cycles = 0;
+                completedInstructions = 0;
+                isRunning = false;
+                updatePipelineDisplay();
+                updateStats();
+            }
+
+            // Cache simulation
+            let l1Cache = new Map();
+            let l2Cache = new Map();
+            let totalAccesses = 0;
+            let cacheHits = 0;
+            let totalCycles = 0;
+
+            function accessMemory() {
+                const address = document.getElementById("memoryAddress").value.trim();
+                if (!address) return;
+
+                totalAccesses++;
+                let cycles = 200; // Default RAM access
+                let hitLevel = "RAM";
+
+                const tag = parseInt(address, 16) >> 6; // Simple tag calculation
+
+                if (l1Cache.has(tag)) {
+                    cycles = 1;
+                    hitLevel = "L1";
+                    cacheHits++;
+                } else if (l2Cache.has(tag)) {
+                    cycles = 8;
+                    hitLevel = "L2";
+                    cacheHits++;
+                    // Promote to L1
+                    l1Cache.set(tag, address);
+                } else {
+                    // Load into both caches
+                    l1Cache.set(tag, address);
+                    l2Cache.set(tag, address);
+
+                    // Simple cache replacement (remove oldest if size > 8)
+                    if (l1Cache.size > 8) {
+                        const firstKey = l1Cache.keys().next().value;
+                        l1Cache.delete(firstKey);
+                    }
+                    if (l2Cache.size > 32) {
+                        const firstKey = l2Cache.keys().next().value;
+                        l2Cache.delete(firstKey);
+                    }
+                }
+
+                totalCycles += cycles;
+                updateCacheDisplay(hitLevel, address, cycles);
+                updateCacheStats();
+            }
+
+            function updateCacheDisplay(hitLevel, address, cycles) {
+                const result = `${address} → ${hitLevel} (${cycles} cycles)`;
+                console.log(result);
+
+                // Update cache contents display
+                updateCacheContents();
+            }
+
+            function updateCacheContents() {
+                const l1Element = document.getElementById("l1-contents");
+                const l2Element = document.getElementById("l2-contents");
+
+                l1Element.innerHTML =
+                    '<div class="cache-line"><span>Tag</span><span>Data</span><span>Valid</span></div>';
+                l2Element.innerHTML =
+                    '<div class="cache-line"><span>Tag</span><span>Data</span><span>Valid</span></div>';
+
+                l1Cache.forEach((value, key) => {
+                    const line = document.createElement("div");
+                    line.className = "cache-line hit";
+                    line.innerHTML = `<span>0x${key.toString(16)}</span><span>${value}</span><span>1</span>`;
+                    l1Element.appendChild(line);
+                });
+
+                l2Cache.forEach((value, key) => {
+                    if (!l1Cache.has(key)) {
+                        const line = document.createElement("div");
+                        line.className = "cache-line";
+                        line.innerHTML = `<span>0x${key.toString(16)}</span><span>${value}</span><span>1</span>`;
+                        l2Element.appendChild(line);
+                    }
+                });
+            }
+
+            function updateCacheStats() {
+                document.getElementById("total-accesses").textContent = totalAccesses;
+                document.getElementById("cache-hits").textContent = cacheHits;
+                document.getElementById("avg-cycles").textContent =
+                    totalAccesses > 0 ? Math.round(totalCycles / totalAccesses) : 0;
+
+                const l1HitRate = totalAccesses > 0 ? Math.round((cacheHits / totalAccesses) * 100) : 0;
+                document.getElementById("l1-hit-rate").textContent = `${l1HitRate}%`;
+                document.getElementById("l2-hit-rate").textContent = `${Math.max(0, l1HitRate - 10)}%`;
+            }
+
+            function resetCache() {
+                l1Cache.clear();
+                l2Cache.clear();
+                totalAccesses = 0;
+                cacheHits = 0;
+                totalCycles = 0;
+                updateCacheContents();
+                updateCacheStats();
+            }
+
+            // Branch prediction simulation
+            let predictorState = 0; // 0: Strongly Not Taken, 1: Weakly Not Taken, 2: Weakly Taken, 3: Strongly Taken
+            let predictionHistory = [];
+            let totalPredictions = 0;
+            let correctPredictions = 0;
+
+            const stateNames = ["Strongly Not Taken", "Weakly Not Taken", "Weakly Taken", "Strongly Taken"];
+
+            function branchTaken() {
+                const predicted = predictorState >= 2;
+                const actual = true;
+
+                updatePrediction(predicted, actual);
+
+                // Update predictor state (increment, max 3)
+                predictorState = Math.min(3, predictorState + 1);
+                updatePredictorDisplay();
+            }
+
+            function branchNotTaken() {
+                const predicted = predictorState >= 2;
+                const actual = false;
+
+                updatePrediction(predicted, actual);
+
+                // Update predictor state (decrement, min 0)
+                predictorState = Math.max(0, predictorState - 1);
+                updatePredictorDisplay();
+            }
+
+            function updatePrediction(predicted, actual) {
+                totalPredictions++;
+                if (predicted === actual) {
+                    correctPredictions++;
+                }
+
+                predictionHistory.push({ predicted, actual, correct: predicted === actual });
+                if (predictionHistory.length > 20) {
+                    predictionHistory.shift();
+                }
+
+                updatePredictionHistory();
+                updatePredictionStats();
+            }
+
+            function updatePredictorDisplay() {
+                document.getElementById("predictor-state").textContent = stateNames[predictorState];
+            }
+
+            function updatePredictionHistory() {
+                const historyElement = document.getElementById("predictionHistory");
+                historyElement.innerHTML = "";
+
+                predictionHistory.forEach((prediction, index) => {
+                    const bit = document.createElement("div");
+                    bit.className = `prediction-bit ${prediction.actual ? "taken" : "not-taken"}`;
+                    bit.textContent = prediction.correct ? "✓" : "✗";
+                    bit.title = `Prediction ${index + 1}: ${prediction.correct ? "Correct" : "Wrong"}`;
+                    historyElement.appendChild(bit);
+                });
+            }
+
+            function updatePredictionStats() {
+                document.getElementById("predictions").textContent = totalPredictions;
+                document.getElementById("correct-predictions").textContent = correctPredictions;
+
+                const accuracy = totalPredictions > 0 ? Math.round((correctPredictions / totalPredictions) * 100) : 0;
+                document.getElementById("accuracy").textContent = `${accuracy}%`;
+            }
+
+            function resetPredictor() {
+                predictorState = 0;
+                predictionHistory = [];
+                totalPredictions = 0;
+                correctPredictions = 0;
+                updatePredictorDisplay();
+                updatePredictionHistory();
+                updatePredictionStats();
+            }
+
+            // Initialize displays
+            updatePipelineDisplay();
+            updateStats();
+            updateCacheContents();
+            updateCacheStats();
+            updatePredictorDisplay();
+            updatePredictionStats();
+        </script>
+    </body>
+</html>

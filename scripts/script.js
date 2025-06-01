@@ -1,23 +1,25 @@
-// Import Three.js models module
-import threeJSModels from "./threejs-models.js";
-
+// Three.js models module will be loaded globally
 // Video player will be initialized separately
 
 // Expose debugging functions to fix model color issues
 window.fixModelColors = {
     debug: () => {
-        threeJSModels.toggleDebugMode();
-        console.log("Debug mode toggled. Check browser console for detailed logs.");
-        return "Use these commands for debugging:\nfixModelColors.analyze('cpu');\nfixModelColors.fixBlack('cpu');\nfixModelColors.adjustLighting(0.9);";
+        if (window.threeJSModels) {
+            window.threeJSModels.toggleDebugMode();
+            console.log("Debug mode toggled. Check browser console for detailed logs.");
+            return "Use these commands for debugging:\nfixModelColors.analyze('cpu');\nfixModelColors.fixBlack('cpu');\nfixModelColors.adjustLighting(0.9);";
+        } else {
+            console.error("ThreeJS models not loaded yet");
+        }
     },
     analyze: (modelType) => {
-        return threeJSModels.analyzeModelColors(modelType);
+        return window.threeJSModels ? window.threeJSModels.analyzeModelColors(modelType) : "ThreeJS not loaded";
     },
     fixBlack: (modelType) => {
-        return threeJSModels.fixBlackMaterials(modelType);
+        return window.threeJSModels ? window.threeJSModels.fixBlackMaterials(modelType) : "ThreeJS not loaded";
     },
     adjustLighting: (intensity) => {
-        return threeJSModels.adjustLighting(intensity);
+        return window.threeJSModels ? window.threeJSModels.adjustLighting(intensity) : "ThreeJS not loaded";
     },
 };
 

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CPU Architecture Theory Quiz</title>
+        <style>
+            body {
+                font-family: "Roboto", sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+            }
+            .quiz-container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            }
+            .quiz-header {
+                text-align: center;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            .quiz-title {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            .quiz-subtitle {
+                color: #666;
+                font-size: 16px;
+            }
+            .question {
+                margin-bottom: 25px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                border-left: 4px solid #4caf50;
+            }
+            .question h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 18px;
+            }
+            .options {
+                display: grid;
+                gap: 10px;
+            }
+            .option {
+                padding: 12px 15px;
+                background: white;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .option:hover {
+                border-color: #4caf50;
+                background: #f1f8e9;
+            }
+            .option.selected {
+                border-color: #4caf50;
+                background: #e8f5e8;
+            }
+            .option.correct {
+                border-color: #4caf50;
+                background: #c8e6c9;
+            }
+            .option.incorrect {
+                border-color: #f44336;
+                background: #ffcdd2;
+            }
+            .submit-btn {
+                background: linear-gradient(45deg, #4caf50, #45a049);
+                color: white;
+                padding: 12px 30px;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: transform 0.2s ease;
+                display: block;
+                margin: 30px auto 0;
+            }
+            .submit-btn:hover {
+                transform: translateY(-2px);
+            }
+            .results {
+                margin-top: 30px;
+                padding: 20px;
+                background: #e3f2fd;
+                border-radius: 10px;
+                text-align: center;
+                display: none;
+            }
+            .score {
+                font-size: 24px;
+                color: #1976d2;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .feedback {
+                color: #555;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1 class="quiz-title">🏗️ Kiến Trúc CPU - Lý Thuyết</h1>
+                <p class="quiz-subtitle">Kiểm tra hiểu biết về ALU, Control Unit, Registers và Bus</p>
+            </div>
+
+            <form id="quiz-form">
+                <div class="question">
+                    <h3>1. ALU (Arithmetic Logic Unit) có chức năng chính là gì?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="a" /> Điều khiển luồng dữ liệu trong CPU
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="b" /> Thực hiện các phép tính số học và logic
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="c" /> Lưu trữ dữ liệu tạm thời
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="d" /> Kết nối với bộ nhớ ngoài
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>2. Control Unit có vai trò gì trong kiến trúc CPU?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="a" /> Thực hiện các phép tính
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="b" /> Giải mã lệnh và điều khiển hoạt động của CPU
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="c" /> Lưu trữ kết quả tính toán
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="d" /> Kết nối với thiết bị I/O
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>3. Registers trong CPU có đặc điểm gì?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="a" /> Tốc độ truy cập chậm nhưng dung lượng lớn
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="b" /> Tốc độ truy cập nhanh nhất và dung lượng nhỏ
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="c" /> Dung lượng trung bình và tốc độ vừa phải
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="d" /> Chỉ có thể lưu trữ lệnh, không lưu được dữ liệu
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>4. Bus trong kiến trúc CPU bao gồm những loại nào?</h3>
+                    <div class="options">
+                        <label class="option"> <input type="radio" name="q4" value="a" /> Chỉ có Address Bus </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="b" /> Address Bus và Data Bus
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="c" /> Address Bus, Data Bus và Control Bus
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="d" /> Data Bus và Memory Bus
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>5. Trong chu kỳ lệnh (Instruction Cycle), thứ tự các giai đoạn là gì?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="a" /> Execute → Fetch → Decode
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="b" /> Fetch → Decode → Execute
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="c" /> Decode → Fetch → Execute
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="d" /> Fetch → Execute → Decode
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Nộp Bài</button>
+            </form>
+
+            <div id="results" class="results">
+                <div class="score"></div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <script>
+            const correctAnswers = {
+                q1: "b",
+                q2: "b",
+                q3: "b",
+                q4: "c",
+                q5: "b",
+            };
+
+            const explanations = {
+                q1: "ALU thực hiện các phép tính số học (cộng, trừ, nhân, chia) và logic (AND, OR, NOT).",
+                q2: "Control Unit giải mã lệnh từ bộ nhớ và điều khiển hoạt động của tất cả các thành phần khác.",
+                q3: "Registers có tốc độ truy cập nhanh nhất trong hệ thống phân cấp bộ nhớ nhưng dung lượng rất nhỏ.",
+                q4: "Bus bao gồm Address Bus (địa chỉ), Data Bus (dữ liệu) và Control Bus (tín hiệu điều khiển).",
+                q5: "Chu kỳ lệnh theo thứ tự: Fetch (lấy lệnh) → Decode (giải mã) → Execute (thực thi).",
+            };
+
+            document.getElementById("quiz-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                let score = 0;
+                const formData = new FormData(this);
+
+                // Check answers and highlight
+                for (let [question, correctAnswer] of Object.entries(correctAnswers)) {
+                    const userAnswer = formData.get(question);
+                    const options = document.querySelectorAll(`input[name="${question}"]`);
+
+                    options.forEach((option) => {
+                        const label = option.parentElement;
+                        if (option.value === correctAnswer) {
+                            label.classList.add("correct");
+                            if (userAnswer === correctAnswer) {
+                                score++;
+                            }
+                        } else if (option.value === userAnswer && userAnswer !== correctAnswer) {
+                            label.classList.add("incorrect");
+                        }
+                        option.disabled = true;
+                    });
+                }
+
+                // Show results
+                const resultsDiv = document.getElementById("results");
+                const scoreElement = resultsDiv.querySelector(".score");
+                const feedbackElement = resultsDiv.querySelector(".feedback");
+
+                const percentage = Math.round((score / Object.keys(correctAnswers).length) * 100);
+
+                scoreElement.textContent = `Điểm: ${score}/${Object.keys(correctAnswers).length} (${percentage}%)`;
+
+                let feedbackText = "";
+                if (percentage >= 80) {
+                    feedbackText = "🎉 Xuất sắc! Bạn đã nắm vững kiến trúc CPU.";
+                } else if (percentage >= 60) {
+                    feedbackText = "👍 Tốt! Hãy ôn lại một số khái niệm về kiến trúc CPU.";
+                } else {
+                    feedbackText = "📚 Bạn cần học thêm về kiến trúc CPU. Hãy xem lại video bài giảng.";
+                }
+
+                feedbackElement.textContent = feedbackText;
+                resultsDiv.style.display = "block";
+
+                // Disable submit button
+                this.querySelector(".submit-btn").disabled = true;
+                this.querySelector(".submit-btn").textContent = "Đã nộp bài";
+            });
+
+            // Handle option selection visual feedback
+            document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+                radio.addEventListener("change", function () {
+                    // Remove selected class from all options in this question
+                    const questionOptions = document.querySelectorAll(`input[name="${this.name}"]`);
+                    questionOptions.forEach((option) => {
+                        option.parentElement.classList.remove("selected");
+                    });
+
+                    // Add selected class to chosen option
+                    this.parentElement.classList.add("selected");
+                });
+            });
+        </script>
+    </body>
+</html>

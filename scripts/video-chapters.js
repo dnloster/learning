@@ -679,4 +679,5 @@ class VideoChapters {
     }
 }
 
-export default VideoChapters;
+// Export for global use
+window.VideoChapters = VideoChapters;

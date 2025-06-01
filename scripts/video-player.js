@@ -59,16 +59,8 @@ class VideoPlayerController {
         const checkControls = () => {
             if (window.customVideoControls) {
                 this.customControls = window.customVideoControls;
-                console.log("Video player connected to custom controls");
-
-                // Add click event to video element for play/pause with visual feedback
-                const videoElement = document.getElementById("main-video");
-                if (videoElement) {
-                    videoElement.addEventListener("click", () => {
-                        this.togglePlayPause();
-                        this.showPlayPauseFeedback();
-                    });
-                }
+                console.log("Video player connected to custom controls"); // Video click handling is managed by custom-video-controls.js
+                // Removed duplicate click handler to prevent conflicts
                 // Add enhanced keyboard controls
                 document.addEventListener("keydown", (e) => {
                     // Ignore if focus is on input elements
@@ -244,13 +236,19 @@ class VideoPlayerController {
 
         // Update video source and play after a slight delay for transition effect
         setTimeout(() => {
-            videoElement.src = videoSrc;
-
-            // When metadata is loaded, play the video
+            videoElement.src = videoSrc; // When metadata is loaded, play the video
             videoElement.onloadedmetadata = () => {
+                console.log("VideoPlayer: Metadata loaded for video:", videoId);
+                console.log("VideoPlayer: Video duration:", videoElement.duration);
+
                 // If custom controls are available, reset them
                 if (this.customControls) {
+                    console.log("VideoPlayer: Calling resetControls");
                     this.customControls.resetControls();
+
+                    // Also explicitly call updateDuration
+                    console.log("VideoPlayer: Calling updateDuration");
+                    this.customControls.updateDuration();
                 }
 
                 // Play the video
@@ -271,13 +269,14 @@ class VideoPlayerController {
             this.updatePlayingStatus(videoId, videoItems);
 
             // Track video progress
-            this.trackVideoProgress(videoId);
-
-            // Update the video levels display
+            this.trackVideoProgress(videoId); // Update the video levels display
             this.updateVideoLevels();
 
             // Show feedback that video is starting
             this.showPlayPauseFeedback();
+
+            // Dispatch video change event for bookmark system
+            this.dispatchVideoChangeEvent(videoData);
         }, 400); // Short delay for transition effect
     }
 
@@ -367,13 +366,61 @@ class VideoPlayerController {
             overlay?.parentElement?.removeChild(overlay);
         }, 500);
     }
-
     findVideoData(videoId) {
         for (const playlist of Object.values(this.videoData)) {
             const video = playlist.find((v) => v.id === videoId);
             if (video) return video;
         }
         return null;
+    }
+    findVideoById(videoId) {
+        // This method is an alias for findVideoData for compatibility
+        return this.findVideoData(videoId);
+    }
+    trackVideoProgress(videoId) {
+        // Track progress for the video (placeholder implementation)
+        console.log(`Tracking progress for video: ${videoId}`);
+        // This could be expanded to track completion, watch time, etc.
+    }
+    /**
+     * Dispatch video change event for bookmark system and other integrations
+     * @param {Object} videoData - The video data object
+     */
+    dispatchVideoChangeEvent(videoData) {
+        const event = new CustomEvent("video-changed", {
+            detail: {
+                ...videoData,
+                playlist: this.currentPlaylist,
+                timestamp: Date.now(),
+            },
+        });
+        window.dispatchEvent(event);
+        console.log("Video change event dispatched:", videoData.title);
+    }
+
+    /**
+     * Load a video by ID and optionally switch playlist
+     * @param {string} videoId - The video ID to load
+     * @param {string} playlist - Optional playlist to switch to
+     */
+    loadVideo(videoId, playlist = null) {
+        // Switch playlist if specified
+        if (playlist && this.videoData[playlist]) {
+            this.switchPlaylist(playlist);
+        }
+
+        // Find the video data
+        const videoData = this.findVideoById(videoId);
+        if (videoData) {
+            this.playVideo(videoId, videoData.src);
+        } else {
+            console.error("Video not found:", videoId);
+        }
+    }
+
+    onVideoEnded() {
+        console.log("Video ended, attempting to play next video");
+        this.playNextVideo();
     }
 
     previousVideo() {
@@ -399,6 +446,9 @@ class VideoPlayerController {
         const video = document.getElementById("main-video");
         if (!video) return;
 
+        // Show visual feedback first
+        this.showPlayPauseFeedback();
+
         if (video.paused) {
             video
                 .play()
@@ -408,7 +458,6 @@ class VideoPlayerController {
             video.pause();
         }
     }
-
     showPlayPauseFeedback() {
         const video = document.getElementById("main-video");
         if (!video) return;
@@ -419,40 +468,36 @@ class VideoPlayerController {
             existingFeedback.remove();
         }
 
-        // Create feedback element
+        // Create simple feedback element
         const feedback = document.createElement("div");
         feedback.className = "video-action-feedback";
 
         // Determine if video will be playing or paused after toggle
         const willPlay = video.paused;
 
+        // Create simple icons like YouTube
         if (willPlay) {
-            feedback.classList.add("play-feedback");
             feedback.innerHTML = '<span class="feedback-icon play">▶</span>';
-            console.log("Play feedback shown");
+            console.log("▶ Play feedback");
         } else {
-            feedback.classList.add("pause-feedback");
             feedback.innerHTML = '<span class="feedback-icon pause">⏸</span>';
-            console.log("Pause feedback shown");
+            console.log("⏸ Pause feedback");
         }
 
         // Add to video player container
         video.parentElement.appendChild(feedback);
 
-        // Trigger show animation
+        // Simple show/hide animation
         requestAnimationFrame(() => {
             feedback.classList.add("show");
         });
 
-        // Remove feedback after animation
+        // Remove after a short time
         setTimeout(() => {
-            feedback.classList.add("animate-out");
-            setTimeout(() => {
-                if (feedback.parentElement) {
-                    feedback.remove();
-                }
-            }, 300);
-        }, 800);
+            if (feedback.parentElement) {
+                feedback.remove();
+            }
+        }, 600);
     }
 
     onVideoEnded() {
@@ -484,11 +529,10 @@ class VideoPlayerController {
         const remainingSeconds = Math.floor(seconds % 60);
         return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
     }
-
     updatePlayingStatus(id, videoItems) {
         // Update the playing status for all videos
         videoItems.forEach((item) => {
-            if (item.id === id) {
+            if (item.dataset.video === id) {
                 if (!item.classList.contains("playing")) {
                     // Add playing class with animation
                     item.classList.add("playing");
@@ -728,11 +772,8 @@ class VideoPlayerController {
                 `;
                 document.head.appendChild(style);
             }
-        }
-
-        // Set content and styles based on direction
+        } // Set content and styles based on direction
         const isForward = seconds > 0;
-        const symbol = isForward ? "⏩" : "⏪";
         feedback.innerHTML = `${Math.abs(seconds)}s`;
 
         // Update classes
@@ -821,11 +862,18 @@ class VideoPlayerController {
                 `;
                 document.head.appendChild(style);
             }
-        }
-
-        // Set content based on volume
+        } // Set content based on volume
         const volumePercent = Math.round(volume * 100);
-        const icon = volume === 0 ? "🔇" : volume < 0.5 ? "🔉" : "🔊";
+
+        // Determine volume icon based on level
+        let icon;
+        if (volume === 0) {
+            icon = "🔇"; // Muted
+        } else if (volume < 0.5) {
+            icon = "🔉"; // Low volume
+        } else {
+            icon = "🔊"; // High volume
+        }
 
         feedback.innerHTML = `
             <span class="volume-icon">${icon}</span>
@@ -860,8 +908,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Expose to global scope for debugging
     window.videoPlayer = videoPlayer;
-
     console.log("Video player initialized successfully");
 });
 
-export default VideoPlayerController;
+// Export for global use
+window.VideoPlayerController = VideoPlayerController;

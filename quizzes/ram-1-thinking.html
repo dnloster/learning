@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>RAM Introduction Thinking Quiz</title>
+        <style>
+            body {
+                font-family: "Roboto", sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #ff9a56 0%, #ff6b96 100%);
+                min-height: 100vh;
+            }
+            .quiz-container {
+                max-width: 900px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            }
+            .quiz-header {
+                text-align: center;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            .quiz-title {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            .quiz-subtitle {
+                color: #666;
+                font-size: 16px;
+            }
+            .scenario {
+                margin-bottom: 30px;
+                padding: 25px;
+                background: #fff3e0;
+                border-radius: 12px;
+                border-left: 5px solid #2196f3;
+            }
+            .scenario-title {
+                color: #1565c0;
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+            }
+            .scenario-title::before {
+                content: "🧠";
+                margin-right: 10px;
+                font-size: 20px;
+            }
+            .scenario-content {
+                color: #333;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+            .question {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+            .question h4 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 16px;
+            }
+            .answer-area {
+                min-height: 80px;
+                padding: 15px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                background: white;
+                font-family: inherit;
+                font-size: 14px;
+                resize: vertical;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .answer-area:focus {
+                border-color: #2196f3;
+                outline: none;
+            }
+            .submit-btn {
+                background: linear-gradient(45deg, #2196f3, #1976d2);
+                color: white;
+                padding: 12px 30px;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: transform 0.2s ease;
+                display: block;
+                margin: 30px auto 0;
+            }
+            .submit-btn:hover {
+                transform: translateY(-2px);
+            }
+            .results {
+                margin-top: 30px;
+                padding: 20px;
+                background: #e3f2fd;
+                border-radius: 10px;
+                text-align: center;
+                display: none;
+            }
+            .completion-message {
+                color: #1976d2;
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .feedback {
+                color: #555;
+                font-size: 16px;
+            }
+            .memory-hierarchy {
+                background: #f5f5f5;
+                padding: 20px;
+                border-radius: 10px;
+                margin: 15px 0;
+                text-align: center;
+                border: 1px solid #e0e0e0;
+            }
+            .memory-level {
+                display: inline-block;
+                padding: 10px 15px;
+                margin: 5px;
+                border-radius: 5px;
+                font-weight: bold;
+                min-width: 80px;
+            }
+            .level-registers {
+                background: #e8f5e8;
+                color: #2e7d32;
+            }
+            .level-cache {
+                background: #fff3e0;
+                color: #f57c00;
+            }
+            .level-ram {
+                background: #e3f2fd;
+                color: #1976d2;
+            }
+            .level-storage {
+                background: #fce4ec;
+                color: #c2185b;
+            }
+            .arrow {
+                display: inline-block;
+                margin: 0 10px;
+                color: #666;
+                font-size: 18px;
+            }
+            .speed-cost-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+            }
+            .speed-cost-table th,
+            .speed-cost-table td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: center;
+            }
+            .speed-cost-table th {
+                background: #f5f5f5;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1 class="quiz-title">🧠 RAM - Tư Duy Phân Tích</h1>
+                <p class="quiz-subtitle">Phân tích vai trò của RAM trong hệ thống máy tính</p>
+            </div>
+
+            <form id="thinking-form">
+                <div class="scenario">
+                    <div class="scenario-title">Tình huống 1: Phân tích hệ thống phân cấp bộ nhớ</div>
+                    <div class="scenario-content">
+                        Hệ thống phân cấp bộ nhớ trong máy tính hiện đại:
+
+                        <div class="memory-hierarchy">
+                            <div class="memory-level level-registers">CPU Registers</div>
+                            <span class="arrow">↓</span>
+                            <div class="memory-level level-cache">Cache L1/L2/L3</div>
+                            <span class="arrow">↓</span>
+                            <div class="memory-level level-ram">RAM</div>
+                            <span class="arrow">↓</span>
+                            <div class="memory-level level-storage">Storage (HDD/SSD)</div>
+                        </div>
+
+                        <table class="speed-cost-table">
+                            <tr>
+                                <th>Loại bộ nhớ</th>
+                                <th>Tốc độ truy cập</th>
+                                <th>Dung lượng</th>
+                                <th>Giá thành/GB</th>
+                            </tr>
+                            <tr>
+                                <td>Registers</td>
+                                <td>~1 chu kỳ</td>
+                                <td>KB</td>
+                                <td>Rất cao</td>
+                            </tr>
+                            <tr>
+                                <td>Cache</td>
+                                <td>1-10 chu kỳ</td>
+                                <td>MB</td>
+                                <td>Cao</td>
+                            </tr>
+                            <tr>
+                                <td>RAM</td>
+                                <td>50-100 chu kỳ</td>
+                                <td>GB</td>
+                                <td>Trung bình</td>
+                            </tr>
+                            <tr>
+                                <td>Storage</td>
+                                <td>1000+ chu kỳ</td>
+                                <td>TB</td>
+                                <td>Thấp</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="question">
+                        <h4>
+                            Giải thích tại sao cần có hệ thống phân cấp bộ nhớ và vai trò của RAM trong hệ thống này:
+                        </h4>
+                        <textarea
+                            class="answer-area"
+                            name="scenario1"
+                            placeholder="Phân tích về balance giữa tốc độ, dung lượng và giá thành. Vai trò của RAM như một 'cầu nối'..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-title">Tình huống 2: So sánh hiệu suất hệ thống</div>
+                    <div class="scenario-content">
+                        Bạn có hai máy tính với cấu hình sau:
+                        <br /><br />
+                        <strong>Máy A:</strong> CPU 4.0GHz, RAM 4GB, SSD 500GB<br />
+                        <strong>Máy B:</strong> CPU 3.0GHz, RAM 16GB, HDD 1TB <br /><br />
+                        Nhiệm vụ cần thực hiện:
+                        <ul>
+                            <li>Chỉnh sửa video 4K (file 50GB)</li>
+                            <li>Chạy máy ảo Windows</li>
+                            <li>Mở 50 tab Chrome cùng lúc</li>
+                            <li>Render 3D model phức tạp</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>Phân tích máy nào sẽ phù hợp hơn cho từng nhiệm vụ và giải thích tại sao:</h4>
+                        <textarea
+                            class="answer-area"
+                            name="scenario2"
+                            placeholder="Xem xét tầm quan trọng của RAM trong từng tác vụ, bottleneck có thể xảy ra..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-title">Tình huống 3: Tối ưu hóa sử dụng RAM</div>
+                    <div class="scenario-content">
+                        Một người dùng than phiền máy tính chạy chậm với các hiện tượng:
+                        <ul>
+                            <li>Mở ứng dụng mới rất lâu</li>
+                            <li>Chuyển đổi giữa các ứng dụng lag</li>
+                            <li>Nghe thấy tiếng ổ cứng hoạt động liên tục</li>
+                            <li>Task Manager hiển thị RAM usage 95%</li>
+                        </ul>
+
+                        Máy tính: Intel i5, RAM 8GB, Windows 10, ổ cứng HDD 1TB
+                    </div>
+
+                    <div class="question">
+                        <h4>Chẩn đoán vấn đề và đề xuất 5 giải pháp cụ thể để cải thiện hiệu suất:</h4>
+                        <textarea
+                            class="answer-area"
+                            name="scenario3"
+                            placeholder="Phân tích nguyên nhân (Virtual Memory, paging) và các giải pháp từ phần mềm đến phần cứng..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-title">Tình huống 4: Lập kế hoạch nâng cấp RAM</div>
+                    <div class="scenario-content">
+                        Một công ty cần nâng cấp 50 máy tính cho các bộ phận:
+                        <ul>
+                            <li><strong>Kế toán:</strong> Excel, Word, phần mềm kế toán</li>
+                            <li><strong>Design:</strong> Photoshop, Illustrator, video editing</li>
+                            <li><strong>Lập trình:</strong> IDE, Docker, database, multiple browsers</li>
+                            <li><strong>Quản lý:</strong> Office, email, web browsing</li>
+                        </ul>
+
+                        Ngân sách: $50,000 USD<br />
+                        Tùy chọn RAM: 8GB ($100), 16GB ($200), 32GB ($400)
+                    </div>
+
+                    <div class="question">
+                        <h4>Lập kế hoạch phân bổ RAM cho từng bộ phận và tính toán chi phí:</h4>
+                        <textarea
+                            class="answer-area"
+                            name="scenario4"
+                            placeholder="Phân tích nhu cầu RAM của từng bộ phận, đưa ra phân bổ tối ưu trong ngân sách..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Hoàn thành bài tập</button>
+            </form>
+
+            <div id="results" class="results">
+                <div class="completion-message">🎯 Đã hoàn thành bài tập tư duy RAM!</div>
+                <div class="feedback">
+                    Câu trả lời của bạn thể hiện khả năng phân tích và giải quyết vấn đề về quản lý bộ nhớ. Hãy thảo
+                    luận với giảng viên để được phản hồi chi tiết.
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("thinking-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                // Validate that all questions have answers
+                const textareas = this.querySelectorAll(".answer-area");
+                let allAnswered = true;
+
+                textareas.forEach((textarea) => {
+                    if (textarea.value.trim().length < 25) {
+                        textarea.style.borderColor = "#f44336";
+                        allAnswered = false;
+                    } else {
+                        textarea.style.borderColor = "#4caf50";
+                    }
+                });
+
+                if (!allAnswered) {
+                    alert("Vui lòng trả lời đầy đủ tất cả các câu hỏi (tối thiểu 25 ký tự mỗi câu).");
+                    return;
+                }
+
+                // Show completion message
+                document.getElementById("results").style.display = "block";
+
+                // Disable form
+                textareas.forEach((textarea) => {
+                    textarea.disabled = true;
+                });
+
+                this.querySelector(".submit-btn").disabled = true;
+                this.querySelector(".submit-btn").textContent = "Đã hoàn thành";
+
+                // Scroll to results
+                document.getElementById("results").scrollIntoView({
+                    behavior: "smooth",
+                });
+            });
+
+            // Auto-resize textareas
+            document.querySelectorAll(".answer-area").forEach((textarea) => {
+                textarea.addEventListener("input", function () {
+                    this.style.height = "auto";
+                    this.style.height = this.scrollHeight + "px";
+                });
+            });
+
+            // Real-time validation feedback
+            document.querySelectorAll(".answer-area").forEach((textarea) => {
+                textarea.addEventListener("input", function () {
+                    if (this.value.trim().length >= 25) {
+                        this.style.borderColor = "#4caf50";
+                    } else if (this.value.trim().length > 0) {
+                        this.style.borderColor = "#2196f3";
+                    } else {
+                        this.style.borderColor = "#e0e0e0";
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

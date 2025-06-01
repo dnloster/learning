@@ -1,5 +1,5 @@
 // Three.js 3D Models Module - New version with color fixes
-// Using Three.js from local files with ES modules
+// Using Three.js from CDN as fallback
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -821,5 +821,3 @@ window.addEventListener("resize", () => {
 
 // Export for global access (for backward compatibility)
 window.threeJSModels = threeJSModels;
-
-export default threeJSModels;

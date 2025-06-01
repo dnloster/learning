@@ -119,7 +119,7 @@
                                         <div class="model-controls">
                                             <button class="control-btn" data-action="rotate">🔄 Xoay</button>
                                             <button class="control-btn" data-action="zoom">🔍 Phóng to</button>
-                                            <button class="control-btn" data-action="reset">↺ Reset</button>
+                                            <button class="control-btn" data-action="reset">↺ Đặt lại</button>
                                         </div>
                                         <div class="loading-indicator">
                                             <div class="spinner"></div>
@@ -146,7 +146,7 @@
                                         <div class="model-controls">
                                             <button class="control-btn" data-action="rotate">🔄 Xoay</button>
                                             <button class="control-btn" data-action="zoom">🔍 Phóng to</button>
-                                            <button class="control-btn" data-action="reset">↺ Reset</button>
+                                            <button class="control-btn" data-action="reset">↺ Đặt lại</button>
                                         </div>
                                         <div class="loading-indicator">
                                             <div class="spinner"></div>
@@ -173,7 +173,7 @@
                                         <div class="model-controls">
                                             <button class="control-btn" data-action="rotate">🔄 Xoay</button>
                                             <button class="control-btn" data-action="zoom">🔍 Phóng to</button>
-                                            <button class="control-btn" data-action="reset">↺ Reset</button>
+                                            <button class="control-btn" data-action="reset">↺ Đặt lại</button>
                                         </div>
                                         <div class="loading-indicator">
                                             <div class="spinner"></div>
@@ -231,6 +231,14 @@
                             <span class="topic-name">ROM - Bộ Nhớ Chỉ Đọc</span>
                             <span class="topic-count">3 videos</span>
                         </button>
+                        <div class="topic-btn">
+                            <a href="quiz.html" class="quiz-nav-btn">
+                                <span class="quiz-nav-icon">📝</span>
+                                <div class="quiz-nav-content">
+                                    <span class="quiz-nav-title">Bài tập trắc nghiệm</span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -318,6 +326,29 @@
                                                 >•</span
                                             >
                                         </button>
+                                        <button
+                                            class="control-btn"
+                                            id="bookmark-btn"
+                                            title="Đánh dấu bài học quan trọng"
+                                        >
+                                            <span class="icon">🔖</span>
+                                            <span
+                                                class="bookmark-indicator"
+                                                id="bookmark-indicator"
+                                                style="display: none"
+                                                >•</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="control-btn"
+                                            id="notes-btn"
+                                            title="Thêm ghi chú tại thời điểm này"
+                                        >
+                                            <span class="icon">📋</span>
+                                            <span class="notes-indicator" id="notes-indicator" style="display: none"
+                                                >•</span
+                                            >
+                                        </button>
                                         <button class="control-btn" id="prev-video-btn" title="Video trước">
                                             <span class="icon">⏮️</span>
                                         </button>
@@ -372,18 +403,34 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- <div class="video-overlay">
-                                <div class="video-title-overlay">
-                                    <h3 id="current-video-title">Chọn video để bắt đầu học</h3>
+                                <!-- Bookmark Panel -->
+                                <div class="bookmark-panel" id="bookmark-panel" style="display: none">
+                                    <div class="bookmark-header">
+                                        <div class="bookmark-title">
+                                            <span class="bookmark-icon">🔖</span>
+                                            <span class="bookmark-text">Bài học đã đánh dấu</span>
+                                            <span class="bookmark-count" id="bookmark-count">0 bài</span>
+                                        </div>
+                                        <button class="bookmark-close" id="bookmark-close" title="Đóng">
+                                            <span class="close-icon">✕</span>
+                                        </button>
+                                    </div>
+                                    <div class="bookmark-content" id="bookmark-content">
+                                        <div class="bookmark-empty" id="bookmark-empty">
+                                            <div class="empty-icon">📝</div>
+                                            <p>Chưa có bài học nào được đánh dấu</p>
+                                            <p class="empty-hint">Nhấn vào nút 🔖 để đánh dấu bài học quan trọng</p>
+                                        </div>
+                                        <div class="bookmark-list" id="bookmark-list"></div>
+                                    </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Video Playlist -->
                 </div>
+
+                <!-- Video Playlist -->
                 <div class="video-playlist">
                     <div class="playlist-header">
                         <h4 id="playlist-title">Danh sách bài học - CPU</h4>
@@ -396,11 +443,11 @@
                             <div class="video-thumbnail">
                                 <img src="images/cpu-thumb-1.jpg" alt="CPU Intro" />
                                 <div class="play-overlay">▶️</div>
-                                <span class="video-duration">15:30</span>
+                                <span class="video-duration">15:20</span>
                             </div>
                             <div class="video-info">
                                 <h5>1. Giới thiệu về CPU</h5>
-                                <p>Tổng quan về bộ vi xử lý và vai trò trong máy tính</p>
+                                <p>Tìm hiểu về bộ xử lý trung tâm và vai trò của nó</p>
                                 <div class="video-meta">
                                     <span class="video-status">chưa xem</span>
                                 </div>
@@ -411,167 +458,26 @@
                             <div class="video-thumbnail">
                                 <img src="images/cpu-thumb-2.jpg" alt="CPU Architecture" />
                                 <div class="play-overlay">▶️</div>
-                                <span class="video-duration">22:45</span>
+                                <span class="video-duration">22:15</span>
                             </div>
                             <div class="video-info">
                                 <h5>2. Kiến trúc CPU</h5>
-                                <p>Cấu trúc bên trong CPU: ALU, Control Unit, Registers</p>
+                                <p>ALU, Control Unit, Registers và Bus</p>
                                 <div class="video-meta">
                                     <span class="video-status">chưa xem</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="video-item" data-video="cpu-3" data-src="videos/cpu-instructions.mp4">
+                        <div class="video-item" data-video="cpu-3" data-src="videos/cpu-instruction.mp4">
                             <div class="video-thumbnail">
                                 <img src="images/cpu-thumb-3.jpg" alt="CPU Instructions" />
                                 <div class="play-overlay">▶️</div>
-                                <span class="video-duration">18:20</span>
+                                <span class="video-duration">18:30</span>
                             </div>
                             <div class="video-info">
-                                <h5>3. Bộ lệnh CPU</h5>
-                                <p>Các loại lệnh và cách CPU thực thi chương trình</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="cpu-4" data-src="videos/cpu-performance.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/cpu-thumb-4.jpg" alt="CPU Performance" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">25:10</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>4. Hiệu năng CPU</h5>
-                                <p>Clock speed, Cache, Pipeline và các yếu tố ảnh hưởng</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="cpu-5" data-src="videos/cpu-practical.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/cpu-thumb-5.jpg" alt="CPU Practical" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">30:15</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>5. Thực hành với CPU</h5>
-                                <p>Lắp ráp, cài đặt và tối ưu hóa CPU</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- RAM Playlist -->
-                    <div class="video-list" id="ram-playlist">
-                        <div class="video-item" data-video="ram-1" data-src="videos/ram-intro.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/ram-thumb-1.jpg" alt="RAM Intro" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">12:30</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>1. Giới thiệu về RAM</h5>
-                                <p>Bộ nhớ truy cập ngẫu nhiên và vai trò trong hệ thống</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="ram-2" data-src="videos/ram-types.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/ram-thumb-2.jpg" alt="RAM Types" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">18:45</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>2. Các loại RAM</h5>
-                                <p>DDR3, DDR4, DDR5 và sự khác biệt giữa chúng</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="ram-3" data-src="videos/ram-performance.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/ram-thumb-3.jpg" alt="RAM Performance" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">20:15</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>3. Hiệu năng RAM</h5>
-                                <p>Tần số, Latency và cách tối ưu hóa RAM</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="ram-4" data-src="videos/ram-installation.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/ram-thumb-4.jpg" alt="RAM Installation" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">15:30</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>4. Lắp đặt RAM</h5>
-                                <p>Hướng dẫn lắp đặt và khắc phục sự cố RAM</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ROM Playlist -->
-                    <div class="video-list" id="rom-playlist">
-                        <div class="video-item" data-video="rom-1" data-src="videos/rom-intro.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/rom-thumb-1.jpg" alt="ROM Intro" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">10:20</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>1. Giới thiệu về ROM</h5>
-                                <p>Bộ nhớ chỉ đọc và vai trò trong hệ thống</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="rom-2" data-src="videos/rom-bios.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/rom-thumb-2.jpg" alt="ROM BIOS" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">16:40</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>2. BIOS và UEFI</h5>
-                                <p>Firmware hệ thống và quá trình khởi động</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="rom-3" data-src="videos/rom-types.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/rom-thumb-3.jpg" alt="ROM Types" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">14:15</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>3. Các loại ROM</h5>
-                                <p>PROM, EPROM, EEPROM và Flash Memory</p>
+                                <h5>3. Tập lệnh CPU</h5>
+                                <p>Machine Language, Assembly và quá trình thực thi</p>
                                 <div class="video-meta">
                                     <span class="video-status">chưa xem</span>
                                 </div>
@@ -582,14 +488,92 @@
             </div>
         </div>
 
-        <script src="scripts/custom-video-controls.js" type="module"></script>
-        <script src="scripts/video-chapters.js" type="module"></script>
-        <script src="scripts/video-player.js" type="module"></script>
-        <script src="scripts/video-state-manager.js" type="module"></script>
-        <script src="scripts/threejs-models.js" type="module"></script>
-        <script src="scripts/video-test.js"></script>
-        <script src="scripts/script.js" type="module"></script>
-        <script src="test-chapters-script.js"></script>
+        <!-- Notes Modal -->
+        <div class="notes-modal" id="notes-modal" style="display: none">
+            <div class="notes-modal-content">
+                <div class="notes-modal-header">
+                    <div class="notes-modal-title">
+                        <span class="notes-icon">📋</span>
+                        <span class="notes-text">Ghi chú tại thời điểm: <span id="note-timestamp">00:00</span></span>
+                    </div>
+                    <button class="notes-modal-close" id="notes-modal-close" title="Đóng">
+                        <span class="close-icon">✕</span>
+                    </button>
+                </div>
+                <div class="notes-modal-body">
+                    <div class="note-form">
+                        <div class="note-input-group">
+                            <label for="note-title">Tiêu đề ghi chú:</label>
+                            <input
+                                type="text"
+                                id="note-title"
+                                placeholder="Nhập tiêu đề cho ghi chú..."
+                                maxlength="100"
+                            />
+                        </div>
+                        <div class="note-input-group">
+                            <label for="note-content">Nội dung ghi chú:</label>
+                            <textarea
+                                id="note-content"
+                                placeholder="Nhập nội dung ghi chú của bạn..."
+                                rows="6"
+                            ></textarea>
+                        </div>
+                        <div class="note-timestamp-info">
+                            <small
+                                >Ghi chú sẽ được lưu tại thời điểm:
+                                <span id="note-timestamp-display">00:00</span></small
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="notes-modal-footer">
+                    <button class="btn btn-secondary" id="cancel-note">Hủy</button>
+                    <button class="btn btn-primary" id="save-note">Lưu ghi chú</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Panel -->
+        <div class="notes-panel" id="notes-panel" style="display: none">
+            <div class="notes-panel-header">
+                <div class="notes-panel-title">
+                    <span class="notes-icon">📋</span>
+                    <span class="notes-text">Danh sách ghi chú</span>
+                    <span class="notes-count" id="notes-count">(0)</span>
+                </div>
+                <div class="notes-panel-actions">
+                    <button class="btn btn-small" id="export-notes" title="Xuất ghi chú">📤</button>
+                    <button class="btn btn-small" id="import-notes" title="Nhập ghi chú">📥</button>
+                    <button class="notes-panel-close" id="notes-panel-close" title="Đóng">
+                        <span class="close-icon">✕</span>
+                    </button>
+                </div>
+            </div>
+            <div class="notes-panel-body">
+                <div class="notes-search">
+                    <input type="text" id="notes-search" placeholder="Tìm kiếm ghi chú..." />
+                </div>
+                <div class="notes-list" id="notes-list">
+                    <div class="no-notes" id="no-notes">
+                        <div class="no-notes-icon">📝</div>
+                        <div class="no-notes-text">Chưa có ghi chú nào</div>
+                        <div class="no-notes-hint">Nhấn nút 📋 để thêm ghi chú mới</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script type="module" src="scripts/video-player.js"></script>
+        <script type="module" src="scripts/video-chapters.js"></script>
+        <script type="module" src="scripts/custom-video-controls.js"></script>
+        <script type="module" src="scripts/bookmark-manager.js"></script>
+        <script type="module" src="scripts/notes-manager.js"></script>
+        <script type="module" src="scripts/quiz-manager.js"></script>
+        <script type="module" src="scripts/threejs-models.js"></script>
+        <script type="module" src="scripts/video-state-manager.js"></script>
+        <script type="module" src="scripts/script.js"></script>
     </body>
 </html>
 

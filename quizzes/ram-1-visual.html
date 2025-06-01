@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bài tập thực hành - RAM</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                min-height: 100vh;
+            }
+            .quiz-container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                padding: 30px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 2.2em;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .exercise-section {
+                margin-bottom: 40px;
+                background: rgba(255, 255, 255, 0.1);
+                padding: 25px;
+                border-radius: 10px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+            }
+            .exercise-title {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+                color: #ffd700;
+                font-weight: bold;
+            }
+            .memory-grid {
+                display: grid;
+                grid-template-columns: repeat(8, 1fr);
+                gap: 5px;
+                margin: 20px 0;
+                padding: 20px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 8px;
+            }
+            .memory-cell {
+                background: #333;
+                border: 2px solid #555;
+                border-radius: 4px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 0.9em;
+            }
+            .memory-cell:hover {
+                background: #555;
+                border-color: #777;
+            }
+            .memory-cell.occupied {
+                background: #ff6b6b;
+                border-color: #ff5252;
+                color: white;
+            }
+            .memory-cell.free {
+                background: #4ecdc4;
+                border-color: #26a69a;
+                color: white;
+            }
+            .memory-cell.selected {
+                background: #ffeb3b;
+                border-color: #fbc02d;
+                color: #333;
+                box-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+            }
+            .drag-area {
+                min-height: 100px;
+                border: 3px dashed rgba(255, 255, 255, 0.3);
+                border-radius: 10px;
+                padding: 20px;
+                margin: 15px 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                background: rgba(255, 255, 255, 0.05);
+            }
+            .drag-area.drag-over {
+                border-color: #4caf50;
+                background: rgba(76, 175, 80, 0.1);
+            }
+            .memory-type {
+                background: rgba(33, 150, 243, 0.8);
+                padding: 10px 15px;
+                border-radius: 8px;
+                margin: 5px;
+                cursor: move;
+                border: 2px solid #1976d2;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                user-select: none;
+            }
+            .memory-type:hover {
+                background: rgba(33, 150, 243, 1);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+            .memory-type.dragging {
+                opacity: 0.5;
+            }
+            .comparison-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .comparison-table th,
+            .comparison-table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .comparison-table th {
+                background: rgba(255, 255, 255, 0.2);
+                font-weight: bold;
+                color: #ffd700;
+            }
+            .comparison-table tr:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .interactive-button {
+                background: linear-gradient(45deg, #4caf50, #45a049);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 1em;
+                font-weight: bold;
+                margin: 10px 5px;
+                transition: all 0.3s ease;
+            }
+            .interactive-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            }
+            .feedback {
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+                font-weight: bold;
+                display: none;
+            }
+            .feedback.correct {
+                background: rgba(76, 175, 80, 0.2);
+                border: 2px solid #4caf50;
+                color: #4caf50;
+            }
+            .feedback.incorrect {
+                background: rgba(244, 67, 54, 0.2);
+                border: 2px solid #f44336;
+                color: #f44336;
+            }
+            .memory-address {
+                font-family: "Courier New", monospace;
+                font-size: 0.8em;
+                color: #ccc;
+            }
+            .info-box {
+                background: rgba(33, 150, 243, 0.2);
+                border: 2px solid #2196f3;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 15px 0;
+                color: #e3f2fd;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <h1>🎯 Bài tập thực hành - Bộ nhớ RAM</h1>
+
+            <div class="exercise-section">
+                <div class="exercise-title">📋 Bài tập 1: Mô phỏng cấp phát bộ nhớ</div>
+                <p>
+                    Hãy click vào các ô bộ nhớ để cấp phát cho các chương trình. Mỗi chương trình cần một số ô nhớ nhất
+                    định.
+                </p>
+
+                <div class="info-box">
+                    <strong>Thông tin:</strong><br />
+                    • Chương trình A: Cần 3 ô nhớ liên tiếp<br />
+                    • Chương trình B: Cần 2 ô nhớ liên tiếp<br />
+                    • Chương trình C: Cần 4 ô nhớ liên tiếp
+                </div>
+
+                <div class="memory-grid" id="memoryGrid">
+                    <!-- Memory cells will be generated by JavaScript -->
+                </div>
+
+                <div style="text-align: center">
+                    <button class="interactive-button" onclick="allocateProgram('A', 3)">
+                        Cấp phát chương trình A
+                    </button>
+                    <button class="interactive-button" onclick="allocateProgram('B', 2)">
+                        Cấp phát chương trình B
+                    </button>
+                    <button class="interactive-button" onclick="allocateProgram('C', 4)">
+                        Cấp phát chương trình C
+                    </button>
+                    <button class="interactive-button" onclick="resetMemory()">Reset bộ nhớ</button>
+                </div>
+
+                <div id="allocationFeedback" class="feedback"></div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-title">🔄 Bài tập 2: Phân loại các loại bộ nhớ</div>
+                <p>Kéo thả các loại bộ nhớ vào đúng danh mục (Nhớ nhanh/Nhớ chậm):</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+                    <div>
+                        <h3 style="text-align: center; color: #4caf50">⚡ Bộ nhớ nhanh</h3>
+                        <div class="drag-area" data-category="fast" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <p style="text-align: center; opacity: 0.7">Thả các loại bộ nhớ nhanh vào đây</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="text-align: center; color: #ff9800">🐌 Bộ nhớ chậm</h3>
+                        <div class="drag-area" data-category="slow" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <p style="text-align: center; opacity: 0.7">Thả các loại bộ nhớ chậm vào đây</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0">
+                    <div class="memory-type" draggable="true" ondragstart="drag(event)" data-type="fast">Cache L1</div>
+                    <div class="memory-type" draggable="true" ondragstart="drag(event)" data-type="fast">Cache L2</div>
+                    <div class="memory-type" draggable="true" ondragstart="drag(event)" data-type="fast">SRAM</div>
+                    <div class="memory-type" draggable="true" ondragstart="drag(event)" data-type="slow">DRAM</div>
+                    <div class="memory-type" draggable="true" ondragstart="drag(event)" data-type="slow">Hard Disk</div>
+                    <div class="memory-type" draggable="true" ondragstart="drag(event)" data-type="slow">SSD</div>
+                </div>
+
+                <div style="text-align: center">
+                    <button class="interactive-button" onclick="checkMemoryTypes()">Kiểm tra kết quả</button>
+                    <button class="interactive-button" onclick="resetMemoryTypes()">Làm lại</button>
+                </div>
+
+                <div id="memoryTypeFeedback" class="feedback"></div>
+            </div>
+
+            <div class="exercise-section">
+                <div class="exercise-title">📊 So sánh tốc độ các loại bộ nhớ</div>
+                <p>Bảng so sánh tốc độ truy cập (đơn vị: nanosecond):</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Loại bộ nhớ</th>
+                            <th>Tốc độ truy cập</th>
+                            <th>Dung lượng điển hình</th>
+                            <th>Giá thành</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cache L1</strong></td>
+                            <td style="color: #4caf50">0.5 - 1 ns</td>
+                            <td>32-64 KB</td>
+                            <td style="color: #f44336">Rất cao</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cache L2</strong></td>
+                            <td style="color: #4caf50">3 - 10 ns</td>
+                            <td>256KB - 1MB</td>
+                            <td style="color: #f44336">Cao</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RAM (DRAM)</strong></td>
+                            <td style="color: #ff9800">50 - 70 ns</td>
+                            <td>4GB - 64GB</td>
+                            <td style="color: #4caf50">Trung bình</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SSD</strong></td>
+                            <td style="color: #f44336">0.1 - 0.2 ms</td>
+                            <td>256GB - 4TB</td>
+                            <td style="color: #4caf50">Thấp</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hard Disk</strong></td>
+                            <td style="color: #f44336">5 - 15 ms</td>
+                            <td>500GB - 10TB</td>
+                            <td style="color: #4caf50">Rất thấp</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="text-align: center; margin-top: 20px">
+                    <button class="interactive-button" onclick="highlightFastest()">Highlight bộ nhớ nhanh nhất</button>
+                    <button class="interactive-button" onclick="highlightSlowest()">Highlight bộ nhớ chậm nhất</button>
+                    <button class="interactive-button" onclick="resetHighlight()">Bỏ highlight</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Memory allocation exercise
+            let memoryState = [];
+            let selectedCells = [];
+            let programColors = {
+                A: "#ff6b6b",
+                B: "#4ecdc4",
+                C: "#45b7d1",
+            };
+
+            // Initialize memory grid
+            function initMemoryGrid() {
+                const grid = document.getElementById("memoryGrid");
+                grid.innerHTML = "";
+                memoryState = new Array(32).fill(null);
+
+                for (let i = 0; i < 32; i++) {
+                    const cell = document.createElement("div");
+                    cell.className = "memory-cell";
+                    cell.textContent = i.toString(16).toUpperCase().padStart(2, "0");
+                    cell.onclick = () => toggleCell(i);
+                    cell.setAttribute("data-address", i);
+                    grid.appendChild(cell);
+                }
+            }
+
+            function toggleCell(index) {
+                if (memoryState[index] === null) {
+                    if (selectedCells.includes(index)) {
+                        selectedCells = selectedCells.filter((i) => i !== index);
+                        document.querySelector(`[data-address="${index}"]`).classList.remove("selected");
+                    } else {
+                        selectedCells.push(index);
+                        document.querySelector(`[data-address="${index}"]`).classList.add("selected");
+                    }
+                }
+            }
+
+            function allocateProgram(program, size) {
+                if (selectedCells.length !== size) {
+                    showFeedback(
+                        "allocationFeedback",
+                        `Chương trình ${program} cần đúng ${size} ô nhớ. Bạn đã chọn ${selectedCells.length} ô.`,
+                        "incorrect"
+                    );
+                    return;
+                }
+
+                // Check if cells are consecutive
+                selectedCells.sort((a, b) => a - b);
+                let consecutive = true;
+                for (let i = 1; i < selectedCells.length; i++) {
+                    if (selectedCells[i] !== selectedCells[i - 1] + 1) {
+                        consecutive = false;
+                        break;
+                    }
+                }
+
+                if (!consecutive) {
+                    showFeedback("allocationFeedback", `Các ô nhớ phải liên tiếp nhau!`, "incorrect");
+                    return;
+                }
+
+                // Allocate memory
+                selectedCells.forEach((index) => {
+                    memoryState[index] = program;
+                    const cell = document.querySelector(`[data-address="${index}"]`);
+                    cell.classList.remove("selected");
+                    cell.classList.add("occupied");
+                    cell.style.backgroundColor = programColors[program];
+                    cell.textContent = program;
+                });
+
+                selectedCells = [];
+                showFeedback("allocationFeedback", `✅ Cấp phát thành công chương trình ${program}!`, "correct");
+            }
+
+            function resetMemory() {
+                memoryState = new Array(32).fill(null);
+                selectedCells = [];
+                initMemoryGrid();
+                document.getElementById("allocationFeedback").style.display = "none";
+            }
+
+            // Drag and drop exercise
+            function allowDrop(ev) {
+                ev.preventDefault();
+                ev.target.classList.add("drag-over");
+            }
+
+            function drag(ev) {
+                ev.dataTransfer.setData("text", ev.target.outerHTML);
+                ev.dataTransfer.setData("type", ev.target.getAttribute("data-type"));
+                ev.target.classList.add("dragging");
+            }
+
+            function drop(ev) {
+                ev.preventDefault();
+                ev.target.classList.remove("drag-over");
+
+                const data = ev.dataTransfer.getData("text");
+                const type = ev.dataTransfer.getData("type");
+                const category = ev.target.getAttribute("data-category");
+
+                if (category) {
+                    const tempDiv = document.createElement("div");
+                    tempDiv.innerHTML = data;
+                    const element = tempDiv.firstChild;
+                    ev.target.appendChild(element);
+                }
+            }
+
+            function checkMemoryTypes() {
+                const fastArea = document.querySelector('[data-category="fast"]');
+                const slowArea = document.querySelector('[data-category="slow"]');
+
+                const fastItems = fastArea.querySelectorAll(".memory-type");
+                const slowItems = slowArea.querySelectorAll(".memory-type");
+
+                let correct = 0;
+                let total = 0;
+
+                fastItems.forEach((item) => {
+                    total++;
+                    if (item.getAttribute("data-type") === "fast") correct++;
+                });
+
+                slowItems.forEach((item) => {
+                    total++;
+                    if (item.getAttribute("data-type") === "slow") correct++;
+                });
+
+                if (correct === total && total === 6) {
+                    showFeedback(
+                        "memoryTypeFeedback",
+                        "🎉 Hoàn hảo! Bạn đã phân loại đúng tất cả các loại bộ nhớ!",
+                        "correct"
+                    );
+                } else {
+                    showFeedback(
+                        "memoryTypeFeedback",
+                        `❌ Chưa đúng. Bạn có ${correct}/${total} đáp án đúng. Hãy thử lại!`,
+                        "incorrect"
+                    );
+                }
+            }
+
+            function resetMemoryTypes() {
+                // Move all items back to center
+                const memoryTypes = document.querySelectorAll(".memory-type");
+                const center = document.querySelector(".exercise-section:nth-child(3) > div:nth-child(4)");
+
+                memoryTypes.forEach((item) => {
+                    center.appendChild(item);
+                });
+
+                document.getElementById("memoryTypeFeedback").style.display = "none";
+            }
+
+            // Table highlighting
+            function highlightFastest() {
+                resetHighlight();
+                const rows = document.querySelectorAll(".comparison-table tbody tr");
+                rows[0].style.background = "rgba(76, 175, 80, 0.3)";
+                rows[0].style.border = "2px solid #4CAF50";
+            }
+
+            function highlightSlowest() {
+                resetHighlight();
+                const rows = document.querySelectorAll(".comparison-table tbody tr");
+                rows[4].style.background = "rgba(244, 67, 54, 0.3)";
+                rows[4].style.border = "2px solid #f44336";
+            }
+
+            function resetHighlight() {
+                const rows = document.querySelectorAll(".comparison-table tbody tr");
+                rows.forEach((row) => {
+                    row.style.background = "";
+                    row.style.border = "";
+                });
+            }
+
+            function showFeedback(elementId, message, type) {
+                const feedback = document.getElementById(elementId);
+                feedback.textContent = message;
+                feedback.className = `feedback ${type}`;
+                feedback.style.display = "block";
+            }
+
+            // Initialize when page loads
+            document.addEventListener("DOMContentLoaded", function () {
+                initMemoryGrid();
+            });
+
+            // Remove drag-over effect when leaving
+            document.addEventListener("dragleave", function (e) {
+                if (e.target.classList.contains("drag-area")) {
+                    e.target.classList.remove("drag-over");
+                }
+            });
+
+            document.addEventListener("dragend", function (e) {
+                if (e.target.classList.contains("memory-type")) {
+                    e.target.classList.remove("dragging");
+                }
+            });
+        </script>
+    </body>
+</html>

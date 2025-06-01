@@ -1,3 +1,6 @@
+// Debug: Script loading check
+console.log("custom-video-controls.js script loaded!");
+
 // Custom Video Controls Controller
 class CustomVideoControls {
     constructor() {
@@ -25,20 +28,33 @@ class CustomVideoControls {
         this.lastMouseMoveTime = 0; // For throttling mouse events        this.isSeekPending = false; // For smooth seeking
         this.seekValue = 0; // Current seek position during drag
         this.seekDebounceTimer = null; // For debounced seeking
-        this.lastSeekTime = 0; // Track last seek time for throttling
-
-        // Video chapters system
+        this.lastSeekTime = 0; // Track last seek time for throttling        // Video chapters system
         this.chapters = null;
 
-        // Debug logging
+        // Bookmark system
+        this.bookmarkManager = null; // Debug logging
         console.log("CustomVideoControls elements check:", {
             video: !!this.video,
             controls: !!this.controls,
             progressBar: !!this.progressBar,
             playPauseBtn: !!this.playPauseBtn,
             volumeBtn: !!this.volumeBtn,
-        }); // Initialize synchronously
+            durationSpan: !!this.durationSpan,
+            currentTimeSpan: !!this.currentTimeSpan,
+        });
+
+        // Additional debug for duration element
+        console.log("Duration element details:");
+        console.log("- Found by ID:", document.getElementById("duration"));
+        console.log("- this.durationSpan:", this.durationSpan);
+        if (this.durationSpan) {
+            console.log("- Element tag:", this.durationSpan.tagName);
+            console.log("- Element text:", this.durationSpan.textContent);
+        } // Initialize synchronously
         this.initSync();
+
+        // Test duration functionality immediately
+        setTimeout(() => this.testDurationFunctionality(), 2000);
 
         // Initialize async parts after a brief delay
         setTimeout(() => this.initAsync(), 0);
@@ -49,21 +65,49 @@ class CustomVideoControls {
             console.error("Video element not found! Cannot initialize controls.");
             return;
         }
-
         console.log("Initializing custom video controls...");
         this.setupEventListeners();
         this.updateVolumeIcon();
         this.showControls();
         this.startHideTimer();
-    }
 
+        // Khởi tạo màu sắc volume slider
+        setTimeout(() => {
+            const initialVolume = this.video.volume * 100;
+            this.updateVolumeSliderColor(initialVolume);
+        }, 100);
+    }
     async initAsync() {
         // Initialize video chapters system
         try {
             await this.initializeChapters();
-            console.log("Custom video controls initialized successfully");
+            console.log("Video chapters initialized successfully");
         } catch (error) {
             console.error("Failed to initialize chapters:", error);
+        } // Initialize bookmark system
+        try {
+            await this.initializeBookmarks();
+            console.log("Bookmark system initialized successfully");
+        } catch (error) {
+            console.error("Failed to initialize bookmark system:", error);
+        }
+
+        // Initialize notes system
+        try {
+            await this.initializeNotes();
+            console.log("Notes system initialized successfully");
+        } catch (error) {
+            console.error("Failed to initialize notes system:", error);
+        }
+
+        // Initialize quiz system - wait a bit longer to ensure quiz manager is loaded
+        try {
+            await new Promise((resolve) => setTimeout(resolve, 500)); // Wait 500ms
+            await this.initializeQuizSystem();
+            console.log("Quiz system initialized successfully");
+        } catch (error) {
+            console.error("Failed to initialize quiz system:", error);
+            console.warn("Quiz functionality may not work properly");
         }
     }
     setupEventListeners() {
@@ -71,7 +115,8 @@ class CustomVideoControls {
 
         // Video events
         this.video.addEventListener("loadedmetadata", () => {
-            console.log("Video metadata loaded");
+            console.log("Video metadata loaded - duration:", this.video.duration);
+            console.log("Video readyState:", this.video.readyState);
             this.updateDuration();
         });
         this.video.addEventListener("timeupdate", () => this.updateProgress());
@@ -121,6 +166,19 @@ class CustomVideoControls {
             this.volumeRange.addEventListener("input", (e) => {
                 console.log("Volume changed to:", e.target.value);
                 this.setVolume(e.target.value);
+            });
+
+            // Thêm event listener cho khi user đang kéo để update màu sắc realtime
+            this.volumeRange.addEventListener("mousemove", (e) => {
+                if (e.buttons === 1) {
+                    // Chỉ khi đang nhấn chuột
+                    this.updateVolumeSliderColor(e.target.value);
+                }
+            });
+
+            // Touch events cho mobile
+            this.volumeRange.addEventListener("touchmove", (e) => {
+                this.updateVolumeSliderColor(e.target.value);
             });
         }
 
@@ -300,10 +358,11 @@ class CustomVideoControls {
     }
     handleSingleClick(e) {
         console.log("Video single-clicked - toggling play/pause");
-        this.togglePlayPause();
 
-        // Show visual feedback effect
+        // Show visual feedback effect BEFORE toggle to show correct state
         this.showPlayPauseFeedback();
+
+        this.togglePlayPause();
 
         // Show controls briefly when user clicks
         this.showControls();
@@ -327,7 +386,6 @@ class CustomVideoControls {
             this.video.pause();
         }
     }
-
     showPlayPauseFeedback() {
         // Remove any existing feedback elements
         const existingFeedback = this.video.parentElement.querySelector(".video-action-feedback");
@@ -335,38 +393,34 @@ class CustomVideoControls {
             existingFeedback.remove();
         }
 
-        // Create feedback element
+        // Create simple feedback element
         const feedback = document.createElement("div");
         feedback.className = "video-action-feedback";
 
         // Determine if video will be playing or paused after toggle
         const willPlay = this.video.paused;
 
+        // Create simple icons like YouTube
         if (willPlay) {
-            feedback.classList.add("play-feedback");
             feedback.innerHTML = '<span class="feedback-icon play">▶</span>';
+            console.log("▶ Play feedback");
         } else {
-            feedback.classList.add("pause-feedback");
             feedback.innerHTML = '<span class="feedback-icon pause">⏸</span>';
+            console.log("⏸ Pause feedback");
         }
 
         // Add to video player container
         this.video.parentElement.appendChild(feedback);
 
-        // Trigger show animation
+        // Simple show/hide animation
         requestAnimationFrame(() => {
             feedback.classList.add("show");
-        });
-
-        // Remove feedback after animation
+        }); // Remove after a short time
         setTimeout(() => {
-            feedback.classList.add("animate-out");
-            setTimeout(() => {
-                if (feedback.parentElement) {
-                    feedback.remove();
-                }
-            }, 300);
-        }, 800);
+            if (feedback.parentElement) {
+                feedback.remove();
+            }
+        }, 600);
     }
 
     showDemoMessage() {
@@ -406,10 +460,11 @@ class CustomVideoControls {
         this.video.muted = !this.video.muted;
         this.volumeRange.value = this.video.muted ? 0 : this.video.volume * 100;
     }
-
     updateVolumeIcon() {
         const icon = this.volumeBtn?.querySelector(".icon");
         if (!icon) return;
+
+        const currentVolume = this.video.muted ? 0 : this.video.volume * 100;
 
         if (this.video.muted || this.video.volume === 0) {
             icon.textContent = "🔇";
@@ -418,16 +473,94 @@ class CustomVideoControls {
         } else {
             icon.textContent = "🔊";
         }
-    }
 
+        // Cập nhật màu sắc thanh volume
+        this.updateVolumeSliderColor(currentVolume);
+    }
     setVolume(value) {
         this.video.volume = value / 100;
         this.video.muted = false;
+        this.updateVolumeSliderColor(value);
+    }
+
+    updateVolumeSliderColor(volumePercentage) {
+        const volumeRange = document.getElementById("volume-range");
+        if (volumeRange) {
+            // Cập nhật CSS custom property để thay đổi màu sắc
+            volumeRange.style.setProperty("--volume-percentage", `${volumePercentage}%`);
+
+            // Tạo gradient động dựa trên mức âm lượng với màu sắc trực quan
+            let gradientColor = "#666666"; // Màu mặc định cho âm lượng thấp
+
+            if (volumePercentage > 80) {
+                gradientColor = "#ff0000"; // Đỏ - âm lượng rất cao
+            } else if (volumePercentage > 60) {
+                gradientColor = "#ff4400"; // Cam đỏ - âm lượng cao
+            } else if (volumePercentage > 40) {
+                gradientColor = "#ff8800"; // Cam - âm lượng trung bình cao
+            } else if (volumePercentage > 20) {
+                gradientColor = "#ffbb00"; // Vàng cam - âm lượng trung bình
+            } else if (volumePercentage > 5) {
+                gradientColor = "#44ff44"; // Xanh lá - âm lượng thấp
+            } // Tạo gradient đúng hướng cho slider dọc (xoay 180 độ)
+            // Gradient hiển thị từ dưới lên: màu âm lượng ở dưới, trong suốt ở trên
+            const gradient = `linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.2) 0%, 
+                rgba(255, 255, 255, 0.2) ${volumePercentage}%, 
+                ${gradientColor} ${volumePercentage}%, 
+                ${gradientColor} 100%)`;
+
+            volumeRange.style.background = gradient;
+
+            // Cập nhật màu sắc thumb
+            const thumbColor = volumePercentage > 0 ? gradientColor : "#666666";
+            volumeRange.style.setProperty("--thumb-color", thumbColor);
+        }
+    }
+
+    testDurationFunctionality() {
+        console.log("=== Testing Duration Functionality ===");
+        console.log("Video element:", this.video);
+        console.log("Video src:", this.video?.src);
+        console.log("Video duration:", this.video?.duration);
+        console.log("Video readyState:", this.video?.readyState);
+        console.log("Duration span element:", this.durationSpan);
+
+        if (this.durationSpan) {
+            console.log("Duration span current text:", this.durationSpan.textContent);
+
+            // Try to manually set a test duration
+            this.durationSpan.textContent = "TEST";
+            console.log("Set test text - Duration span now shows:", this.durationSpan.textContent);
+
+            // Reset to original or formatted time
+            if (this.video?.duration) {
+                const formatted = this.formatTime(this.video.duration);
+                console.log("Formatted time:", formatted);
+                this.durationSpan.textContent = formatted;
+            } else {
+                this.durationSpan.textContent = "0:00";
+            }
+        } else {
+            console.error("Duration span element not found!");
+            // Try to find it again
+            const durationEl = document.getElementById("duration");
+            console.log("Direct search for duration element:", durationEl);
+        }
+        console.log("=== End Duration Test ===");
     }
 
     updateDuration() {
+        console.log("updateDuration called - video.duration:", this.video.duration);
+        console.log("durationSpan element:", this.durationSpan);
+
         if (this.durationSpan) {
-            this.durationSpan.textContent = this.formatTime(this.video.duration);
+            const formattedTime = this.formatTime(this.video.duration);
+            console.log("Formatted duration:", formattedTime);
+            this.durationSpan.textContent = formattedTime;
+            console.log("Duration updated successfully");
+        } else {
+            console.warn("durationSpan element not found!");
         }
     }
 
@@ -853,8 +986,8 @@ class CustomVideoControls {
         switch (e.code) {
             case "Space":
                 e.preventDefault();
-                this.togglePlayPause();
                 this.showPlayPauseFeedback();
+                this.togglePlayPause();
                 break;
             case "ArrowLeft":
                 e.preventDefault();
@@ -940,9 +1073,25 @@ class CustomVideoControls {
     pause() {
         this.video.pause();
     }
-
     setSource(src) {
         this.video.src = src;
+    }
+
+    resetControls() {
+        // Reset control states when loading a new video
+        if (this.progressFilled) {
+            this.progressFilled.style.width = "0%";
+        }
+        if (this.progressHandle) {
+            this.progressHandle.style.left = "0%";
+        }
+        if (this.currentTimeSpan) {
+            this.currentTimeSpan.textContent = "0:00";
+        }
+        if (this.durationSpan) {
+            this.durationSpan.textContent = "0:00";
+        }
+        console.log("Video controls reset");
     }
 
     getCurrentTime() {
@@ -978,11 +1127,113 @@ class CustomVideoControls {
             this.chapters.loadChaptersForVideo(videoData.id || videoData.title);
             console.log("Chapters updated for video:", videoData.title);
         }
-    }
-
-    // Get chapters instance for external access
+    } // Get chapters instance for external access
     getChapters() {
         return this.chapters;
+    }
+
+    // Bookmark System Integration
+    async initializeBookmarks() {
+        try {
+            // Dynamic import BookmarkManager
+            const { default: BookmarkManager } = await import("./bookmark-manager.js");
+            this.bookmarkManager = new BookmarkManager();
+            console.log("Bookmark system initialized");
+
+            // Connect bookmark manager with video player
+            this.bookmarkManager.setVideoPlayer({
+                getCurrentVideo: () => this.getCurrentVideoData(),
+                loadVideo: (videoData) => this.loadVideoFromBookmark(videoData),
+            });
+
+            // Listen for video changes to update bookmark status
+            window.addEventListener("video-changed", (event) => {
+                this.handleBookmarkVideoChange(event.detail);
+            });
+        } catch (error) {
+            console.error("Failed to initialize bookmark system:", error);
+        }
+    }
+
+    // Notes System Integration
+    async initializeNotes() {
+        try {
+            // Dynamic import NotesManager
+            const { default: NotesManager } = await import("./notes-manager.js");
+            this.notesManager = new NotesManager();
+            console.log("Notes system initialized");
+
+            // Connect notes manager with video player
+            this.notesManager.setCurrentVideo(this.getCurrentVideoId());
+
+            // Listen for video changes to update notes for current video
+            window.addEventListener("video-changed", (event) => {
+                this.handleNotesVideoChange(event.detail);
+            }); // Set up notes button to toggle notes panel
+            const notesBtn = document.getElementById("notes-btn");
+            if (notesBtn) {
+                // Remove existing listeners to avoid duplicates
+                notesBtn.removeEventListener("click", this.handleNotesButtonClick);
+
+                // Right click to open notes panel
+                notesBtn.addEventListener("contextmenu", (e) => {
+                    e.preventDefault();
+                    this.notesManager.toggleNotesPanel();
+                });
+
+                // Add keyboard shortcut info to tooltip
+                notesBtn.title =
+                    "Thêm ghi chú tại thời điểm này\nChuột phải: Xem danh sách ghi chú\nPhím tắt: Ctrl+N (ghi chú mới), Ctrl+Shift+N (panel)";
+            }
+        } catch (error) {
+            console.error("Failed to initialize notes system:", error);
+        }
+    }
+    getCurrentVideoData() {
+        // Get current video data from the video player controller
+        if (window.videoPlayer?.currentVideo) {
+            return window.videoPlayer.currentVideo;
+        }
+        return null;
+    }
+
+    getCurrentVideoId() {
+        const videoData = this.getCurrentVideoData();
+        return videoData ? videoData.id || videoData.title || "default" : "default";
+    }
+
+    handleNotesVideoChange(videoData) {
+        if (this.notesManager && videoData) {
+            // Update notes system for the new video
+            const videoId = videoData.id || videoData.title || "default";
+            this.notesManager.setCurrentVideo(videoId);
+            console.log("Notes system updated for video:", videoData.title);
+        }
+    }
+
+    // Get notes manager instance for external access
+    getNotesManager() {
+        return this.notesManager;
+    }
+
+    loadVideoFromBookmark(videoData) {
+        // Load video through the video player controller
+        if (window.videoPlayer) {
+            window.videoPlayer.loadVideo(videoData.id || videoData.title, videoData.playlist || "cpu");
+        }
+    }
+
+    handleBookmarkVideoChange(videoData) {
+        if (this.bookmarkManager && videoData) {
+            // Update bookmark button state for the new video
+            this.bookmarkManager.updateBookmarkButtonState();
+            console.log("Bookmark status updated for video:", videoData.title);
+        }
+    }
+
+    // Get bookmark manager instance for external access
+    getBookmarkManager() {
+        return this.bookmarkManager;
     }
 
     // Progress Bar Hover Preview Methods
@@ -1109,6 +1360,71 @@ class CustomVideoControls {
             }
         }, 1500);
     }
+    /**
+     * Initialize quiz system integration
+     */
+    async initializeQuizSystem() {
+        return new Promise((resolve, reject) => {
+            let attempts = 0;
+            const maxAttempts = 50; // Wait up to 5 seconds (50 * 100ms)
+
+            // Wait for quiz manager to be available
+            const checkQuizManager = () => {
+                attempts++;
+
+                if (window.quizManager) {
+                    console.log("Quiz Manager instance found, setting up integration...");
+                    this.setupQuizIntegration();
+                    resolve();
+                } else if (window.QuizManager) {
+                    // If class is available but instance is not, create one
+                    console.log("Quiz Manager class found, creating instance...");
+                    try {
+                        window.quizManager = new window.QuizManager();
+                        console.log("Quiz Manager instance created successfully");
+                        this.setupQuizIntegration();
+                        resolve();
+                    } catch (error) {
+                        console.error("Failed to create Quiz Manager instance:", error);
+                        reject(error);
+                    }
+                } else if (attempts >= maxAttempts) {
+                    console.warn("Quiz Manager not found after maximum attempts, quiz integration may not work");
+                    reject(new Error("Quiz Manager initialization timeout"));
+                } else {
+                    // Retry after a short delay
+                    setTimeout(checkQuizManager, 100);
+                }
+            };
+
+            checkQuizManager();
+        });
+    }
+
+    setupQuizIntegration() {
+        // Setup quiz button if it exists
+        const quizBtn = document.getElementById("quiz-btn");
+        if (quizBtn) {
+            console.log("Quiz button found and ready");
+
+            // Verify quiz manager has proper methods
+            if (typeof window.quizManager.togglePanel === "function") {
+                console.log("Quiz Manager properly initialized with togglePanel method");
+            } else {
+                console.warn("Quiz Manager exists but togglePanel method not found");
+            }
+
+            // Add additional event listeners if needed
+            quizBtn.addEventListener("contextmenu", (e) => {
+                e.preventDefault();
+                if (window.quizManager?.togglePanel) {
+                    window.quizManager.togglePanel();
+                }
+            });
+        } else {
+            console.warn("Quiz button not found in DOM");
+        }
+    }
 }
 
 // Initialize custom video controls when DOM is loaded
@@ -1120,4 +1436,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
 });
 
-export default CustomVideoControls;
+// Export for global use
+window.CustomVideoControls = CustomVideoControls;

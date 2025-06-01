@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bài Tập Trắc Nghiệm - Bộ Vi Xử Lý</title>
+        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="stylesheet" href="styles/quiz.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <!-- Loading Screen -->
+        <div id="loading-screen">
+            <div class="loading-content">
+                <div class="loading-logo-container">
+                    <div class="circular-progress">
+                        <svg class="progress-ring" width="200" height="200" viewBox="0 0 200 200">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #4caf50; stop-opacity: 1" />
+                                    <stop offset="50%" style="stop-color: #64b5f6; stop-opacity: 1" />
+                                    <stop offset="100%" style="stop-color: #9c27b0; stop-opacity: 1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-background" cx="100" cy="100" r="90" />
+                            <circle class="progress-ring-circle" cx="100" cy="100" r="90" />
+                        </svg>
+                        <div class="loading-percentage">0%</div>
+                    </div>
+                    <div class="school-logo-loading">
+                        <img id="loading-logo" src="images/TCDKTTT.png" alt="Logo Trường" />
+                        <div class="logo-placeholder">
+                            <div class="placeholder-icon">🎓</div>
+                            <div class="placeholder-text">LOGO</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-text">Đang tải bài tập trắc nghiệm...</div>
+                <div class="loading-subtitle">Lý thuyết - Tư duy - Hình ảnh</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content-section" class="content-container">
+            <nav class="content-nav">
+                <button id="back-to-home" class="nav-btn">◀ Về trang chủ</button>
+                <h2>Bài tập trắc nghiệm</h2>
+            </nav>
+
+            <!-- Quiz Learning Container -->
+            <div class="quiz-learning-container">
+                <!-- Header Section -->
+                <div class="quiz-main-header">
+                    <div class="quiz-header-content">
+                        <div class="quiz-title-section">
+                            <div class="quiz-icon-large">📝</div>
+                            <div class="quiz-title-text">
+                                <h1>Bài tập trắc nghiệm</h1>
+                                <p>Kiểm tra và củng cố kiến thức về CPU, RAM, ROM</p>
+                            </div>
+                        </div>
+                        <div class="quiz-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">24</span>
+                                <span class="stat-label">Bài tập</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">3</span>
+                                <span class="stat-label">Loại</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">0%</span>
+                                <span class="stat-label">Hoàn thành</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Topic Selection -->
+                <div class="quiz-topic-nav">
+                    <div class="quiz-topic-header">
+                        <h3>📚 Chọn chủ đề</h3>
+                    </div>
+                    <div class="quiz-topic-buttons">
+                        <button class="quiz-topic-btn active" data-topic="cpu">
+                            <div class="topic-btn-content">
+                                <span class="topic-icon">🔥</span>
+                                <div class="topic-info">
+                                    <span class="topic-name">CPU - Bộ Vi Xử Lý</span>
+                                    <span class="topic-desc">Kiến trúc và hoạt động</span>
+                                </div>
+                                <span class="topic-count">12 bài</span>
+                            </div>
+                        </button>
+                        <button class="quiz-topic-btn" data-topic="ram">
+                            <div class="topic-btn-content">
+                                <span class="topic-icon">⚡</span>
+                                <div class="topic-info">
+                                    <span class="topic-name">RAM - Bộ Nhớ</span>
+                                    <span class="topic-desc">Lưu trữ và truy cập</span>
+                                </div>
+                                <span class="topic-count">8 bài</span>
+                            </div>
+                        </button>
+                        <button class="quiz-topic-btn" data-topic="rom">
+                            <div class="topic-btn-content">
+                                <span class="topic-icon">💾</span>
+                                <div class="topic-info">
+                                    <span class="topic-name">ROM - Bộ Nhớ Chỉ Đọc</span>
+                                    <span class="topic-desc">Firmware và BIOS</span>
+                                </div>
+                                <span class="topic-count">4 bài</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Content Container -->
+                <div class="quiz-content-container">
+                    <!-- Exercise Types Grid -->
+                    <div class="exercise-types-section">
+                        <div class="exercise-types-header">
+                            <h3>📝 Loại bài tập</h3>
+                            <div class="exercise-filter">
+                                <button class="filter-btn active" data-filter="theory">Lý thuyết</button>
+                                <button class="filter-btn" data-filter="thinking">Tư duy</button>
+                                <button class="filter-btn" data-filter="visual">Hình ảnh</button>
+                            </div>
+                        </div>
+
+                        <div class="exercise-grid-large">
+                            <!-- Theory Exercises -->
+                            <div class="exercise-category" data-category="theory">
+                                <div class="category-header">
+                                    <div class="category-icon">📚</div>
+                                    <div class="category-info">
+                                        <h4>Lý thuyết</h4>
+                                        <p>Kiểm tra kiến thức cơ bản và khái niệm</p>
+                                    </div>
+                                </div>
+                                <div class="exercise-list" id="theory-exercises">
+                                    <!-- Theory exercises will be populated dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Thinking Exercises -->
+                            <div class="exercise-category" data-category="thinking">
+                                <div class="category-header">
+                                    <div class="category-icon">🧠</div>
+                                    <div class="category-info">
+                                        <h4>Tư duy</h4>
+                                        <p>Phân tích, suy luận và ứng dụng</p>
+                                    </div>
+                                </div>
+                                <div class="exercise-list" id="thinking-exercises">
+                                    <!-- Thinking exercises will be populated dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Visual Exercises -->
+                            <div class="exercise-category" data-category="visual">
+                                <div class="category-header">
+                                    <div class="category-icon">👁️</div>
+                                    <div class="category-info">
+                                        <h4>Hình ảnh</h4>
+                                        <p>Nhận dạng, phân biệt và so sánh</p>
+                                    </div>
+                                </div>
+                                <div class="exercise-list" id="visual-exercises">
+                                    <!-- Visual exercises will be populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Overview -->
+                    <div class="progress-overview">
+                        <div class="progress-header">
+                            <h3>📊 Tiến độ học tập</h3>
+                        </div>
+                        <div class="progress-cards">
+                            <div class="progress-card">
+                                <div class="progress-card-header">
+                                    <span class="progress-icon">📚</span>
+                                    <span class="progress-title">Lý thuyết</span>
+                                </div>
+                                <div class="progress-stats">
+                                    <div class="progress-circle">
+                                        <svg class="progress-ring-small" viewBox="0 0 36 36">
+                                            <path
+                                                class="circle-bg"
+                                                d="M18 2.0845
+                                                a 15.9155 15.9155 0 0 1 0 31.831
+                                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <path
+                                                class="circle"
+                                                stroke-dasharray="0, 100"
+                                                d="M18 2.0845
+                                                a 15.9155 15.9155 0 0 1 0 31.831
+                                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <text x="18" y="20.35" class="percentage">0%</text>
+                                        </svg>
+                                    </div>
+                                    <div class="progress-text">
+                                        <span class="completed">0</span>/<span class="total">10</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="progress-card">
+                                <div class="progress-card-header">
+                                    <span class="progress-icon">🧠</span>
+                                    <span class="progress-title">Tư duy</span>
+                                </div>
+                                <div class="progress-stats">
+                                    <div class="progress-circle">
+                                        <svg class="progress-ring-small" viewBox="0 0 36 36">
+                                            <path
+                                                class="circle-bg"
+                                                d="M18 2.0845
+                                                a 15.9155 15.9155 0 0 1 0 31.831
+                                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <path
+                                                class="circle"
+                                                stroke-dasharray="0, 100"
+                                                d="M18 2.0845
+                                                a 15.9155 15.9155 0 0 1 0 31.831
+                                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <text x="18" y="20.35" class="percentage">0%</text>
+                                        </svg>
+                                    </div>
+                                    <div class="progress-text">
+                                        <span class="completed">0</span>/<span class="total">8</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="progress-card">
+                                <div class="progress-card-header">
+                                    <span class="progress-icon">👁️</span>
+                                    <span class="progress-title">Hình ảnh</span>
+                                </div>
+                                <div class="progress-stats">
+                                    <div class="progress-circle">
+                                        <svg class="progress-ring-small" viewBox="0 0 36 36">
+                                            <path
+                                                class="circle-bg"
+                                                d="M18 2.0845
+                                                a 15.9155 15.9155 0 0 1 0 31.831
+                                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <path
+                                                class="circle"
+                                                stroke-dasharray="0, 100"
+                                                d="M18 2.0845
+                                                a 15.9155 15.9155 0 0 1 0 31.831
+                                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <text x="18" y="20.35" class="percentage">0%</text>
+                                        </svg>
+                                    </div>
+                                    <div class="progress-text">
+                                        <span class="completed">0</span>/<span class="total">6</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Modal (reuse the existing modal structure) -->
+        <div class="quiz-panel" id="quiz-panel" style="display: none">
+            <div class="quiz-header">
+                <div class="quiz-title">
+                    <span class="quiz-icon">📝</span>
+                    <span class="quiz-text">Bài tập trắc nghiệm</span>
+                </div>
+                <button class="quiz-close" id="quiz-close" title="Đóng">
+                    <span class="close-icon">✕</span>
+                </button>
+            </div>
+            <div class="quiz-tabs">
+                <button class="quiz-tab active" data-tab="theory">
+                    <span class="tab-icon">📚</span>
+                    <span class="tab-text">Lý thuyết</span>
+                </button>
+                <button class="quiz-tab" data-tab="thinking">
+                    <span class="tab-icon">🧠</span>
+                    <span class="tab-text">Tư duy</span>
+                </button>
+                <button class="quiz-tab" data-tab="visual">
+                    <span class="tab-icon">👁️</span>
+                    <span class="tab-text">Hình ảnh</span>
+                </button>
+            </div>
+            <div class="quiz-content">
+                <div class="quiz-tab-content active" id="theory-content">
+                    <div class="quiz-loading" id="theory-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Đang tải bài tập lý thuyết...</p>
+                    </div>
+                    <iframe
+                        id="theory-iframe"
+                        class="quiz-iframe"
+                        style="display: none"
+                        title="Bài tập lý thuyết"
+                    ></iframe>
+                </div>
+                <div class="quiz-tab-content" id="thinking-content">
+                    <div class="quiz-loading" id="thinking-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Đang tải bài tập tư duy...</p>
+                    </div>
+                    <iframe
+                        id="thinking-iframe"
+                        class="quiz-iframe"
+                        style="display: none"
+                        title="Bài tập tư duy"
+                    ></iframe>
+                </div>
+                <div class="quiz-tab-content" id="visual-content">
+                    <div class="quiz-loading" id="visual-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Đang tải bài tập hình ảnh...</p>
+                    </div>
+                    <iframe
+                        id="visual-iframe"
+                        class="quiz-iframe"
+                        style="display: none"
+                        title="Bài tập hình ảnh"
+                    ></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="scripts/quiz-manager.js"></script>
+        <script src="scripts/quiz-page.js"></script>
+        <script>
+            // Loading screen functionality
+            window.addEventListener("load", function () {
+                const loadingScreen = document.getElementById("loading-screen");
+                const progressRing = document.querySelector(".progress-ring-circle");
+                const loadingPercentage = document.querySelector(".loading-percentage");
+
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 15 + 5;
+                    if (progress > 100) progress = 100;
+
+                    if (progressRing) {
+                        const circumference = 2 * Math.PI * 90;
+                        const offset = circumference - (progress / 100) * circumference;
+                        progressRing.style.strokeDashoffset = offset;
+                    }
+
+                    if (loadingPercentage) {
+                        loadingPercentage.textContent = Math.round(progress) + "%";
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        setTimeout(() => {
+                            loadingScreen.style.opacity = "0";
+                            setTimeout(() => {
+                                loadingScreen.style.display = "none";
+                            }, 500);
+                        }, 500);
+                    }
+                }, 100);
+            });
+
+            // Back to home button
+            document.getElementById("back-to-home").addEventListener("click", function () {
+                window.location.href = "index.html";
+            });
+        </script>
+    </body>
+</html>

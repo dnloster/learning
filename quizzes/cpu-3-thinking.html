@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tư duy - CPU nâng cao</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                min-height: 100vh;
+            }
+            .quiz-container {
+                max-width: 900px;
+                margin: 0 auto;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                padding: 30px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 2.2em;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .scenario {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 25px;
+                border-radius: 10px;
+                margin-bottom: 25px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+            }
+            .scenario h3 {
+                color: #ffd700;
+                margin-bottom: 15px;
+                font-size: 1.3em;
+            }
+            .scenario-content {
+                background: rgba(33, 150, 243, 0.2);
+                padding: 20px;
+                border-radius: 8px;
+                margin: 15px 0;
+                border: 2px solid #2196f3;
+                line-height: 1.6;
+            }
+            .question-input {
+                width: 100%;
+                min-height: 100px;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                color: white;
+                font-size: 1em;
+                resize: vertical;
+                margin: 10px 0;
+            }
+            .question-input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            .submit-btn {
+                background: linear-gradient(45deg, #4caf50, #45a049);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 1em;
+                font-weight: bold;
+                margin: 10px 5px;
+                transition: all 0.3s ease;
+            }
+            .submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            }
+            .feedback {
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+                display: none;
+            }
+            .feedback.show {
+                display: block;
+            }
+            .feedback.good {
+                background: rgba(76, 175, 80, 0.2);
+                border: 2px solid #4caf50;
+                color: #81c784;
+            }
+            .feedback.needs-improvement {
+                background: rgba(255, 193, 7, 0.2);
+                border: 2px solid #ffc107;
+                color: #ffd54f;
+            }
+            .analysis-points {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 20px;
+                border-radius: 8px;
+                margin: 15px 0;
+            }
+            .analysis-points h4 {
+                color: #ffd700;
+                margin-bottom: 10px;
+            }
+            .analysis-points ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            .analysis-points li {
+                padding: 8px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .analysis-points li:before {
+                content: "🔍 ";
+                margin-right: 8px;
+            }
+            .info-box {
+                background: rgba(33, 150, 243, 0.2);
+                border: 2px solid #2196f3;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 15px 0;
+                color: #e3f2fd;
+            }
+            .benchmark-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .benchmark-table th,
+            .benchmark-table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .benchmark-table th {
+                background: rgba(255, 255, 255, 0.2);
+                font-weight: bold;
+                color: #ffd700;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <h1>🧠 Tư duy - CPU nâng cao</h1>
+
+            <div class="info-box">
+                <strong>Mục tiêu:</strong> Phân tích và đánh giá hiệu suất CPU trong các tình huống thực tế<br />
+                <strong>Kỹ năng:</strong> Tư duy phản biện, phân tích hiệu suất, so sánh kiến trúc
+            </div>
+
+            <div class="scenario">
+                <h3>🎯 Tình huống 1: So sánh hiệu suất CPU</h3>
+                <div class="scenario-content">
+                    <p>
+                        <strong>Bối cảnh:</strong> Bạn là kỹ sư phần cứng cần lựa chọn CPU cho hai ứng dụng khác nhau:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Ứng dụng A:</strong> Xử lý video 4K realtime (cần nhiều lõi, tính toán song song)
+                        </li>
+                        <li><strong>Ứng dụng B:</strong> Game đơn luồng (cần tần số cao, hiệu suất lõi đơn)</li>
+                    </ul>
+
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>CPU</th>
+                                <th>Lõi/Luồng</th>
+                                <th>Tần số base/boost</th>
+                                <th>Cache L3</th>
+                                <th>Giá</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CPU X</td>
+                                <td>8/16</td>
+                                <td>3.2/4.5 GHz</td>
+                                <td>32MB</td>
+                                <td>$300</td>
+                            </tr>
+                            <tr>
+                                <td>CPU Y</td>
+                                <td>6/12</td>
+                                <td>3.8/5.0 GHz</td>
+                                <td>20MB</td>
+                                <td>$280</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>
+                    <strong>Câu hỏi:</strong> Phân tích và đưa ra lựa chọn CPU phù hợp cho từng ứng dụng. Giải thích lý
+                    do.
+                </p>
+                <textarea
+                    class="question-input"
+                    id="answer1"
+                    placeholder="Nhập phân tích của bạn ở đây...
+
+Gợi ý: Xem xét các yếu tố:
+- Số lõi/luồng và khả năng xử lý song song
+- Tần số xung nhịp và hiệu suất đơn luồng  
+- Cache và khả năng truy cập dữ liệu
+- Tỷ lệ giá/hiệu suất"
+                ></textarea>
+
+                <button class="submit-btn" onclick="analyzeAnswer(1)">Phân tích đáp án</button>
+                <div id="feedback1" class="feedback"></div>
+            </div>
+
+            <div class="scenario">
+                <h3>🔧 Tình huống 2: Tối ưu hiệu suất pipeline</h3>
+                <div class="scenario-content">
+                    <p>
+                        <strong>Vấn đề:</strong> CPU có pipeline 5 giai đoạn đang gặp vấn đề hiệu suất do branch
+                        misprediction.
+                    </p>
+                    <ul>
+                        <li>Branch prediction accuracy: 85%</li>
+                        <li>Pipeline penalty khi misprediction: 10 cycles</li>
+                        <li>Tần suất lệnh branch: 20% tổng số lệnh</li>
+                        <li>Thông lượng lý tưởng: 1 lệnh/cycle</li>
+                    </ul>
+                </div>
+
+                <p><strong>Câu hỏi:</strong> Tính toán hiệu suất thực tế và đề xuất giải pháp cải thiện.</p>
+                <textarea
+                    class="question-input"
+                    id="answer2"
+                    placeholder="Nhập tính toán và đề xuất của bạn ở đây...
+
+Gợi ý: 
+- Tính penalty cycles do misprediction
+- Đánh giá impact lên hiệu suất tổng thể
+- Đề xuất cải thiện branch predictor
+- Xem xét các kỹ thuật như speculative execution"
+                ></textarea>
+
+                <button class="submit-btn" onclick="analyzeAnswer(2)">Phân tích đáp án</button>
+                <div id="feedback2" class="feedback"></div>
+            </div>
+
+            <div class="scenario">
+                <h3>⚡ Tình huống 3: Cache hierarchy optimization</h3>
+                <div class="scenario-content">
+                    <p><strong>Thách thức:</strong> Thiết kế cache hierarchy cho CPU mới với các ràng buộc:</p>
+                    <ul>
+                        <li>Tổng diện tích silicon: 100mm²</li>
+                        <li>L1 cache: 0.1mm²/KB, access time: 1 cycle</li>
+                        <li>L2 cache: 0.05mm²/KB, access time: 8 cycles</li>
+                        <li>L3 cache: 0.02mm²/KB, access time: 25 cycles</li>
+                        <li>RAM access: 200 cycles</li>
+                    </ul>
+                </div>
+
+                <p><strong>Câu hỏi:</strong> Thiết kế cache hierarchy tối ưu và giải thích quyết định.</p>
+                <textarea
+                    class="question-input"
+                    id="answer3"
+                    placeholder="Nhập thiết kế của bạn ở đây...
+
+Gợi ý:
+- Cân bằng dung lượng vs access time
+- Xem xét hit rate và miss penalty
+- Tính toán average access time
+- Đề xuất cấu hình L1/L2/L3"
+                ></textarea>
+
+                <button class="submit-btn" onclick="analyzeAnswer(3)">Phân tích đáp án</button>
+                <div id="feedback3" class="feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px">
+                <button class="submit-btn" onclick="showAllAnalysis()">Xem tất cả phân tích</button>
+                <button class="submit-btn" onclick="resetAllAnswers()">Làm lại</button>
+            </div>
+        </div>
+
+        <script>
+            const analysisPoints = {
+                1: {
+                    title: "Phân tích lựa chọn CPU",
+                    points: [
+                        "Ứng dụng A (Video 4K): Chọn CPU X do có nhiều lõi hơn (8 vs 6), hỗ trợ song song tốt hơn",
+                        "Ứng dụng B (Gaming): Chọn CPU Y do tần số cao hơn (5.0 vs 4.5 GHz), hiệu suất đơn luồng tốt hơn",
+                        "CPU X phù hợp workload đa luồng với 16 luồng xử lý",
+                        "CPU Y có IPC cao hơn nhờ tần số boost cao, tốt cho game",
+                        "Xem xét giá: CPU Y rẻ hơn 20$ nhưng hiệu suất gaming cao hơn",
+                        "Cache L3 lớn hơn của CPU X hỗ trợ tốt cho xử lý video",
+                    ],
+                    keywords: ["song song", "đa luồng", "tần số", "gaming", "video", "cache", "hiệu suất"],
+                },
+                2: {
+                    title: "Tính toán và tối ưu pipeline",
+                    points: [
+                        "Misprediction rate: 15% của 20% branch = 3% tổng lệnh",
+                        "Penalty cycles: 3% × 10 cycles = 0.3 cycles/lệnh trung bình",
+                        "Hiệu suất thực tế: ~77% so với lý tưởng (1/(1+0.3))",
+                        "Đề xuất: Cải thiện branch predictor lên 95% accuracy",
+                        "Kỹ thuật: Two-level adaptive predictor, neural predictor",
+                        "Speculative execution để giảm penalty",
+                        "Branch target buffer để dự đoán địa chỉ đích",
+                    ],
+                    keywords: ["misprediction", "penalty", "cycles", "predictor", "speculative", "buffer", "accuracy"],
+                },
+                3: {
+                    title: "Thiết kế cache hierarchy",
+                    points: [
+                        "L1: 32KB (3.2mm²), access 1 cycle - cần nhanh cho CPU pipeline",
+                        "L2: 512KB (25.6mm²), access 8 cycles - cân bằng tốc độ/dung lượng",
+                        "L3: 8MB (160mm²), access 25 cycles - catch miss từ L2",
+                        "Tổng diện tích: ~89mm², còn dư cho logic khác",
+                        "Average access time tối ưu với hit rate cao",
+                        "Inclusive hierarchy để đơn giản hóa coherence",
+                        "Write-back policy để giảm băng thông",
+                    ],
+                    keywords: [
+                        "hierarchy",
+                        "hit rate",
+                        "access time",
+                        "diện tích",
+                        "inclusive",
+                        "write-back",
+                        "coherence",
+                    ],
+                },
+            };
+
+            function analyzeAnswer(questionNum) {
+                const answer = document.getElementById(`answer${questionNum}`).value.trim();
+                const feedback = document.getElementById(`feedback${questionNum}`);
+
+                if (answer.length < 50) {
+                    feedback.textContent = "⚠️ Đáp án quá ngắn. Hãy phân tích chi tiết hơn (ít nhất 50 ký tự).";
+                    feedback.className = "feedback needs-improvement show";
+                    return;
+                }
+
+                const analysis = analysisPoints[questionNum];
+                const keywords = analysis.keywords;
+                let keywordCount = 0;
+
+                // Count keywords mentioned
+                keywords.forEach((keyword) => {
+                    if (answer.toLowerCase().includes(keyword.toLowerCase())) {
+                        keywordCount++;
+                    }
+                });
+
+                const score = keywordCount / keywords.length;
+
+                feedback.innerHTML = `
+                <h4>${analysis.title}</h4>
+                <p><strong>Độ bao phủ từ khóa:</strong> ${keywordCount}/${keywords.length} (${Math.round(
+                    score * 100
+                )}%)</p>
+                <div class="analysis-points">
+                    <h4>🔍 Các điểm cần phân tích:</h4>
+                    <ul>
+                        ${analysis.points.map((point) => `<li>${point}</li>`).join("")}
+                    </ul>
+                </div>
+                <p><strong>💡 Nhận xét:</strong> ${getScoreFeedback(score)}</p>
+            `;
+
+                feedback.className = `feedback ${score >= 0.6 ? "good" : "needs-improvement"} show`;
+            }
+
+            function getScoreFeedback(score) {
+                if (score >= 0.8) {
+                    return "Xuất sắc! Bạn đã phân tích toàn diện và sâu sắc.";
+                } else if (score >= 0.6) {
+                    return "Tốt! Đã nắm được các khái niệm chính, có thể bổ sung thêm chi tiết.";
+                } else if (score >= 0.4) {
+                    return "Khá! Cần phân tích sâu hơn và xem xét thêm các yếu tố.";
+                } else {
+                    return "Cần cải thiện! Hãy đọc kỹ đề bài và phân tích từng yếu tố.";
+                }
+            }
+
+            function showAllAnalysis() {
+                [1, 2, 3].forEach((num) => {
+                    const feedback = document.getElementById(`feedback${num}`);
+                    const analysis = analysisPoints[num];
+
+                    feedback.innerHTML = `
+                    <h4>${analysis.title}</h4>
+                    <div class="analysis-points">
+                        <h4>🎯 Phân tích mẫu:</h4>
+                        <ul>
+                            ${analysis.points.map((point) => `<li>${point}</li>`).join("")}
+                        </ul>
+                    </div>
+                `;
+                    feedback.className = "feedback good show";
+                });
+            }
+
+            function resetAllAnswers() {
+                [1, 2, 3].forEach((num) => {
+                    document.getElementById(`answer${num}`).value = "";
+                    document.getElementById(`feedback${num}`).className = "feedback";
+                    document.getElementById(`feedback${num}`).innerHTML = "";
+                });
+            }
+
+            // Auto-save answers
+            document.querySelectorAll(".question-input").forEach((input) => {
+                input.addEventListener("input", function () {
+                    localStorage.setItem(this.id, this.value);
+                });
+
+                // Restore saved answer
+                const saved = localStorage.getItem(input.id);
+                if (saved) {
+                    input.value = saved;
+                }
+            });
+        </script>
+    </body>
+</html>

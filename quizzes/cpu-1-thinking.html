@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bài tập tư duy - CPU Logic</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+                min-height: 100vh;
+                color: #333;
+            }
+            .quiz-container {
+                max-width: 900px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            }
+            .quiz-header {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #f0f0f0;
+                padding-bottom: 20px;
+            }
+            .quiz-title {
+                color: #e91e63;
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+            .scenario {
+                background: #fff3e0;
+                border-left: 4px solid #ff9800;
+                padding: 20px;
+                margin-bottom: 25px;
+                border-radius: 8px;
+            }
+            .scenario-title {
+                font-weight: 600;
+                color: #f57c00;
+                margin-bottom: 10px;
+            }
+            .question {
+                margin-bottom: 25px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                border-left: 4px solid #e91e63;
+            }
+            .question-title {
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: #2c3e50;
+            }
+            .thinking-box {
+                background: #e8f5e8;
+                border: 2px dashed #4caf50;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 8px;
+            }
+            .thinking-prompt {
+                color: #2e7d32;
+                font-style: italic;
+                margin-bottom: 10px;
+            }
+            .answer-area {
+                width: 100%;
+                min-height: 80px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-family: inherit;
+                resize: vertical;
+            }
+            .submit-btn {
+                background: #e91e63;
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                font-size: 1rem;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                width: 100%;
+                margin-top: 20px;
+            }
+            .submit-btn:hover {
+                background: #c2185b;
+            }
+            .feedback {
+                margin-top: 20px;
+                padding: 15px;
+                border-radius: 8px;
+                background: #e3f2fd;
+                border: 1px solid #2196f3;
+                display: none;
+            }
+            .step {
+                margin: 10px 0;
+                padding: 10px;
+                background: #f5f5f5;
+                border-radius: 5px;
+                border-left: 3px solid #9c27b0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1 class="quiz-title">🧠 Bài tập tư duy</h1>
+                <p class="quiz-subtitle">CPU - Phân tích và giải quyết vấn đề</p>
+            </div>
+
+            <div class="scenario">
+                <div class="scenario-title">🎯 Tình huống thực tế:</div>
+                <p>
+                    Bạn là một kỹ sư phần cứng và được yêu cầu thiết kế một hệ thống máy tính cho một trường học. Trường
+                    có 3 phòng máy với các nhu cầu khác nhau:
+                </p>
+                <ul>
+                    <li><strong>Phòng 1:</strong> Học lập trình cơ bản (30 máy)</li>
+                    <li><strong>Phòng 2:</strong> Thiết kế đồ họa (15 máy)</li>
+                    <li><strong>Phòng 3:</strong> Lưu trữ và quản lý dữ liệu (5 server)</li>
+                </ul>
+            </div>
+
+            <form id="thinking-form">
+                <div class="question">
+                    <div class="question-title">Câu 1: Phân tích yêu cầu CPU cho từng phòng</div>
+
+                    <div class="thinking-box">
+                        <div class="thinking-prompt">💭 Hãy suy nghĩ về:</div>
+                        <p>
+                            - Loại công việc nào cần CPU mạnh nhất?<br />
+                            - Tại sao thiết kế đồ họa cần CPU khác với lập trình cơ bản?<br />
+                            - Server cần những đặc điểm CPU gì đặc biệt?
+                        </p>
+                    </div>
+
+                    <div class="step">
+                        <strong>Bước 1:</strong> Phân tích nhu cầu từng phòng
+                        <textarea
+                            class="answer-area"
+                            name="analysis"
+                            placeholder="Viết phân tích của bạn về nhu cầu CPU cho từng phòng..."
+                        ></textarea>
+                    </div>
+
+                    <div class="step">
+                        <strong>Bước 2:</strong> Đề xuất cấu hình CPU cụ thể
+                        <textarea
+                            class="answer-area"
+                            name="config"
+                            placeholder="Đề xuất cấu hình CPU cho từng phòng (số core, clock speed, cache...)"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">Câu 2: Tối ưu hóa hiệu suất và chi phí</div>
+
+                    <div class="thinking-box">
+                        <div class="thinking-prompt">💭 Cân nhắc:</div>
+                        <p>
+                            - Làm thế nào để cân bằng giữa hiệu suất và chi phí?<br />
+                            - Có thể dùng chung cấu hình nào không?<br />
+                            - Yếu tố nào quan trọng nhất với ngân sách hạn chế?
+                        </p>
+                    </div>
+
+                    <div class="step">
+                        <strong>Giải pháp tối ưu:</strong>
+                        <textarea
+                            class="answer-area"
+                            name="optimization"
+                            placeholder="Đưa ra giải pháp tối ưu về CPU cho cả 3 phòng với ngân sách hạn chế..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">Câu 3: Dự đoán xu hướng tương lai</div>
+
+                    <div class="thinking-box">
+                        <div class="thinking-prompt">💭 Nghĩ về tương lai:</div>
+                        <p>
+                            - Công nghệ CPU sẽ phát triển như thế nào trong 5 năm tới?<br />
+                            - AI và machine learning sẽ ảnh hưởng gì đến thiết kế CPU?<br />
+                            - Làm sao để hệ thống không bị lỗi thời nhanh?
+                        </p>
+                    </div>
+
+                    <div class="step">
+                        <strong>Dự đoán và đề xuất:</strong>
+                        <textarea
+                            class="answer-area"
+                            name="future"
+                            placeholder="Phân tích xu hướng CPU tương lai và cách chuẩn bị cho nó..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Nộp bài tư duy</button>
+            </form>
+
+            <div id="feedback" class="feedback">
+                <h3>💡 Phản hồi và gợi ý:</h3>
+                <div id="feedback-content"></div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("thinking-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const feedbackDiv = document.getElementById("feedback");
+                const feedbackContent = document.getElementById("feedback-content");
+
+                feedbackContent.innerHTML = `
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <h4>🎯 Điểm mạnh trong tư duy:</h4>
+                    <ul>
+                        <li>Phân tích đa chiều về nhu cầu phần cứng</li>
+                        <li>Cân nhắc yếu tố chi phí và hiệu suất</li>
+                        <li>Tư duy về tương lai và tính bền vững</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <h4>📚 Các khái niệm cần nhớ:</h4>
+                    <ul>
+                        <li><strong>Multi-core:</strong> Nhiều core giúp xử lý song song tốt hơn</li>
+                        <li><strong>Clock Speed:</strong> Tốc độ xử lý của từng core</li>
+                        <li><strong>Cache:</strong> Bộ nhớ đệm giúp tăng tốc truy xuất dữ liệu</li>
+                        <li><strong>TDP:</strong> Công suất tiêu thụ và tản nhiệt</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <h4>🚀 Gợi ý cải thiện:</h4>
+                    <ul>
+                        <li>Nghiên cứu thêm về kiến trúc CPU hiện đại</li>
+                        <li>Tìm hiểu về CPU chuyên dụng cho AI/ML</li>
+                        <li>So sánh các nhà sản xuất: Intel, AMD, ARM</li>
+                    </ul>
+                </div>
+            `;
+
+                feedbackDiv.style.display = "block";
+                feedbackDiv.scrollIntoView({ behavior: "smooth" });
+            });
+        </script>
+    </body>
+</html>

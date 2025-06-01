@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bài tập lý thuyết - CPU Cơ bản</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                color: #333;
+            }
+            .quiz-container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            }
+            .quiz-header {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #f0f0f0;
+                padding-bottom: 20px;
+            }
+            .quiz-title {
+                color: #3f51b5;
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+            .quiz-subtitle {
+                color: #666;
+                font-size: 1rem;
+            }
+            .question {
+                margin-bottom: 25px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                border-left: 4px solid #3f51b5;
+            }
+            .question-title {
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: #2c3e50;
+            }
+            .options {
+                list-style: none;
+                padding: 0;
+            }
+            .option {
+                margin-bottom: 10px;
+                padding: 12px;
+                background: white;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+            }
+            .option:hover {
+                background: #e3f2fd;
+                border-color: #2196f3;
+            }
+            .option input {
+                margin-right: 10px;
+            }
+            .submit-btn {
+                background: #4caf50;
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                font-size: 1rem;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                width: 100%;
+                margin-top: 20px;
+            }
+            .submit-btn:hover {
+                background: #45a049;
+            }
+            .result {
+                margin-top: 20px;
+                padding: 15px;
+                border-radius: 8px;
+                display: none;
+            }
+            .result.correct {
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+            .result.incorrect {
+                background: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1 class="quiz-title">📚 Bài tập lý thuyết</h1>
+                <p class="quiz-subtitle">CPU - Bộ xử lý trung tâm</p>
+            </div>
+
+            <form id="quiz-form">
+                <div class="question">
+                    <div class="question-title">Câu 1: CPU là viết tắt của từ gì?</div>
+                    <ul class="options">
+                        <li class="option">
+                            <input type="radio" name="q1" value="a" id="q1a" />
+                            <label for="q1a">Computer Processing Unit</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q1" value="b" id="q1b" />
+                            <label for="q1b">Central Processing Unit</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q1" value="c" id="q1c" />
+                            <label for="q1c">Central Program Unit</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q1" value="d" id="q1d" />
+                            <label for="q1d">Computer Program Unit</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">Câu 2: Thành phần nào sau đây KHÔNG phải là bộ phận chính của CPU?</div>
+                    <ul class="options">
+                        <li class="option">
+                            <input type="radio" name="q2" value="a" id="q2a" />
+                            <label for="q2a">ALU (Arithmetic Logic Unit)</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q2" value="b" id="q2b" />
+                            <label for="q2b">Control Unit</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q2" value="c" id="q2c" />
+                            <label for="q2c">Registers</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q2" value="d" id="q2d" />
+                            <label for="q2d">Hard Drive</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">Câu 3: Clock Speed của CPU được đo bằng đơn vị nào?</div>
+                    <ul class="options">
+                        <li class="option">
+                            <input type="radio" name="q3" value="a" id="q3a" />
+                            <label for="q3a">MHz/GHz</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q3" value="b" id="q3b" />
+                            <label for="q3b">MB/GB</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q3" value="c" id="q3c" />
+                            <label for="q3c">KB/s</label>
+                        </li>
+                        <li class="option">
+                            <input type="radio" name="q3" value="d" id="q3d" />
+                            <label for="q3d">Volt</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="submit-btn">Nộp bài</button>
+            </form>
+
+            <div id="result" class="result"></div>
+        </div>
+
+        <script>
+            document.getElementById("quiz-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const answers = {
+                    q1: "b", // Central Processing Unit
+                    q2: "d", // Hard Drive
+                    q3: "a", // MHz/GHz
+                };
+
+                let score = 0;
+                let total = Object.keys(answers).length;
+
+                for (let question in answers) {
+                    const selected = document.querySelector(`input[name="${question}"]:checked`);
+                    if (selected && selected.value === answers[question]) {
+                        score++;
+                    }
+                }
+
+                const resultDiv = document.getElementById("result");
+                const percentage = Math.round((score / total) * 100);
+
+                resultDiv.style.display = "block";
+
+                if (percentage >= 70) {
+                    resultDiv.className = "result correct";
+                    resultDiv.innerHTML = `
+                    <strong>🎉 Xuất sắc!</strong><br>
+                    Bạn đã trả lời đúng ${score}/${total} câu (${percentage}%)
+                `;
+                } else {
+                    resultDiv.className = "result incorrect";
+                    resultDiv.innerHTML = `
+                    <strong>📚 Cần cố gắng thêm!</strong><br>
+                    Bạn đã trả lời đúng ${score}/${total} câu (${percentage}%)<br>
+                    Hãy xem lại video bài học để hiểu rõ hơn.
+                `;
+                }
+            });
+        </script>
+    </body>
+</html>

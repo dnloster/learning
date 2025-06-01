@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>RAM Introduction Theory Quiz</title>
+        <style>
+            body {
+                font-family: "Roboto", sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+            }
+            .quiz-container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            }
+            .quiz-header {
+                text-align: center;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            .quiz-title {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            .quiz-subtitle {
+                color: #666;
+                font-size: 16px;
+            }
+            .question {
+                margin-bottom: 25px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                border-left: 4px solid #2196f3;
+            }
+            .question h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 18px;
+            }
+            .options {
+                display: grid;
+                gap: 10px;
+            }
+            .option {
+                padding: 12px 15px;
+                background: white;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .option:hover {
+                border-color: #2196f3;
+                background: #e3f2fd;
+            }
+            .option.selected {
+                border-color: #2196f3;
+                background: #e3f2fd;
+            }
+            .option.correct {
+                border-color: #4caf50;
+                background: #c8e6c9;
+            }
+            .option.incorrect {
+                border-color: #f44336;
+                background: #ffcdd2;
+            }
+            .submit-btn {
+                background: linear-gradient(45deg, #2196f3, #1976d2);
+                color: white;
+                padding: 12px 30px;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: transform 0.2s ease;
+                display: block;
+                margin: 30px auto 0;
+            }
+            .submit-btn:hover {
+                transform: translateY(-2px);
+            }
+            .results {
+                margin-top: 30px;
+                padding: 20px;
+                background: #e3f2fd;
+                border-radius: 10px;
+                text-align: center;
+                display: none;
+            }
+            .score {
+                font-size: 24px;
+                color: #1976d2;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .feedback {
+                color: #555;
+                font-size: 16px;
+            }
+            .info-box {
+                background: #f0f8ff;
+                border: 1px solid #2196f3;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .info-box h4 {
+                color: #1976d2;
+                margin-top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1 class="quiz-title">💾 Giới Thiệu RAM - Lý Thuyết</h1>
+                <p class="quiz-subtitle">Kiểm tra hiểu biết cơ bản về bộ nhớ RAM</p>
+            </div>
+
+            <div class="info-box">
+                <h4>💡 Thông tin cần nhớ</h4>
+                <p>
+                    RAM (Random Access Memory) là bộ nhớ truy cập ngẫu nhiên, là một loại bộ nhớ tạm thời được sử dụng
+                    để lưu trữ dữ liệu và chương trình đang được CPU xử lý.
+                </p>
+            </div>
+
+            <form id="quiz-form">
+                <div class="question">
+                    <h3>1. RAM là viết tắt của từ gì?</h3>
+                    <div class="options">
+                        <label class="option"> <input type="radio" name="q1" value="a" /> Random Access Memory </label>
+                        <label class="option"> <input type="radio" name="q1" value="b" /> Read Access Memory </label>
+                        <label class="option"> <input type="radio" name="q1" value="c" /> Rapid Access Memory </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="d" /> Restricted Access Memory
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>2. Đặc điểm chính của RAM là gì?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="a" /> Lưu trữ dữ liệu vĩnh viễn
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="b" /> Dữ liệu sẽ mất khi tắt nguồn (volatile)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="c" /> Chỉ có thể đọc dữ liệu
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="d" /> Truy cập dữ liệu theo thứ tự tuần tự
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>3. Tại sao RAM được gọi là "truy cập ngẫu nhiên"?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="a" /> Vì dữ liệu được lưu trữ một cách ngẫu nhiên
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="b" /> Vì có thể truy cập bất kỳ vị trí nào với thời
+                            gian như nhau
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="c" /> Vì tốc độ truy cập thay đổi ngẫu nhiên
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="d" /> Vì dữ liệu được mã hóa ngẫu nhiên
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>4. Vai trò chính của RAM trong hệ thống máy tính là gì?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="a" /> Lưu trữ hệ điều hành vĩnh viễn
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="b" /> Lưu trữ tạm thời dữ liệu và chương trình đang
+                            chạy
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="c" /> Thay thế hoàn toàn ổ cứng
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="d" /> Chỉ lưu trữ BIOS và firmware
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>5. So với ổ cứng (HDD/SSD), RAM có ưu điểm gì?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="a" /> Dung lượng lưu trữ lớn hơn
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="b" /> Tốc độ truy cập nhanh hơn nhiều
+                        </label>
+                        <label class="option"> <input type="radio" name="q5" value="c" /> Giá thành rẻ hơn </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="d" /> Lưu trữ dữ liệu vĩnh viễn
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>6. Khi máy tính khởi động, điều gì xảy ra với RAM?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q6" value="a" /> RAM giữ nguyên dữ liệu từ lần khởi động trước
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="b" /> RAM được làm sạch và sẵn sàng cho dữ liệu mới
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="c" /> RAM tự động sao lưu dữ liệu quan trọng
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="d" /> RAM không hoạt động trong quá trình khởi động
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Nộp Bài</button>
+            </form>
+
+            <div id="results" class="results">
+                <div class="score"></div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <script>
+            const correctAnswers = {
+                q1: "a",
+                q2: "b",
+                q3: "b",
+                q4: "b",
+                q5: "b",
+                q6: "b",
+            };
+
+            const explanations = {
+                q1: "RAM là viết tắt của Random Access Memory - Bộ nhớ truy cập ngẫu nhiên.",
+                q2: "RAM là bộ nhớ volatile, có nghĩa là dữ liệu sẽ bị mất khi tắt nguồn.",
+                q3: "RAM cho phép truy cập bất kỳ vị trí nào với thời gian như nhau, không cần tuần tự.",
+                q4: "RAM lưu trữ tạm thời các chương trình và dữ liệu mà CPU đang xử lý.",
+                q5: "RAM có tốc độ truy cập nhanh gấp hàng nghìn lần so với ổ cứng.",
+                q6: "Khi khởi động, RAM được làm sạch và sẵn sàng nhận dữ liệu mới từ hệ điều hành.",
+            };
+
+            document.getElementById("quiz-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                let score = 0;
+                const formData = new FormData(this);
+
+                // Check answers and highlight
+                for (let [question, correctAnswer] of Object.entries(correctAnswers)) {
+                    const userAnswer = formData.get(question);
+                    const options = document.querySelectorAll(`input[name="${question}"]`);
+
+                    options.forEach((option) => {
+                        const label = option.parentElement;
+                        if (option.value === correctAnswer) {
+                            label.classList.add("correct");
+                            if (userAnswer === correctAnswer) {
+                                score++;
+                            }
+                        } else if (option.value === userAnswer && userAnswer !== correctAnswer) {
+                            label.classList.add("incorrect");
+                        }
+                        option.disabled = true;
+                    });
+                }
+
+                // Show results
+                const resultsDiv = document.getElementById("results");
+                const scoreElement = resultsDiv.querySelector(".score");
+                const feedbackElement = resultsDiv.querySelector(".feedback");
+
+                const percentage = Math.round((score / Object.keys(correctAnswers).length) * 100);
+
+                scoreElement.textContent = `Điểm: ${score}/${Object.keys(correctAnswers).length} (${percentage}%)`;
+
+                let feedbackText = "";
+                if (percentage >= 80) {
+                    feedbackText = "🎉 Xuất sắc! Bạn đã hiểu rõ về RAM.";
+                } else if (percentage >= 60) {
+                    feedbackText = "👍 Tốt! Hãy ôn lại một số khái niệm về RAM.";
+                } else {
+                    feedbackText = "📚 Bạn cần tìm hiểu thêm về RAM. Hãy xem lại video bài giảng.";
+                }
+
+                feedbackElement.textContent = feedbackText;
+                resultsDiv.style.display = "block";
+
+                // Disable submit button
+                this.querySelector(".submit-btn").disabled = true;
+                this.querySelector(".submit-btn").textContent = "Đã nộp bài";
+            });
+
+            // Handle option selection visual feedback
+            document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+                radio.addEventListener("change", function () {
+                    // Remove selected class from all options in this question
+                    const questionOptions = document.querySelectorAll(`input[name="${this.name}"]`);
+                    questionOptions.forEach((option) => {
+                        option.parentElement.classList.remove("selected");
+                    });
+
+                    // Add selected class to chosen option
+                    this.parentElement.classList.add("selected");
+                });
+            });
+        </script>
+    </body>
+</html>

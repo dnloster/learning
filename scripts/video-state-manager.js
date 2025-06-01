@@ -197,53 +197,53 @@ class VideoStateManager {
         }
     }
 
-    showResumeNotification(savedState) {
-        // Remove any existing notification
-        this.hideResumeNotification();
+    // showResumeNotification(savedState) {
+    //     // Remove any existing notification
+    //     this.hideResumeNotification();
 
-        // Create resume notification
-        this.resumeNotification = document.createElement("div");
-        this.resumeNotification.className = "video-resume-notification";
-        this.resumeNotification.innerHTML = `
-            <div class="resume-content">
-                <div class="resume-icon">▶️</div>
-                <div class="resume-text">
-                    <div class="resume-title">Tiếp tục xem video</div>
-                    <div class="resume-subtitle">
-                        Video "${this.getVideoTitle(savedState.videoId)}" đã dừng tại ${this.formatTime(
-            savedState.currentTime
-        )}
-                    </div>
-                </div>
-                <div class="resume-actions">
-                    <button class="resume-btn" data-action="resume">Tiếp tục</button>
-                    <button class="resume-btn secondary" data-action="start-over">Xem từ đầu</button>
-                    <button class="resume-btn dismiss" data-action="dismiss">×</button>
-                </div>
-            </div>
-        `;
+    //     // Create resume notification
+    //     this.resumeNotification = document.createElement("div");
+    //     this.resumeNotification.className = "video-resume-notification";
+    //     this.resumeNotification.innerHTML = `
+    //         <div class="resume-content">
+    //             <div class="resume-icon">▶️</div>
+    //             <div class="resume-text">
+    //                 <div class="resume-title">Tiếp tục xem video</div>
+    //                 <div class="resume-subtitle">
+    //                     Video "${this.getVideoTitle(savedState.videoId)}" đã dừng tại ${this.formatTime(
+    //         savedState.currentTime
+    //     )}
+    //                 </div>
+    //             </div>
+    //             <div class="resume-actions">
+    //                 <button class="resume-btn" data-action="resume">Tiếp tục</button>
+    //                 <button class="resume-btn secondary" data-action="start-over">Xem từ đầu</button>
+    //                 <button class="resume-btn dismiss" data-action="dismiss">×</button>
+    //             </div>
+    //         </div>
+    //     `;
 
-        // Add to page
-        document.body.appendChild(this.resumeNotification);
+    //     // Add to page
+    //     document.body.appendChild(this.resumeNotification);
 
-        // Setup event listeners
-        this.resumeNotification.addEventListener("click", (e) => {
-            const action = e.target.dataset.action;
-            if (action) {
-                this.handleResumeAction(action, savedState);
-            }
-        });
+    //     // Setup event listeners
+    //     this.resumeNotification.addEventListener("click", (e) => {
+    //         const action = e.target.dataset.action;
+    //         if (action) {
+    //             this.handleResumeAction(action, savedState);
+    //         }
+    //     });
 
-        // Auto-hide after 15 seconds
-        setTimeout(() => {
-            this.hideResumeNotification();
-        }, 15000);
+    //     // Auto-hide after 15 seconds
+    //     setTimeout(() => {
+    //         this.hideResumeNotification();
+    //     }, 15000);
 
-        // Add animation
-        setTimeout(() => {
-            this.resumeNotification.classList.add("visible");
-        }, 100);
-    }
+    //     // Add animation
+    //     setTimeout(() => {
+    //         this.resumeNotification.classList.add("visible");
+    //     }, 100);
+    // }
 
     handleResumeAction(action, savedState) {
         switch (action) {
@@ -443,4 +443,5 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("VideoStateManager: Initialized and available globally");
 });
 
-export default VideoStateManager;
+// Export for global use
+window.VideoStateManager = VideoStateManager;
