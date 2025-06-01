@@ -54,8 +54,8 @@ window.addEventListener("load", function () {
     const messages = [
         "Đang khởi tạo hệ thống...",
         "Đang tải thông tin CPU...",
-        "Đang chuẩn bị dữ liệu RAM...",
-        "Đang đọc thông tin ROM...",
+        "Đang chuẩn bị dữ liệu Bộ nhớ trong...",
+        "Đang đọc thông tin Bộ nhớ ngoài...",
         "Hoàn tất!",
     ];
 
@@ -510,42 +510,45 @@ document.addEventListener("DOMContentLoaded", function () {
     videoPlayers.forEach((player) => {
         const videoId = player.getAttribute("data-video-id");
         const isMainVideo = player.classList.contains("main-video");
+        const videoElement = player.querySelector("video");
 
-        // Initialize Video.js player
-        const videoJsPlayer = videojs(player, {
-            controls: true,
-            autoplay: false,
-            preload: "auto",
-            responsive: true,
-            fluid: true,
-            aspectRatio: "16:9",
-        });
+        if (!videoElement) return;
 
-        // Load video source
-        videoJsPlayer.src({
-            src: `https://path/to/your/video/${videoId}.mp4`,
-            type: "video/mp4",
-        });
+        // Set up video source
+        const videoSrc = `videos/${videoId || "default"}.mp4`;
+        videoElement.src = videoSrc;
 
         // Poster image
         const posterImage = player.getAttribute("data-poster");
         if (posterImage) {
-            videoJsPlayer.poster(posterImage);
+            videoElement.poster = posterImage;
         }
 
         // Main video specific settings
-        if (isMainVideo) {
-            videoJsPlayer.on("ready", function () {
-                this.play();
-            });
+        if (isMainVideo && videoElement.paused) {
+            // Optional autoplay for main video
+            // Only if user has interacted with page
+            document.addEventListener(
+                "click",
+                function onFirstClick() {
+                    videoElement.play().catch((e) => console.log("Autoplay prevented:", e));
+                    document.removeEventListener("click", onFirstClick);
+                },
+                { once: true }
+            );
         }
 
         // Error handling
-        videoJsPlayer.on("error", function () {
-            const errorCode = this.error().code;
-            console.error("Video.js error:", errorCode);
+        videoElement.addEventListener("error", function () {
+            console.error("Video error:", this.error);
         });
     });
+
+    // Remove custom control addition since we're using our own controls
+    const customControls = document.querySelectorAll(".video-controls-overlay");
+    if (customControls.length > 0) {
+        console.log("Using custom video controls");
+    }
 });
 
 // Add custom control for main video
@@ -590,4 +593,158 @@ window.addEventListener("scroll", function () {
     });
 
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+});
+
+// Initialize global bookmark manager
+let bookmarkManager;
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize global bookmark manager
+    console.log("Initializing global BookmarkManager");
+    bookmarkManager = new BookmarkManager();
+    window.bookmarkManager = bookmarkManager;
+
+    // Connect to video player if available
+    if (window.videoPlayerController) {
+        console.log("Connecting BookmarkManager to videoPlayerController");
+        bookmarkManager.setVideoPlayerController(window.videoPlayerController);
+    }
+
+    // Manually attach event to bookmarks button
+    const bookmarksBtn = document.getElementById("bookmarks-btn");
+    if (bookmarksBtn) {
+        console.log("Attaching click event to bookmarks button from script.js");
+        bookmarksBtn.addEventListener("click", function (e) {
+            console.log("Bookmarks button clicked from script.js handler");
+            e.preventDefault();
+            if (window.bookmarkManager) {
+                window.bookmarkManager.showBookmarksDialog();
+            } else {
+                console.error("BookmarkManager not available");
+            }
+        });
+    }
+});
+
+// Ensure BookmarkManager is initialized properly
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize BookmarkManager if not already initialized
+    if (!window.bookmarkManager) {
+        console.log("Initializing global BookmarkManager");
+        window.bookmarkManager = new BookmarkManager();
+    }
+
+    // Connect to video player controller when it's ready
+    const connectToVideoController = () => {
+        if (window.videoPlayerController) {
+            console.log("Connecting BookmarkManager to videoPlayerController");
+            window.bookmarkManager.setVideoPlayerController(window.videoPlayerController);
+
+            // Update UI for currently playing video (if any)
+            if (window.videoPlayerController.currentVideo) {
+                const currentVideo = window.videoPlayerController.currentVideo;
+                window.bookmarkManager.onVideoChange({
+                    id: currentVideo.id,
+                    title: currentVideo.title,
+                    src: currentVideo.src,
+                    topic: window.videoPlayerController.currentPlaylist,
+                });
+            }
+        } else {
+            // Retry after a short delay
+            setTimeout(connectToVideoController, 500);
+        }
+    };
+
+    // Start connecting
+    connectToVideoController();
+});
+
+// Connect VideoChapters with the video player
+document.addEventListener("DOMContentLoaded", () => {
+    // Initialize relationship between components after a short delay
+    setTimeout(() => {
+        // Connect video chapters to video player controller
+        if (window.videoPlayerController && window.videoChapters) {
+            console.log("Connecting video chapters system");
+
+            // Initial load of chapters for current video
+            if (window.videoPlayerController.currentVideo) {
+                const videoId = window.videoPlayerController.currentVideo.id;
+                window.videoChapters.loadChaptersForVideo(videoId);
+            }
+        } else {
+            console.warn("Could not connect video chapters - components not initialized");
+        }
+    }, 1000); // Delay to ensure all components are loaded
+});
+
+// Thêm vào phần khởi tạo hoặc DOMContentLoaded
+
+// Đảm bảo VideoChapters được khởi tạo đúng
+document.addEventListener("DOMContentLoaded", () => {
+    // Thử import VideoChapters và khởi tạo nếu chưa có
+    try {
+        import("./video-chapters.js")
+            .then((module) => {
+                if (!window.videoChapters) {
+                    console.log("Setting up videoChapters from script.js import");
+                    window.videoChapters = module.default || new module.default.constructor();
+                }
+
+                // Kiểm tra instance đã khởi tạo đúng chưa
+                if (!window.videoChapters || typeof window.videoChapters.toggleChapterPanel !== "function") {
+                    console.error("VideoChapters not correctly initialized after import");
+
+                    // Khởi tạo lại nếu cần
+                    if (typeof module.default === "object") {
+                        window.videoChapters = module.default;
+                    } else if (typeof module.default === "function") {
+                        window.videoChapters = new module.default();
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error("Error importing VideoChapters:", err);
+            });
+    } catch (error) {
+        console.error("Error setting up VideoChapters:", error);
+    }
+
+    // Đảm bảo nút phân đoạn video hoạt động
+    setTimeout(() => {
+        const chaptersBtn = document.getElementById("chapters-btn");
+        if (chaptersBtn) {
+            chaptersBtn.addEventListener("click", function () {
+                if (window.videoChapters && typeof window.videoChapters.toggleChapterPanel === "function") {
+                    window.videoChapters.toggleChapterPanel();
+                } else {
+                    // Fallback khi không có module
+                    const panel = document.getElementById("chapter-navigation-panel");
+                    if (panel) {
+                        panel.style.display = panel.style.display === "none" ? "flex" : "none";
+                    }
+                }
+            });
+        }
+    }, 1000); // Đảm bảo DOM đã tải xong
+});
+
+// Thêm vào phần khởi tạo
+
+// Cập nhật window.videoPlayerController để tham chiếu đến window.videoPlayer
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        if (window.videoPlayer && !window.videoPlayerController) {
+            window.videoPlayerController = window.videoPlayer;
+            console.log("Set videoPlayerController reference to videoPlayer");
+
+            // Kích hoạt getChapterForVideo cho video hiện tại nếu có
+            if (window.videoPlayerController.currentVideo) {
+                console.log("Triggering chapter update for current video");
+                window.videoPlayerController.getChapterForVideo();
+            }
+        }
+    }, 1000); // Chờ một chút để đảm bảo các components đã tải xong
 });

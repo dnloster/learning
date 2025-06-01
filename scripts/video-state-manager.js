@@ -85,10 +85,8 @@ class VideoStateManager {
         // Detect browser tab change
         document.addEventListener("visibilitychange", () => {
             if (document.hidden) {
-                console.log("VideoStateManager: Tab became hidden");
                 this.handleTabHidden();
             } else {
-                console.log("VideoStateManager: Tab became visible");
                 this.handleTabVisible();
             }
         });

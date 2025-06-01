@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Liên hệ nhóm tác giả - Bộ Vi Xử Lý</title>
+        <link rel="stylesheet" href="styles/style.css" />
+        <!-- <link rel="stylesheet" href="styles/new-styles.css" /> -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* Basic styling for contact page */
+            body {
+                font-family: "Roboto", sans-serif;
+                background-color: #f4f7f6;
+                color: #333;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                min-height: 100vh;
+                background: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 25%, #2a3f7a 50%, #1a1f4a 75%, #0a0e27 100%);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .content-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .content-nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 20px;
+                border-bottom: 1px solid #e0e0e0;
+                margin-bottom: 30px;
+            }
+
+            .content-nav h2 {
+                margin: 0;
+                font-size: 24px;
+                color: #333;
+            }
+
+            .nav-btn {
+                background-color: #4a90e2;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+
+            .nav-btn:hover {
+                background-color: #357abd;
+            }
+
+            .contact-content {
+                padding: 20px;
+            }
+
+            .team-section h3 {
+                text-align: center;
+                font-size: 28px;
+                color: #333;
+                margin-bottom: 40px;
+            }
+
+            .team-members {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+                justify-content: center;
+            }
+
+            .team-member-card {
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                text-align: center;
+                padding: 25px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .team-member-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .member-avatar img {
+                width: 240px;
+                height: 240px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-bottom: 20px;
+                border: 4px solid #4a90e2;
+            }
+
+            .avatar-placeholder {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                background-color: #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 50px;
+                color: #aaa;
+                margin: 0 auto 20px auto;
+                border: 4px solid #4a90e2;
+            }
+
+            .member-info h4 {
+                font-size: 20px;
+                color: #333;
+                margin-bottom: 8px;
+                font-weight: 500;
+            }
+
+            .member-rank,
+            .member-position {
+                font-size: 14px;
+                color: #555;
+                margin-bottom: 5px;
+                line-height: 1.4;
+            }
+            .member-position {
+                font-style: italic;
+                color: #777;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content-container">
+                <nav class="content-nav">
+                    <button id="back-to-home" class="nav-btn">◀ Về trang chủ</button>
+                    <h2>Thông tin nhóm tác giả</h2>
+                </nav>
+
+                <div class="contact-content">
+                    <div class="team-section">
+                        <div class="team-members">
+                            <div class="team-member-card">
+                                <div class="member-avatar">
+                                    <!-- Sử dụng ảnh thật hoặc placeholder -->
+                                    <img src="path/to/author1-avatar.jpg" alt="Nguyễn Văn A" />
+                                </div>
+                                <div class="member-info">
+                                    <h4>Nguyễn Văn A</h4>
+                                    <p class="member-rank">Cấp bậc: Tiến sĩ</p>
+                                    <p class="member-position">Chức vụ: Giảng viên chính</p>
+                                </div>
+                            </div>
+
+                            <div class="team-member-card">
+                                <div class="member-avatar">
+                                    <img src="path/to/author1-avatar.jpg" alt="Nguyễn Văn A" />
+                                </div>
+                                <div class="member-info">
+                                    <h4>Trần Thị B</h4>
+                                    <p class="member-rank">Cấp bậc: Thạc sĩ</p>
+                                    <p class="member-position">Chức vụ: Giảng viên</p>
+                                </div>
+                            </div>
+
+                            <div class="team-member-card">
+                                <div class="member-avatar">
+                                    <img src="path/to/author1-avatar.jpg" alt="Nguyễn Văn A" />
+                                </div>
+                                <div class="member-info">
+                                    <h4>Lê Văn C</h4>
+                                    <p class="member-rank">Cấp bậc: Thạc sĩ</p>
+                                    <p class="member-position">Chức vụ: Trợ giảng</p>
+                                </div>
+                            </div>
+
+                            <div class="team-member-card">
+                                <div class="member-avatar">
+                                    <img src="path/to/author1-avatar.jpg" alt="Nguyễn Văn A" />
+                                </div>
+                                <div class="member-info">
+                                    <h4>Phạm Thị D</h4>
+                                    <p class="member-rank">Cấp bậc: Kỹ sư</p>
+                                    <p class="member-position">Chức vụ: Nghiên cứu viên</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("back-to-home").addEventListener("click", function () {
+                window.location.href = "index.html";
+            });
+        </script>
+    </body>
+</html>

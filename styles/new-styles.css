@@ -1,0 +1,786 @@
+/* Side Navigation Styles */
+.side-navigation {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.side-nav-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.side-nav-header h3 {
+    color: white;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.side-nav-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.side-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.side-nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(3px);
+}
+
+.side-nav-item.active {
+    background: linear-gradient(45deg, #4caf50, #64b5f6);
+    color: white;
+    font-weight: 500;
+}
+
+.side-nav-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* Accordion Playlist Styles */
+.accordion-playlist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #fff;
+}
+
+.playlist-accordion {
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 2px;
+}
+
+.accordion-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.accordion-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.accordion-header.active {
+    background: linear-gradient(45deg, rgba(76, 175, 80, 0.5), rgba(100, 181, 246, 0.5));
+}
+
+.accordion-toggle {
+    margin-left: auto;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.accordion-header.active .accordion-toggle {
+    transform: rotate(180deg);
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 1000px; /* Large enough value to show all content */
+    padding: 10px 0;
+}
+
+.accordion-item.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.topic-info {
+    margin-left: 10px;
+    flex: 1;
+}
+
+.topic-name {
+    font-weight: 500;
+    color: white;
+}
+
+.topic-count {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 8px;
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.accordion-content.active {
+    max-height: 1000px; /* Arbitrary large value */
+}
+
+/* Layout adjustments for side-by-side navigation and video */
+.video-learning-container {
+    display: grid;
+    gap: 20px;
+}
+
+.video-main-content {
+    grid-column: 2;
+}
+
+@media (max-width: 768px) {
+    .video-learning-container {
+        grid-template-columns: 1fr;
+    }
+
+    .video-main-content {
+        grid-column: 1;
+    }
+}
+
+/* References Page Styles */
+.references-content {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.references-section {
+    margin-bottom: 30px;
+}
+
+.references-section h3 {
+    color: #64b5f6;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reference-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.reference-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition: transform 0.2s ease;
+}
+
+.reference-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.reference-title {
+    font-weight: 500;
+    color: white;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.reference-author,
+.reference-publisher {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.reference-link a {
+    color: #64b5f6;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.reference-link a:hover {
+    color: #4caf50;
+    text-decoration: underline;
+}
+
+/* Contact Page Styles */
+.contact-content {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.team-section,
+.contact-form-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.team-section h3,
+.contact-form-section h3 {
+    color: #64b5f6;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-members {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.team-member {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.member-avatar {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #1a237e, #304ffe);
+}
+
+.avatar-placeholder {
+    font-size: 3rem;
+}
+
+.member-info {
+    padding: 15px;
+}
+
+.member-info h4 {
+    color: white;
+    margin-bottom: 5px;
+}
+
+.member-role,
+.member-department,
+.member-student-id,
+.member-email {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-family: "Roboto", sans-serif;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #64b5f6;
+    box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.3);
+}
+
+.submit-btn {
+    background: linear-gradient(45deg, #4caf50, #64b5f6);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(45deg, #64b5f6, #4caf50);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Video bookmark icon styling */
+.video-bookmark-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+
+.video-bookmark-icon.active {
+    display: flex;
+    color: #ffeb3b;
+    text-shadow: 0 0 5px rgba(255, 235, 59, 0.5);
+    transform: scale(1);
+}
+
+.video-item:hover .video-bookmark-icon.active {
+    transform: scale(1.1);
+}
+
+/* Video player bookmark button */
+#bookmark-btn.bookmarked .control-icon,
+#bookmark-btn.active .control-icon {
+    color: #ffeb3b !important;
+    text-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
+}
+
+/* Animation for bookmark button */
+.bookmark-add-animation {
+    animation: bookmark-pulse-add 0.6s ease;
+}
+
+.bookmark-remove-animation {
+    animation: bookmark-pulse-remove 0.6s ease;
+}
+
+@keyframes bookmark-pulse-add {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+        color: #ffeb3b;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes bookmark-pulse-remove {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+        color: #f44336;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Style cho thông báo */
+.message-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #333;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    z-index: 1000;
+}
+
+.message-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.message-notification.success {
+    background: #4caf50;
+}
+
+.message-notification.error {
+    background: #f44336;
+}
+
+/* Dialog styles */
+dialog.bookmarks-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    background: #1a1a2e;
+    color: white;
+    min-width: 400px;
+    max-width: 80%;
+    max-height: 80vh;
+    z-index: 10000;
+}
+
+dialog.bookmarks-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+/* Fix for dialog not showing in some browsers */
+dialog.bookmarks-dialog[open] {
+    display: block;
+}
+
+/* Chapter Navigation Panel Styling */
+
+/* Panel chính */
+.chapter-navigation-panel {
+    position: absolute;
+    right: 15px;
+    bottom: 100%;
+    width: 350px;
+    max-width: 90%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(10, 14, 39, 0.95));
+    border-radius: 12px;
+    flex-direction: column;
+    color: white;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    z-index: 16;
+    font-family: "Roboto", Arial, sans-serif;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    max-height: calc(80vh - 100px);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: none; /* Hidden by default */
+}
+
+/* Header của panel */
+.chapter-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.chapter-nav-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.chapter-nav-icon {
+    font-size: 1.1rem;
+}
+
+.chapter-count {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 5px;
+}
+
+/* Nút toggle */
+.chapter-nav-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.chapter-nav-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Nội dung panel */
+.chapter-nav-content {
+    display: flex;
+    flex-direction: column;
+    transition: max-height 0.3s ease;
+}
+
+.chapter-nav-content.collapsed {
+    max-height: 0;
+}
+
+/* Thông tin phân đoạn hiện tại */
+.chapter-current-info {
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 5px;
+}
+
+.current-chapter-title {
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.chapter-progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.chapter-progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.chapter-progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #2196f3;
+    border-radius: 2px;
+    width: 0;
+    transition: width 0.1s linear;
+}
+
+.chapter-time-info {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: right;
+}
+
+/* Danh sách phân đoạn */
+.chapters-list-external {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 5px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.chapters-list-external::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chapters-list-external::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chapters-list-external::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+/* Từng item phân đoạn */
+.chapter-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.chapter-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.chapter-item.active {
+    background-color: rgba(33, 150, 243, 0.2);
+    border-left-color: #2196f3;
+}
+
+.chapter-item-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chapter-number {
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.chapter-details {
+    flex: 1;
+}
+
+.chapter-item-title {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+}
+
+.chapter-item-time {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Trạng thái trống */
+.empty-chapters {
+    padding: 30px 15px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-chapters .empty-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+/* Đánh dấu phân đoạn trên thanh tiến trình */
+.progress-markers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.chapter-marker {
+    position: absolute;
+    top: -2px;
+    height: calc(100% + 4px);
+    width: 3px;
+    background-color: rgba(255, 255, 255, 0.7);
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 2;
+    transform: translateX(-50%);
+}
+
+.chapter-marker:hover::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 7px;
+    height: 7px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Animation */
+@keyframes fadeInPanel {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chapter-navigation-panel.show {
+    display: flex;
+    animation: fadeInPanel 0.3s forwards;
+}
+
+/* Hiệu ứng cho nút khi active */
+#chapters-btn.active {
+    color: #64b5f6;
+    background-color: rgba(33, 150, 243, 0.2);
+}
+
+/* Indicator cho nút chapters */
+.chapter-indicator {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    background-color: #f44336;
+    border-radius: 50%;
+}
+
+/* Styling cho loading */
+.chapter-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.chapter-loading::before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #2196f3;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hiệu ứng fix lỗi không tìm được progress bar */
+.video-progress-container .progress-bar {
+    position: relative;
+    overflow: visible;
+}

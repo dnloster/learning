@@ -1,0 +1,39 @@
+/* Fix for Chapter Navigation Panel CSS conflict */
+.chapter-navigation-panel {
+    position: absolute;
+    right: 0px;
+    bottom: 0 !important;
+    width: 350px;
+    max-width: 90%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(10, 14, 39, 0.95));
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    z-index: 100 !important;
+    font-family: "Roboto", Arial, sans-serif;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    max-height: calc(80vh - 100px);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.chapter-navigation-panel.visible,
+.chapter-navigation-panel.show {
+    display: flex !important;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animation override */
+@keyframes fadeInPanel {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Build PC</title>
+        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="stylesheet" href="styles/build-pc.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Build PC</h1>
+            <nav>
+                <a href="index.html">Trang chủ</a>
+                <a href="contact.html">Nhóm tác giả</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="build-pc-layout">
+                    <!-- New wrapper -->
+                    <div class="component-selection-area">
+                        <!-- Wrapper for the grid -->
+                        <div class="component-grid" id="component-grid">
+                            <!-- Components will be dynamically loaded here -->
+                        </div>
+                    </div>
+                    <div id="selected-components" class="selected-components-summary">
+                        <h3>Your Configuration:</h3>
+                        <!-- Selected components will be listed here -->
+                    </div>
+                </div>
+                <!-- End of new wrapper -->
+            </div>
+
+            <div class="modal" id="component-modal">
+                <div class="modal-content">
+                    <span class="close-button" id="close-modal-button">&times;</span>
+                    <h3 id="modal-title">Select <span id="modal-component-name">Component</span></h3>
+                    <div id="modal-item-list" class="modal-item-list">
+                        <!-- Component items will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script src="scripts/build-pc.js"></script>
+    </body>
+</html>

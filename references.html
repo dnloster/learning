@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tài liệu tham khảo - Bộ Vi Xử Lý</title>
+        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="stylesheet" href="styles/new-styles.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="content-container">
+            <nav class="content-nav">
+                <button id="back-to-home" class="nav-btn" onclick="window.location.href='index.html'">
+                    ◀ Về trang chủ
+                </button>
+                <h2>Tài liệu tham khảo</h2>
+            </nav>
+
+            <div class="references-content">
+                <div class="references-section">
+                    <h3>Sách và tài liệu</h3>
+                    <ul class="reference-list">
+                        <li>
+                            <div class="reference-item">
+                                <div class="reference-title">
+                                    Computer Organization and Design: The Hardware/Software Interface
+                                </div>
+                                <div class="reference-author">David A. Patterson, John L. Hennessy</div>
+                                <div class="reference-publisher">Morgan Kaufmann, 6th Edition, 2021</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="reference-item">
+                                <div class="reference-title">Modern Computer Architecture and Organization</div>
+                                <div class="reference-author">Jim Ledin</div>
+                                <div class="reference-publisher">Packt Publishing, 2020</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="reference-item">
+                                <div class="reference-title">Digital Design and Computer Architecture</div>
+                                <div class="reference-author">David Harris, Sarah Harris</div>
+                                <div class="reference-publisher">Morgan Kaufmann, 2022</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="references-section">
+                    <h3>Tài nguyên trực tuyến</h3>
+                    <ul class="reference-list">
+                        <li>
+                            <div class="reference-item">
+                                <div class="reference-title">How CPU Works</div>
+                                <div class="reference-link">
+                                    <a href="https://www.youtube.com/watch?v=cNN_tTXABUA" target="_blank"
+                                        >YouTube: How CPU Works (Video)</a
+                                    >
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="reference-item">
+                                <div class="reference-title">Computer Memory</div>
+                                <div class="reference-link">
+                                    <a href="https://www.geeksforgeeks.org/computer-memory/" target="_blank"
+                                        >GeeksforGeeks: Computer Memory</a
+                                    >
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="reference-item">
+                                <div class="reference-title">ROM (Read-Only Memory)</div>
+                                <div class="reference-link">
+                                    <a
+                                        href="https://www.techtarget.com/whatis/definition/ROM-read-only-memory"
+                                        target="_blank"
+                                        >TechTarget: ROM (Read-Only Memory)</a
+                                    >
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("back-to-home").addEventListener("click", function () {
+                window.location.href = "index.html";
+            });
+        </script>
+    </body>
+</html>

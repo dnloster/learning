@@ -1,8 +1,8 @@
 // Three.js 3D Models Module - New version with color fixes
 // Using Three.js from CDN as fallback
 import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "../three.js-master/three.js-master/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "../three.js-master/three.js-master/examples/jsm/controls/OrbitControls.js";
 
 class ThreeJSModels {
     constructor() {
@@ -46,9 +46,9 @@ class ThreeJSModels {
             console.log("🔧 Initializing RAM model...");
             await this.initModel("ram", "RAM.glb");
 
-            // Initialize ROM model
-            console.log("🔧 Initializing ROM model...");
-            await this.initModel("rom", "ROM.glb");
+            // Initialize hard disk model
+            console.log("🔧 Initializing hard disk model...");
+            await this.initModel("hardDisk", "hardDisk.glb");
 
             this.isInitialized = true;
             console.log("✅ Three.js models initialized successfully");
@@ -123,7 +123,7 @@ class ThreeJSModels {
                     case "ram":
                         model = this.createRAMModel();
                         break;
-                    case "rom":
+                    case "hardDisk":
                         model = this.createROMModel();
                         break;
                     default:
@@ -276,7 +276,6 @@ class ThreeJSModels {
                 // Check for materials
                 if (child.material) {
                     const defaultColor = this.getDefaultColorForModel(modelPath);
-                    console.log(`🎨 Default color for model: ${defaultColor.getHexString()}`);
 
                     // Handle arrays of materials
                     const materials = Array.isArray(child.material) ? child.material : [child.material];
@@ -327,7 +326,6 @@ class ThreeJSModels {
                         else if (material.type === "MeshStandardMaterial") {
                             material.roughness = 0.5; // Medium roughness
                             material.metalness = 0.2; // Slight metalness
-                            console.log(`  🔧 Enhanced MeshStandardMaterial properties`);
                         }
                         // Convert Lambert materials to Phong for better specular highlights
                         else if (material.type === "MeshLambertMaterial") {
@@ -375,8 +373,8 @@ class ThreeJSModels {
             return new THREE.Color(0x2196f3); // Blue for CPU
         } else if (modelPath.toLowerCase().includes("ram")) {
             return new THREE.Color(0x4caf50); // Green for RAM
-        } else if (modelPath.toLowerCase().includes("rom")) {
-            return new THREE.Color(0x795548); // Brown for ROM
+        } else if (modelPath.toLowerCase().includes("harddisk")) {
+            return new THREE.Color(0x000000); // Black for hard disk
         } else {
             return new THREE.Color(0xcccccc); // Light gray as default
         }
@@ -419,7 +417,7 @@ class ThreeJSModels {
             case "ram":
                 model = this.createRAMModel();
                 break;
-            case "rom":
+            case "hardDisk":
                 model = this.createROMModel();
                 break;
             default:

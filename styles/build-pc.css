@@ -1,0 +1,418 @@
+/* General Styles from style.css - assuming these exist and are relevant */
+body {
+    font-family: "Roboto", sans-serif; /* Match main theme font */
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #0a0e27; /* Dark theme background */
+    color: #e0e0e0; /* Light default text color for dark theme */
+}
+
+header {
+    background: #12183a; /* Slightly lighter dark shade for header */
+    color: #fff;
+    padding: 1.5rem 0; /* Increased padding */
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem; /* Larger title */
+    color: #64b5f6; /* Accent color for title */
+}
+
+header nav a {
+    color: #b0bec5; /* Lighter nav link color */
+    text-decoration: none;
+    padding: 0 1.5rem;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #ffffff; /* Brighter on hover */
+    text-decoration: none;
+}
+
+.container {
+    width: 95%; /* Wider container, changed from 100% */
+    max-width: 1600px; /* Max width for large screens, changed from 1200px */
+    margin: 30px auto;
+    overflow: hidden;
+    padding: 25px;
+    background: #1a1f4a; /* Darker card-like background for container */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Softer shadow for dark theme */
+}
+
+/* New layout styles */
+.build-pc-layout {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 30px; /* Space between selection area and summary */
+    margin-top: 20px;
+    align-items: flex-start; /* Align items to the top */
+}
+
+.component-selection-area {
+    flex: 3; /* Takes up more space */
+    min-width: 300px; /* Minimum width before wrapping */
+}
+
+.selected-components-summary {
+    flex: 1; /* Takes up less space */
+    min-width: 280px; /* Minimum width before wrapping */
+    background-color: rgba(100, 181, 246, 0.1);
+    border: 1px solid rgba(100, 181, 246, 0.3);
+    padding: 20px;
+    margin-bottom: 25px; /* Retain or adjust as needed, was in the old rule */
+    border-radius: 10px;
+    height: fit-content; /* Make its height adjust to content */
+    position: sticky; /* Make it sticky */
+    top: 30px; /* Distance from the top of the viewport */
+}
+
+/* Build PC Page Specific Styles */
+.component-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row, changed from repeat(auto-fit, minmax(220px, 1fr)) */
+    gap: 25px; /* Increased gap */
+    margin-top: 25px;
+}
+
+.component-card {
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Lighter border for dark theme */
+    border-radius: 10px; /* Consistent rounded corners */
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.05); /* Semi-transparent card background */
+    backdrop-filter: blur(5px); /* Subtle blur effect */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.component-card img {
+    max-width: 120px; /* Larger image */
+    height: 100px; /* Fixed height for consistency */
+    object-fit: contain; /* Ensure image fits well */
+    margin-bottom: 15px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px;
+}
+
+.component-card h4 {
+    margin: 10px 0 15px 0; /* Adjusted margin */
+    font-size: 1.2em;
+    color: #64b5f6; /* Accent color for component name */
+}
+
+.component-card .action-buttons {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.component-card .select-btn,
+.component-card .remove-selection-btn {
+    color: white;
+    border: none;
+    padding: 12px 18px; /* Increased padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.95em; /* Slightly adjusted font size */
+    font-weight: 500; /* Medium weight */
+    border-radius: 25px; /* Pill-shaped buttons */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.component-card .select-btn {
+    background: linear-gradient(45deg, #4caf50, #64b5f6); /* Gradient from theme */
+}
+
+.component-card .select-btn:hover {
+    background: linear-gradient(45deg, #5cb85c, #73c6f7); /* Lighter gradient on hover */
+    transform: translateY(-2px);
+}
+
+.component-card .remove-selection-btn {
+    background-color: #d9534f;
+}
+
+.component-card .remove-selection-btn:hover {
+    background-color: #c9302c;
+    transform: translateY(-2px);
+}
+
+.component-card .selected-model {
+    font-size: 0.9em;
+    color: #90caf9; /* Lighter blue for selected model text */
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* Modal Styles */
+.modal {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(3px);
+    transform: scale(0.95);
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0.25s;
+}
+
+.modal.is-visible {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0s;
+}
+
+.modal-content {
+    background-color: #12183a;
+    color: #e0e0e0;
+    margin: 8% auto;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 65%;
+    max-width: 700px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    transform: translateY(15px) scale(0.98);
+    opacity: 0;
+    transition: transform 0.25s ease-out 0.05s, opacity 0.25s ease-out 0.05s;
+}
+
+.modal.is-visible .modal-content {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 32px; /* Larger close button */
+    font-weight: bold;
+    position: absolute;
+    top: 15px; /* Adjusted position */
+    right: 25px;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #fff; /* Brighter on hover */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#modal-title {
+    margin-top: 0;
+    color: #64b5f6; /* Accent color for modal title */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+    font-size: 1.5rem; /* Larger modal title */
+}
+
+.modal-item-list {
+    max-height: 450px; /* Increased max height */
+    overflow-y: auto;
+    margin-top: 20px;
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+/* Custom scrollbar for modal list */
+.modal-item-list::-webkit-scrollbar {
+    width: 8px;
+}
+.modal-item-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+.modal-item-list::-webkit-scrollbar-thumb {
+    background: #64b5f6;
+    border-radius: 4px;
+}
+.modal-item-list::-webkit-scrollbar-thumb:hover {
+    background: #73c6f7;
+}
+
+.modal-item {
+    display: flex;
+    align-items: center;
+    padding: 15px; /* Increased padding */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 8px; /* Rounded corners for items */
+    margin-bottom: 10px; /* Space between items */
+}
+
+.modal-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.modal-item:hover {
+    background-color: rgba(255, 255, 255, 0.08); /* Lighter hover for dark theme */
+}
+
+.modal-item img {
+    width: 70px; /* Larger image in modal */
+    height: 70px;
+    object-fit: contain;
+    margin-right: 20px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px;
+}
+
+.modal-item-info h5 {
+    margin: 0 0 8px 0;
+    font-size: 1.1em;
+    color: #b0bec5; /* Lighter text for item name */
+}
+
+.modal-item-info p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #78909c; /* Subtler color for details */
+}
+
+.modal-item .select-model-btn {
+    margin-left: auto;
+    background: linear-gradient(45deg, #4caf50, #2196f3); /* Different gradient for modal select */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px; /* Pill shape */
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.modal-item .select-model-btn:hover {
+    background: linear-gradient(45deg, #5cb85c, #3aa1f4);
+    transform: translateY(-1px);
+}
+
+/* Selected Components Summary - Styles are now primarily handled by the .selected-components-summary rule within .build-pc-layout context.
+   The original standalone .selected-components-summary block (around line 238) should be removed or its contents merged if anything unique was there.
+   For now, I will assume it's removed and only keep the child element styling below.
+*/
+
+.selected-components-summary h3 {
+    margin-top: 0;
+    color: #64b5f6; /* Accent color */
+    font-size: 1.3rem;
+}
+
+.selected-components-summary ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.selected-components-summary li {
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(100, 181, 246, 0.2);
+    color: #b0bec5; /* Lighter text for summary items */
+}
+
+.selected-components-summary li:last-child {
+    border-bottom: none;
+}
+
+.selected-components-summary strong {
+    color: #81d4fa; /* Brighter accent for component type */
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .modal-content {
+        width: 90%; /* Wider modal on smaller screens */
+        margin: 10% auto;
+        padding: 20px;
+    }
+
+    .component-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust for smaller screens */
+        gap: 15px;
+    }
+    header h1 {
+        font-size: 1.8rem;
+    }
+    header nav a {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .component-card img {
+        max-width: 100px;
+        height: 80px;
+    }
+    .component-card h4 {
+        font-size: 1.1em;
+    }
+    .component-card .select-btn,
+    .component-card .remove-selection-btn {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+
+    .modal-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: center; /* Center text in column layout */
+    }
+    .modal-item img {
+        margin-right: 0; /* Remove right margin */
+        margin-bottom: 10px;
+        align-self: center; /* Center image */
+    }
+    .modal-item .select-model-btn {
+        margin-left: 0;
+        margin-top: 15px; /* Increased top margin */
+        width: 100%;
+    }
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+    #modal-title {
+        font-size: 1.3rem;
+    }
+    .close-button {
+        font-size: 28px;
+        top: 10px;
+        right: 15px;
+    }
+}

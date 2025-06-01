@@ -1,7 +1,7 @@
 // Bookmark Manager - Save and manage important lessons
 class BookmarkManager {
     constructor() {
-        this.bookmarks = [];
+        this.bookmarks = JSON.parse(localStorage.getItem("videoBookmarks")) || [];
         this.currentVideo = null;
         this.videoPlayerController = null;
 
@@ -16,12 +16,16 @@ class BookmarkManager {
 
         // State
         this.isPanelVisible = false;
+        this.useDialogPolyfill = false; // For dialog polyfill support
 
         this.init();
     }
 
     init() {
         console.log("Initializing Bookmark Manager...");
+
+        // Check dialog support
+        this.checkDialogSupport();
 
         // Load bookmarks from localStorage
         this.loadBookmarks();
@@ -35,6 +39,51 @@ class BookmarkManager {
 
         console.log("Bookmark Manager initialized successfully");
     }
+
+    checkDialogSupport() {
+        if (!window.HTMLDialogElement) {
+            console.warn("Dialog element not supported by browser, loading polyfill");
+
+            // Simple dialog polyfill
+            this.useDialogPolyfill = true;
+
+            // Create a showModal method for standard elements
+            HTMLElement.prototype._showModal = function () {
+                this.style.display = "block";
+                this.style.position = "fixed";
+                this.style.zIndex = 1000;
+                this.style.top = "50%";
+                this.style.left = "50%";
+                this.style.transform = "translate(-50%, -50%)";
+
+                // Add backdrop
+                const backdrop = document.createElement("div");
+                backdrop.className = "dialog-backdrop";
+                backdrop.style.position = "fixed";
+                backdrop.style.top = 0;
+                backdrop.style.left = 0;
+                backdrop.style.right = 0;
+                backdrop.style.bottom = 0;
+                backdrop.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+                backdrop.style.zIndex = 999;
+                this._backdrop = backdrop;
+                document.body.appendChild(backdrop);
+
+                // Handle close on backdrop click
+                backdrop.addEventListener("click", () => {
+                    this.close();
+                });
+            };
+
+            HTMLElement.prototype._close = function () {
+                this.style.display = "none";
+                if (this._backdrop && this._backdrop.parentNode) {
+                    this._backdrop.parentNode.removeChild(this._backdrop);
+                }
+            };
+        }
+    }
+
     setupEventListeners() {
         // Bookmark button click - toggle bookmark
         if (this.bookmarkBtn) {
@@ -100,6 +149,80 @@ class BookmarkManager {
                     break;
             }
         });
+
+        // Add bookmark button events
+        const bookmarksBtn = document.getElementById("bookmarks-btn");
+        if (bookmarksBtn) {
+            console.log("Found bookmarks button, attaching event listener");
+            bookmarksBtn.addEventListener("click", (e) => {
+                console.log("Bookmarks button clicked");
+                e.preventDefault();
+                this.showBookmarksDialog();
+            });
+        } else {
+            console.warn("Bookmarks button not found in DOM");
+        }
+    }
+    showBookmarksDialog() {
+        console.log("showBookmarksDialog called");
+
+        // Find or create bookmarks dialog
+        let dialog = document.getElementById("bookmarks-dialog");
+
+        if (!dialog) {
+            console.log("Creating new bookmarks dialog");
+            dialog = document.createElement("dialog");
+            dialog.id = "bookmarks-dialog";
+            dialog.className = "bookmarks-dialog";
+
+            dialog.innerHTML = `
+                <div class="dialog-header">
+                    <h3>Video đã đánh dấu</h3>
+                    <button class="close-dialog">×</button>
+                </div>
+                <div id="bookmarks-container" class="dialog-content">
+                    <!-- Bookmarks will be loaded here -->
+                </div>
+            `;
+
+            document.body.appendChild(dialog);
+
+            // Add close button event
+            dialog.querySelector(".close-dialog").addEventListener("click", () => {
+                console.log("Dialog close button clicked");
+                dialog.close();
+            });
+
+            // Close on click outside
+            dialog.addEventListener("click", (e) => {
+                if (e.target === dialog) {
+                    console.log("Dialog background clicked, closing");
+                    dialog.close();
+                }
+            });
+        } else {
+            console.log("Using existing bookmarks dialog");
+        }
+
+        try {
+            // Display bookmarks
+            console.log("Displaying bookmarks in dialog");
+            this.displayBookmarks();
+
+            // Show dialog with support for browsers without dialog
+            console.log("Opening dialog");
+            if (this.useDialogPolyfill) {
+                dialog._showModal();
+            } else {
+                dialog.showModal();
+            }
+        } catch (error) {
+            console.error("Error showing bookmarks dialog:", error);
+            this.showMessage("Không thể hiển thị danh sách video đánh dấu", "error");
+
+            // Fallback display if showModal fails
+            dialog.style.display = "block";
+        }
     }
     setVideoPlayerController(controller) {
         this.videoPlayerController = controller;
@@ -124,28 +247,225 @@ class BookmarkManager {
         // Update bookmark button state
         this.updateBookmarkButton();
 
+        // Update bookmark icon in playlist for this video
+        if (this.currentVideo && this.currentVideo.id) {
+            const isBookmarked = this.isVideoBookmarked(this.currentVideo.id);
+            this.updateBookmarkUI(this.currentVideo.id, isBookmarked);
+        }
+
         console.log("Bookmark manager updated for video:", this.currentVideo.title);
     }
-    toggleBookmark() {
-        console.log("toggleBookmark called, currentVideo:", this.currentVideo);
-        if (!this.currentVideo) {
+    toggleBookmark(videoId) {
+        // Nếu không truyền videoId, sử dụng currentVideo.id
+        if (!videoId && this.currentVideo) {
+            videoId = this.currentVideo.id;
+        }
+
+        // Nếu vẫn không có videoId, hiển thị thông báo và thoát
+        if (!videoId) {
             this.showMessage("Không có video nào đang phát", "error");
+            return false;
+        }
+
+        const index = this.bookmarks.findIndex((b) => b.id === videoId);
+        let isBookmarked = false;
+
+        if (index === -1) {
+            // Video chưa được đánh dấu - thêm vào
+            if (this.currentVideo) {
+                this.addBookmark(this.currentVideo);
+                this.animateBookmarkButton("add");
+                this.showMessage("Đã thêm vào danh sách đánh dấu", "success");
+                isBookmarked = true;
+            }
+        } else {
+            // Video đã được đánh dấu - xóa khỏi danh sách
+            this.removeBookmark(videoId);
+            this.animateBookmarkButton("remove");
+            this.showMessage("Đã xóa khỏi danh sách đánh dấu", "success");
+            isBookmarked = false;
+        }
+
+        // Cập nhật UI cho videoId này
+        this.updateBookmarkUI(videoId, isBookmarked);
+        return isBookmarked;
+    }
+
+    updateBookmarkUI(videoId, isBookmarked) {
+        // Update bookmark button on video player
+        const bookmarkBtn = document.getElementById("bookmark-btn");
+        if (bookmarkBtn) {
+            if (isBookmarked) {
+                bookmarkBtn.classList.add("active", "bookmarked");
+                bookmarkBtn.title = "Đã đánh dấu - Bỏ đánh dấu";
+            } else {
+                bookmarkBtn.classList.remove("active", "bookmarked");
+                bookmarkBtn.title = "Đánh dấu video này";
+            }
+        }
+
+        // Update bookmark icon on video items in playlist
+        const videoItems = document.querySelectorAll(`.video-item[data-video="${videoId}"]`);
+        videoItems.forEach((item) => {
+            let bookmarkIcon = item.querySelector(".video-bookmark-icon");
+
+            // Nếu không tìm thấy icon, tạo mới
+            if (!bookmarkIcon) {
+                bookmarkIcon = document.createElement("span");
+                bookmarkIcon.className = "video-bookmark-icon";
+                bookmarkIcon.innerHTML = "🔖";
+                bookmarkIcon.title = "Video đã được đánh dấu";
+
+                // Thêm vào thumbnail container
+                const thumbnailContainer = item.querySelector(".video-thumbnail");
+                if (thumbnailContainer) {
+                    thumbnailContainer.appendChild(bookmarkIcon);
+                }
+            }
+
+            if (isBookmarked) {
+                bookmarkIcon.classList.add("active");
+                bookmarkIcon.style.display = "block";
+            } else {
+                bookmarkIcon.classList.remove("active");
+                bookmarkIcon.style.display = "none";
+            }
+        });
+    }
+    findVideoById(videoId) {
+        for (const category in this.videoData) {
+            const found = this.videoData[category].find((v) => v.id === videoId);
+            if (found) return found;
+        }
+        return null;
+    }
+    getCategoryFromVideoId(videoId) {
+        // Assumes IDs are in format "category-number" (e.g., "cpu-1")
+        return videoId.split("-")[0];
+    }
+
+    checkIfBookmarked(videoId) {
+        return this.bookmarks.some((b) => b.id === videoId);
+    }
+    displayBookmarks() {
+        const bookmarksContainer = document.getElementById("bookmarks-container");
+        if (!bookmarksContainer) return;
+
+        // Clear existing content
+        bookmarksContainer.innerHTML = "";
+
+        if (this.bookmarks.length === 0) {
+            bookmarksContainer.innerHTML = `
+                <div class="empty-bookmarks">
+                    <div class="empty-icon">🔖</div>
+                    <p>Chưa có video nào được đánh dấu</p>
+                    <p class="empty-hint">Nhấn vào biểu tượng 🔖 khi xem video để đánh dấu và xem lại sau</p>
+                </div>
+            `;
             return;
         }
 
-        const isBookmarked = this.isVideoBookmarked(this.currentVideo.id);
-        console.log("Is video bookmarked:", isBookmarked);
+        // Sort bookmarks by most recent first
+        const sortedBookmarks = [...this.bookmarks].sort((a, b) => b.timestamp - a.timestamp);
 
-        if (isBookmarked) {
-            this.removeBookmark(this.currentVideo.id);
-            this.showMessage("✅ Đã bỏ đánh dấu bài học", "success");
-            this.animateBookmarkButton("remove");
-        } else {
-            this.addBookmark(this.currentVideo);
-            this.showMessage("🔖 Đã đánh dấu bài học", "success");
-            this.animateBookmarkButton("add");
-        }
+        // Create bookmarks list
+        const bookmarksList = document.createElement("div");
+        bookmarksList.className = "bookmarks-list";
+
+        sortedBookmarks.forEach((bookmark) => {
+            // Create thumbnail path
+            const thumbnailSrc = bookmark.src.replace(".mp4", ".jpg").replace("videos/", "images/thumbnails/");
+
+            const bookmarkItem = document.createElement("div");
+            bookmarkItem.className = "bookmark-item";
+            bookmarkItem.dataset.video = bookmark.id;
+            bookmarkItem.dataset.src = bookmark.src;
+
+            bookmarkItem.innerHTML = `
+                <div class="bookmark-thumbnail">
+                    <img src="${thumbnailSrc}" alt="${bookmark.title}">
+                    <span class="bookmark-duration">${bookmark.duration}</span>
+                    <button class="remove-bookmark" title="Xóa đánh dấu">×</button>
+                </div>
+                <div class="bookmark-info">
+                    <h4>${bookmark.title}</h4>
+                    <p>${this.getCategoryLabel(bookmark.category)}</p>
+                    <span class="bookmark-date">${this.formatBookmarkDate(bookmark.timestamp)}</span>
+                </div>
+            `;
+
+            bookmarksList.appendChild(bookmarkItem);
+        });
+
+        bookmarksContainer.appendChild(bookmarksList);
+
+        // Add event listeners
+        this.setupBookmarkEvents();
     }
+    getCategoryLabel(category) {
+        const labels = {
+            cpu: "CPU - Bộ xử lý trung tâm",
+            ram: "RAM - Bộ nhớ truy cập ngẫu nhiên",
+            rom: "ROM - Bộ nhớ chỉ đọc",
+        };
+
+        return labels[category] || category;
+    }
+    formatBookmarkDate(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+    setupBookmarkEvents() {
+        // Handle bookmark item click to play video
+        document.querySelectorAll(".bookmark-item").forEach((item) => {
+            item.addEventListener("click", (e) => {
+                if (!e.target.closest(".remove-bookmark")) {
+                    const videoId = item.dataset.video;
+                    const videoSrc = item.dataset.src;
+                    if (videoId && videoSrc) {
+                        this.playVideo(videoId, videoSrc);
+
+                        // Close bookmarks panel if it's in a dialog
+                        const bookmarksDialog = document.getElementById("bookmarks-dialog");
+                        if (bookmarksDialog) {
+                            bookmarksDialog.close();
+                        }
+                    }
+                }
+            });
+        });
+
+        // Handle remove bookmark button
+        document.querySelectorAll(".remove-bookmark").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const bookmarkItem = e.target.closest(".bookmark-item");
+                const videoId = bookmarkItem.dataset.video;
+
+                if (videoId) {
+                    this.toggleBookmark(videoId);
+                    bookmarkItem.classList.add("removing");
+
+                    // Animate removal
+                    setTimeout(() => {
+                        bookmarkItem.remove();
+
+                        // Check if bookmarks list is now empty
+                        if (this.bookmarks.length === 0) {
+                            this.displayBookmarks();
+                        }
+                    }, 300);
+                }
+            });
+        });
+    }
+
     animateBookmarkButton(action) {
         if (!this.bookmarkBtn) return;
 
@@ -170,8 +490,10 @@ class BookmarkManager {
             title: video.title,
             src: video.src,
             thumbnail: video.thumbnail,
+            category: video.topic, // Ensure we use the same field name for consistency
             topic: video.topic,
             duration: video.duration,
+            timestamp: Date.now(),
             dateAdded: Date.now(),
             currentTime: this.getCurrentVideoTime(),
         };
@@ -181,6 +503,9 @@ class BookmarkManager {
         this.updateBookmarkButton();
         this.updateBookmarkCount();
         this.updateBookmarkList();
+
+        // Update UI
+        this.updateBookmarkUI(video.id, true);
 
         // Add animation effect
         this.bookmarkBtn?.classList.add("bookmark-added");
@@ -199,6 +524,9 @@ class BookmarkManager {
             this.updateBookmarkButton();
             this.updateBookmarkCount();
             this.updateBookmarkList();
+
+            // Update UI
+            this.updateBookmarkUI(videoId, false);
 
             console.log("Bookmark removed:", removed.title);
         }
@@ -246,7 +574,7 @@ class BookmarkManager {
     updateBookmarkCount() {
         if (this.bookmarkCount) {
             const count = this.bookmarks.length;
-            this.bookmarkCount.textContent = `${count} bài`;
+            this.bookmarkCount.textContent = `${count}`;
         }
     }
 
@@ -407,10 +735,19 @@ class BookmarkManager {
     }
 
     saveBookmarks() {
-        try {
-            localStorage.setItem("videoBookmarks", JSON.stringify(this.bookmarks));
-        } catch (error) {
-            console.error("Failed to save bookmarks:", error);
+        localStorage.setItem("videoBookmarks", JSON.stringify(this.bookmarks));
+
+        // Also update the bookmarks count in the UI
+        const bookmarkCountElement = document.getElementById("bookmark-count");
+        if (bookmarkCountElement) {
+            bookmarkCountElement.textContent = this.bookmarks.length;
+
+            // Show/hide the badge based on bookmark count
+            if (this.bookmarks.length > 0) {
+                bookmarkCountElement.classList.add("active");
+            } else {
+                bookmarkCountElement.classList.remove("active");
+            }
         }
     }
 

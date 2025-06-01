@@ -1,683 +1,783 @@
 // Video Chapters Controller - YouTube-style chapters system
 class VideoChapters {
-    constructor(videoElement, customControls) {
-        this.video = videoElement;
-        this.customControls = customControls;
-        this.chapters = [];
+    constructor() {
+        this.chapters = {};
+        this.currentVideo = null;
         this.currentChapter = null;
-        this.isMenuOpen = false; // Get DOM elements
-        this.chaptersBtn = document.getElementById("chapters-btn");
-        this.chaptersMenu = document.getElementById("chapters-menu"); // Legacy modal
-        this.closeChaptersBtn = document.getElementById("close-chapters-btn");
-        this.chaptersList = document.getElementById("chapters-list");
-        this.chapterMarkers = document.getElementById("chapter-markers");
-        this.chapterInfo = document.getElementById("chapter-info");
-        this.chapterPreview = document.getElementById("chapter-preview");
-        this.progressBar = document.getElementById("progress-bar");
+        this.isVisible = false;
+        this.chapterPanel = null;
+        this.videoElement = null;
+        this.chapterMarkers = [];
+        this.chaptersBtn = null;
+        this.chapterIndicator = null;
+        this.chapterNavigationPanel = null;
 
-        // New external chapter navigation elements
+        // Đảm bảo các phần tử DOM đã được tạo trước khi thực hiện khởi tạo
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            this.initElements();
+        } else {
+            document.addEventListener("DOMContentLoaded", () => this.initElements());
+        }
+
+        console.log("VideoChapters instance created");
+    }
+
+    initElements() {
+        console.log("VideoChapters: Initializing elements");
+        this.videoElement = document.getElementById("main-video");
         this.chapterNavigationPanel = document.getElementById("chapter-navigation-panel");
-        this.chapterNavToggle = document.getElementById("chapter-nav-toggle");
+        this.chaptersBtn = document.getElementById("chapters-btn");
+        this.chapterIndicator = document.getElementById("chapter-indicator");
+
+        // Thêm các tham chiếu khác
         this.chapterNavContent = document.getElementById("chapter-nav-content");
-        this.chapterCount = document.getElementById("chapter-count");
+        this.chapterNavToggle = document.getElementById("chapter-nav-toggle");
+        this.chaptersListExternal = document.getElementById("chapters-list-external");
         this.currentChapterDisplay = document.getElementById("current-chapter-display");
         this.chapterProgressFill = document.getElementById("chapter-progress-fill");
         this.chapterTimeInfo = document.getElementById("chapter-time-info");
-        this.chaptersListExternal = document.getElementById("chapters-list-external");
-        this.chapterIndicator = document.getElementById("chapter-indicator");
+        this.markersContainer = document.querySelector(".progress-markers");
 
-        // State for external panel
-        this.isExternalPanelVisible = false;
-        this.isExternalPanelCollapsed = false;
+        if (!this.chapterNavigationPanel) {
+            console.warn("Chapter panel not found, will create one");
+            this.createChapterPanel();
+        }
 
-        this.init();
-    }
+        // Thêm listener cho timeupdate
+        this.addVideoTimeUpdateListener();
 
-    init() {
-        console.log("Initializing Video Chapters...");
-
-        // Load default chapters
-        this.loadChapters();
-
-        // Setup event listeners
         this.setupEventListeners();
-
-        console.log("Video Chapters initialized successfully");
     }
-    setupEventListeners() {
-        // Chapters button click - now toggles external panel
-        if (this.chaptersBtn) {
-            this.chaptersBtn.addEventListener("click", () => this.toggleExternalPanel());
-        }
 
-        // External panel toggle (collapse/expand)
-        if (this.chapterNavToggle) {
-            this.chapterNavToggle.addEventListener("click", () => this.toggleExternalPanelCollapse());
-        }
+    // Phương thức được gọi khi nhấn nút hiển thị/ẩn phân đoạn
+    toggleChapterPanel() {
+        console.log("Toggle chapter panel called");
 
-        // Close chapters menu (legacy)
-        if (this.closeChaptersBtn) {
-            this.closeChaptersBtn.addEventListener("click", () => this.closeChaptersMenu());
-        }
+        if (!this.chapterNavigationPanel) {
+            console.warn("Chapter navigation panel not found");
+            this.chapterNavigationPanel = document.getElementById("chapter-navigation-panel");
 
-        // Video time update for chapter tracking
-        if (this.video) {
-            this.video.addEventListener("timeupdate", () => {
-                this.updateCurrentChapter();
-                this.updateChapterProgress();
-            });
-            this.video.addEventListener("loadedmetadata", () => {
-                this.renderChapterMarkers();
-                this.updateChapterCount();
-            });
-        }
+            if (!this.chapterNavigationPanel) {
+                console.error("Cannot find chapter panel, creating one");
+                this.createChapterPanel();
 
-        // Progress bar hover for chapter preview
-        if (this.progressBar) {
-            this.progressBar.addEventListener("mousemove", (e) => this.showChapterPreview(e));
-            this.progressBar.addEventListener("mouseleave", () => this.hideChapterPreview());
-        }
-
-        // Click outside to close panels
-        document.addEventListener("click", (e) => {
-            if (
-                this.isMenuOpen &&
-                this.chaptersMenu &&
-                !this.chaptersMenu.contains(e.target) &&
-                !this.chaptersBtn.contains(e.target)
-            ) {
-                this.closeChaptersMenu();
+                if (!this.chapterNavigationPanel) {
+                    console.error("Failed to create chapter panel");
+                    return;
+                }
             }
-            if (
-                this.isExternalPanelVisible &&
-                this.chapterNavigationPanel &&
-                !this.chapterNavigationPanel.contains(e.target) &&
-                !this.chaptersBtn.contains(e.target)
-            ) {
-                this.hideExternalPanel();
+        }
+
+        // Toggle hiển thị/ẩn
+        this.isVisible = !this.isVisible;
+
+        if (this.isVisible) {
+            // Hiển thị panel
+            this.chapterNavigationPanel.style.display = "flex";
+            this.chapterNavigationPanel.classList.add("show");
+            this.chapterNavigationPanel.classList.add("visible");
+
+            if (this.chaptersBtn) {
+                this.chaptersBtn.classList.add("active");
+            }
+
+            // Cập nhật dữ liệu nếu cần
+            setTimeout(() => {
+                this.updateChaptersData();
+            }, 50);
+
+            console.log("Chapter panel shown");
+        } else {
+            // Ẩn panel
+            this.chapterNavigationPanel.classList.remove("show");
+            this.chapterNavigationPanel.classList.remove("visible");
+
+            // Đợi animation hoàn thành
+            setTimeout(() => {
+                if (!this.isVisible) {
+                    // Kiểm tra lại để tránh conflict nếu người dùng nhấn lại nút
+                    this.chapterNavigationPanel.style.display = "none";
+                }
+            }, 300);
+
+            if (this.chaptersBtn) {
+                this.chaptersBtn.classList.remove("active");
+            }
+
+            console.log("Chapter panel hidden");
+        }
+
+        return this.isVisible;
+    }
+
+    // Phương thức tạo panel nếu không tồn tại
+    createChapterPanel() {
+        console.log("Creating chapter navigation panel");
+
+        const videoPlayerContainer = document.querySelector(".video-player-container");
+        if (!videoPlayerContainer) {
+            console.error("Video player container not found");
+            return;
+        } // Tạo panel mới
+        this.chapterNavigationPanel = document.createElement("div");
+        this.chapterNavigationPanel.id = "chapter-navigation-panel";
+        this.chapterNavigationPanel.className = "chapter-navigation-panel";
+        this.chapterNavigationPanel.style.display = "none";
+
+        // Thêm nội dung HTML
+        this.chapterNavigationPanel.innerHTML = `
+            <div class="chapter-nav-header">
+                <div class="chapter-nav-title">
+                    <span class="chapter-nav-icon">📑</span>
+                    <span>Phân đoạn</span>
+                    <span class="chapter-count" id="chapter-count">0 phần</span>
+                </div>
+                <button class="chapter-nav-toggle" id="chapter-nav-toggle">
+                    <span class="toggle-icon">▼</span>
+                </button>
+            </div>
+            <div class="chapter-nav-content" id="chapter-nav-content">
+                <div class="chapter-current-info">
+                    <div class="current-chapter-title" id="current-chapter-display">
+                        Chưa có phân đoạn
+                    </div>
+                    <div class="chapter-progress-container">
+                        <div class="chapter-progress-bar">
+                            <div class="chapter-progress-fill" id="chapter-progress-fill"></div>
+                        </div>
+                        <div class="chapter-time-info" id="chapter-time-info">0:00 / 0:00</div>
+                    </div>
+                </div>
+                <div class="chapters-list-external" id="chapters-list-external">
+                    <div class="chapter-loading">Đang tải...</div>
+                </div>
+            </div>
+        `;
+
+        videoPlayerContainer.appendChild(this.chapterNavigationPanel);
+        console.log("Chapter panel created and added to DOM");
+    }
+
+    updateChaptersData() {
+        console.log("Updating chapters data");
+
+        // Nếu không có video hiện tại hoặc không có dữ liệu phân đoạn, thử lấy từ controller
+        if (
+            !this.currentVideo ||
+            !this.chapters ||
+            (this.currentVideo && (!this.chapters[this.currentVideo] || this.chapters[this.currentVideo].length === 0))
+        ) {
+            console.log("No cached chapters data, trying to fetch from controller");
+
+            // Lấy ID video hiện tại
+            let videoId = this.currentVideo;
+            if (!videoId && window.videoPlayerController && window.videoPlayerController.currentVideo) {
+                videoId = window.videoPlayerController.currentVideo.id;
+                this.currentVideo = videoId;
+            }
+
+            if (videoId) {
+                // Thử tất cả các cách để lấy phân đoạn
+                const sources = [
+                    window.videoPlayer,
+                    window.videoPlayerController,
+                    window.VideoPlayerController ? new window.VideoPlayerController() : null,
+                ];
+
+                for (const source of sources) {
+                    if (!source) continue;
+
+                    // Thử từng phương thức có thể
+                    const methodsToTry = ["getChaptersForVideo", "getChapterForVideo", "getVideoChapters"];
+
+                    for (const method of methodsToTry) {
+                        if (typeof source[method] === "function") {
+                            try {
+                                console.log(`Trying to get chapters using ${method}`);
+                                const chapters = source[method](videoId);
+
+                                if (chapters && chapters.length > 0) {
+                                    console.log(`Found ${chapters.length} chapters using ${method}`);
+
+                                    if (!this.chapters) this.chapters = {};
+                                    this.chapters[videoId] = chapters;
+
+                                    // Render chapters
+                                    this.renderChapters(chapters);
+
+                                    // Create markers
+                                    this.createChapterMarkers(chapters);
+
+                                    return;
+                                }
+                            } catch (e) {
+                                console.warn(`Error trying to get chapters with ${method}:`, e);
+                            }
+                        }
+                    }
+                }
+
+                // Nếu tất cả các cách trên đều thất bại, thử truy cập trực tiếp vào dữ liệu
+                try {
+                    if (window.videoPlayer && window.videoPlayer.videoData) {
+                        for (const category in window.videoPlayer.videoData) {
+                            const video = window.videoPlayer.videoData[category].find((v) => v.id === videoId);
+                            if (video && video.chapters && video.chapters.length > 0) {
+                                console.log(`Found ${video.chapters.length} chapters directly from videoData`);
+
+                                if (!this.chapters) this.chapters = {};
+                                this.chapters[videoId] = video.chapters;
+
+                                this.renderChapters(video.chapters);
+                                this.createChapterMarkers(video.chapters);
+                                return;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Error accessing video data directly:", e);
+                }
+
+                console.warn(`No chapters found for video: ${videoId}`);
+                this.renderEmptyChapters();
+            } else {
+                console.warn("No current video identified");
+                this.renderEmptyChapters();
+            }
+        } else if (this.currentVideo && this.chapters[this.currentVideo]) {
+            // Đã có dữ liệu, render lại
+            this.renderChapters(this.chapters[this.currentVideo]);
+            this.createChapterMarkers(this.chapters[this.currentVideo]);
+        }
+    }
+
+    setupEventListeners() {
+        console.log("VideoChapters: Setting up event listeners");
+
+        // Xử lý nút chapters
+        if (this.chaptersBtn) {
+            console.log("Found chapters button, attaching event");
+            // Xóa các event listeners cũ nếu có
+            this.chaptersBtn.removeEventListener("click", this._toggleChapterHandler);
+
+            // Tạo handler và lưu tham chiếu để có thể xóa sau này
+            this._toggleChapterHandler = () => {
+                console.log("Chapter button clicked");
+                this.toggleChapterPanel();
+            };
+
+            this.chaptersBtn.addEventListener("click", this._toggleChapterHandler);
+        }
+
+        // Xử lý nút toggle trong panel
+        if (this.chapterNavToggle) {
+            this.chapterNavToggle.addEventListener("click", () => {
+                if (this.chapterNavContent) {
+                    const isCollapsed = this.chapterNavContent.classList.toggle("collapsed");
+                    const toggleIcon = this.chapterNavToggle.querySelector(".toggle-icon");
+                    if (toggleIcon) {
+                        toggleIcon.textContent = isCollapsed ? "▲" : "▼";
+                    }
+                }
+            });
+        }
+
+        // Thêm timeupdate listener cho video
+        this.addVideoTimeUpdateListener();
+
+        // Các event listeners khác (giữ nguyên)
+        // Lắng nghe sự kiện videoChaptersReady
+        window.addEventListener("video-chapters-ready", (event) => {
+            if (event.detail && event.detail.videoId) {
+                console.log("VideoChapters: Received chapters for video:", event.detail.videoId);
+                const videoId = event.detail.videoId;
+                const chapters = event.detail.chapters || [];
+
+                if (chapters.length > 0) {
+                    // Cập nhật dữ liệu
+                    if (!this.chapters) this.chapters = {};
+                    this.chapters[videoId] = chapters;
+                    this.currentVideo = videoId;
+
+                    // Hiển thị indicator nếu có phân đoạn
+                    if (this.chapterIndicator) {
+                        this.chapterIndicator.style.display = "inline-block";
+                    }
+
+                    // Nếu panel đang hiển thị, cập nhật nội dung
+                    if (this.isVisible && this.chapterNavigationPanel) {
+                        this.updateChaptersData();
+                    }
+                }
             }
         });
 
-        // Keyboard navigation
-        document.addEventListener("keydown", (e) => this.handleKeyboard(e));
-    }
+        // Lắng nghe sự kiện video-changed
+        window.addEventListener("video-changed", (event) => {
+            if (event.detail && event.detail.id) {
+                console.log("VideoChapters: Video changed event received for:", event.detail.id);
+                const videoId = event.detail.id;
+                const chapters = event.detail.chapters || [];
 
-    loadChapters() {
-        // Default chapters for demo - in real app, this would come from video metadata or API
-        this.chapters = [
-            {
-                id: "intro",
-                title: "Giới thiệu về CPU",
-                startTime: 0,
-                endTime: 150, // 2:30
-                thumbnail: "images/chapter-thumb-1.jpg",
-            },
-            {
-                id: "architecture",
-                title: "Kiến trúc cơ bản",
-                startTime: 150,
-                endTime: 300, // 5:00
-                thumbnail: "images/chapter-thumb-2.jpg",
-            },
-            {
-                id: "components",
-                title: "Các thành phần chính",
-                startTime: 300,
-                endTime: 480, // 8:00
-                thumbnail: "images/chapter-thumb-3.jpg",
-            },
-            {
-                id: "performance",
-                title: "Hiệu năng và tối ưu",
-                startTime: 480,
-                endTime: 650, // 10:50
-                thumbnail: "images/chapter-thumb-4.jpg",
-            },
-            {
-                id: "practical",
-                title: "Thực hành và ứng dụng",
-                startTime: 650,
-                endTime: 930, // 15:30 (end)
-                thumbnail: "images/chapter-thumb-5.jpg",
-            },
-        ];
+                // Lưu ID video hiện tại
+                this.currentVideo = videoId;
 
-        this.renderChaptersList();
-        this.renderExternalChaptersList();
-        this.updateChapterCount();
-        this.updateChapterIndicator();
+                if (chapters.length > 0) {
+                    // Cập nhật dữ liệu phân đoạn
+                    if (!this.chapters) this.chapters = {};
+                    this.chapters[videoId] = chapters;
+
+                    // Hiển thị indicator
+                    if (this.chapterIndicator) {
+                        this.chapterIndicator.style.display = "inline-block";
+                    }
+
+                    // Nếu panel đang hiển thị, cập nhật nội dung
+                    if (this.isVisible && this.chapterNavigationPanel) {
+                        this.updateChaptersData();
+                    }
+                } else {
+                    // Ẩn indicator nếu không có phân đoạn
+                    if (this.chapterIndicator) {
+                        this.chapterIndicator.style.display = "none";
+                    }
+                }
+            }
+        });
     }
 
     loadChaptersForVideo(videoId) {
-        // Load specific chapters for different videos
-        const videoChapters = {
-            "cpu-1": [
-                { id: "intro", title: "Giới thiệu về CPU", startTime: 0, endTime: 150 },
-                { id: "history", title: "Lịch sử phát triển", startTime: 150, endTime: 300 },
-                { id: "importance", title: "Tầm quan trọng", startTime: 300, endTime: 450 },
-                { id: "overview", title: "Tổng quan chung", startTime: 450, endTime: 600 },
-            ],
-            "cpu-2": [
-                { id: "basic-arch", title: "Kiến trúc cơ bản", startTime: 0, endTime: 200 },
-                { id: "alu", title: "Đơn vị tính toán ALU", startTime: 200, endTime: 400 },
-                { id: "control-unit", title: "Đơn vị điều khiển", startTime: 400, endTime: 600 },
-                { id: "registers", title: "Thanh ghi", startTime: 600, endTime: 800 },
-                { id: "cache", title: "Bộ nhớ đệm", startTime: 800, endTime: 1000 },
-            ],
-            "ram-1": [
-                { id: "ram-intro", title: "Giới thiệu RAM", startTime: 0, endTime: 120 },
-                { id: "ram-types", title: "Các loại RAM", startTime: 120, endTime: 300 },
-                { id: "ram-speed", title: "Tốc độ và hiệu năng", startTime: 300, endTime: 480 },
-                { id: "ram-usage", title: "Cách sử dụng", startTime: 480, endTime: 600 },
-            ],
-        };
-        this.chapters = videoChapters[videoId] || this.chapters;
-        this.renderChaptersList();
-        this.renderExternalChaptersList();
-        this.renderChapterMarkers();
-        this.updateChapterCount();
-        this.updateChapterIndicator();
-    }
+        console.log(`Loading chapters for video: ${videoId}`);
+        this.currentVideo = videoId;
 
-    renderChaptersList() {
-        if (!this.chaptersList) return;
-
-        this.chaptersList.innerHTML = "";
-
-        if (this.chapters.length === 0) {
-            this.chaptersList.innerHTML = '<div class="chapter-loading">Không có phân đoạn cho video này</div>';
+        // Đầu tiên kiểm tra xem đã có dữ liệu phân đoạn trong cache chưa
+        if (this.chapters && this.chapters[videoId] && this.chapters[videoId].length > 0) {
+            console.log(`Using cached chapters for video ${videoId}`);
+            this.renderChapters(this.chapters[videoId]);
+            this.createChapterMarkers(this.chapters[videoId]);
             return;
         }
 
-        this.chapters.forEach((chapter, index) => {
+        // Nếu không có cache, thử lấy từ VideoPlayerController
+        if (window.videoPlayer && window.videoPlayer.getChaptersForVideo) {
+            console.log("Fetching chapters from VideoPlayerController");
+            const videoChapters = window.videoPlayer.getChaptersForVideo(videoId);
+            if (videoChapters && videoChapters.length > 0) {
+                if (!this.chapters) this.chapters = {};
+                this.chapters[videoId] = videoChapters;
+                this.renderChapters(videoChapters);
+                this.createChapterMarkers(videoChapters);
+                return;
+            }
+        }
+
+        // Thử lấy trực tiếp từ đối tượng video
+        const videoPlayerController = window.videoPlayer || window.videoPlayerController;
+        if (videoPlayerController) {
+            const videoData = videoPlayerController.findVideoById(videoId);
+            if (videoData && videoData.chapters && videoData.chapters.length > 0) {
+                if (!this.chapters) this.chapters = {};
+                this.chapters[videoId] = videoData.chapters;
+                this.renderChapters(videoData.chapters);
+                this.createChapterMarkers(videoData.chapters);
+                return;
+            }
+        }
+
+        console.warn(`No chapters found for video: ${videoId}`);
+        this.renderEmptyChapters();
+    }
+
+    /**
+     * Hiển thị danh sách phân đoạn video
+     * @param {Array} chapters - Mảng các phân đoạn cần hiển thị
+     */
+    renderChapters(chapters) {
+        // Kiểm tra tham số đầu vào
+        if (!chapters || !Array.isArray(chapters) || chapters.length === 0) {
+            console.warn("No chapters to render");
+            this.renderEmptyChapters();
+            return;
+        }
+
+        console.log(`Rendering ${chapters.length} chapters`);
+
+        // Lấy container để đổ dữ liệu vào
+        const chaptersListExternal = document.getElementById("chapters-list-external");
+        if (!chaptersListExternal) {
+            console.error("Chapters list external container not found");
+            return;
+        }
+
+        // Xóa nội dung cũ
+        chaptersListExternal.innerHTML = "";
+
+        // Cập nhật số lượng phân đoạn
+        const chapterCount = document.getElementById("chapter-count");
+        if (chapterCount) {
+            chapterCount.textContent = `${chapters.length} phần`;
+        }
+
+        // Tạo danh sách phân đoạn
+        chapters.forEach((chapter, index) => {
             const chapterItem = document.createElement("div");
             chapterItem.className = "chapter-item";
-            chapterItem.setAttribute("data-chapter-id", chapter.id);
-            chapterItem.setAttribute("tabindex", "0");
-            chapterItem.setAttribute("role", "button");
-            chapterItem.setAttribute("aria-label", `Chuyển đến phân đoạn: ${chapter.title}`);
+            chapterItem.dataset.time = chapter.time;
+            chapterItem.dataset.index = index;
 
-            const startTimeFormatted = this.formatTime(chapter.startTime);
-            const duration = chapter.endTime - chapter.startTime;
-            const durationFormatted = this.formatTime(duration);
+            // Kiểm tra nếu đây là phân đoạn hiện tại
+            if (this.currentChapter && this.currentChapter.time === chapter.time) {
+                chapterItem.classList.add("active");
+            }
 
             chapterItem.innerHTML = `
-                <div class="chapter-thumbnail">
-                    <img src="${chapter.thumbnail || "images/video-placeholder.jpg"}" 
-                         alt="Thumbnail phân đoạn ${chapter.title}" 
-                         onerror="this.src='images/video-placeholder.jpg'">
-                </div>
-                <div class="chapter-details">
-                    <div class="chapter-item-title">${chapter.title}</div>
-                    <div class="chapter-item-time">
-                        ${startTimeFormatted}
-                        <span class="chapter-item-duration">(${durationFormatted})</span>
+                <div class="chapter-item-content">
+                    <div class="chapter-number">${index + 1}</div>
+                    <div class="chapter-details">
+                        <div class="chapter-item-title">${chapter.title}</div>
+                        <div class="chapter-item-time">${this.formatTime(chapter.time)}</div>
                     </div>
                 </div>
             `;
 
-            // Click to jump to chapter
-            chapterItem.addEventListener("click", () => this.jumpToChapter(chapter));
-            chapterItem.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    this.jumpToChapter(chapter);
-                }
-            });
+            // Thêm sự kiện click để nhảy đến phân đoạn
+            chapterItem.addEventListener("click", () => {
+                if (this.videoElement) {
+                    this.videoElement.currentTime = chapter.time;
 
-            this.chaptersList.appendChild(chapterItem);
-        });
-    }
-    renderChapterMarkers() {
-        if (!this.chapterMarkers || !this.video.duration || this.chapters.length === 0) return;
-
-        this.chapterMarkers.innerHTML = "";
-
-        this.chapters.forEach((chapter) => {
-            if (chapter.startTime > 0) {
-                // Don't show marker at 0:00
-                const marker = document.createElement("div");
-                marker.className = "chapter-marker";
-                marker.setAttribute("data-chapter-id", chapter.id);
-                marker.setAttribute("role", "button");
-                marker.setAttribute("tabindex", "0");
-                marker.setAttribute("aria-label", `Chuyển đến: ${chapter.title}`);
-                marker.setAttribute("title", `${chapter.title} - ${this.formatTime(chapter.startTime)}`);
-
-                const position = (chapter.startTime / this.video.duration) * 100;
-                marker.style.left = `${position}%`;
-
-                // Enhanced interactivity
-                marker.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    this.jumpToChapter(chapter);
-                });
-
-                marker.addEventListener("mouseenter", () => {
-                    marker.style.transform = "translateX(-50%) scale(1.2)";
-                    marker.style.zIndex = "10";
-                });
-
-                marker.addEventListener("mouseleave", () => {
-                    marker.style.transform = "translateX(-50%) scale(1)";
-                    marker.style.zIndex = "1";
-                });
-
-                marker.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        this.jumpToChapter(chapter);
+                    // Nếu video đang tạm dừng, phát lại
+                    if (this.videoElement.paused) {
+                        this.videoElement.play().catch((err) => {
+                            console.error("Error playing video:", err);
+                        });
                     }
-                });
 
-                this.chapterMarkers.appendChild(marker);
-            }
-        });
-
-        console.log(`Rendered ${this.chapters.length} chapter markers`);
-    }
-
-    updateCurrentChapter() {
-        const currentTime = this.video.currentTime;
-
-        // Find current chapter
-        const newCurrentChapter = this.chapters.find(
-            (chapter) => currentTime >= chapter.startTime && currentTime < chapter.endTime
-        );
-        if (newCurrentChapter && newCurrentChapter !== this.currentChapter) {
-            this.currentChapter = newCurrentChapter;
-            this.updateChapterInfo();
-            this.updateActiveChapterInList();
-            this.updateActiveChapterInExternalList();
-
-            // Show chapter info briefly when chapter changes
-            this.showChapterInfo();
-        } else if (!newCurrentChapter && this.currentChapter) {
-            // No current chapter
-            this.currentChapter = null;
-            if (this.currentChapterDisplay) {
-                this.currentChapterDisplay.textContent = "Chưa có phân đoạn";
-            }
-            if (this.chapterTimeInfo) {
-                this.chapterTimeInfo.textContent = "--:-- / --:--";
-            }
-            if (this.chapterProgressFill) {
-                this.chapterProgressFill.style.width = "0%";
-            }
-        }
-    }
-
-    updateChapterInfo() {
-        if (!this.chapterInfo || !this.currentChapter) return;
-
-        const titleEl = document.getElementById("current-chapter-title");
-        const timeEl = document.getElementById("current-chapter-time");
-
-        if (titleEl) titleEl.textContent = this.currentChapter.title;
-        if (timeEl) {
-            const startTime = this.formatTime(this.currentChapter.startTime);
-            const endTime = this.formatTime(this.currentChapter.endTime);
-            timeEl.textContent = `${startTime} - ${endTime}`;
-        }
-    }
-
-    updateActiveChapterInList() {
-        // Update active state in chapters list
-        const chapterItems = this.chaptersList.querySelectorAll(".chapter-item");
-        chapterItems.forEach((item) => {
-            const chapterId = item.getAttribute("data-chapter-id");
-            item.classList.toggle("active", chapterId === this.currentChapter?.id);
-        });
-    }
-
-    showChapterInfo() {
-        if (!this.chapterInfo) return;
-
-        this.chapterInfo.classList.add("visible");
-
-        // Hide after 3 seconds
-        setTimeout(() => {
-            this.chapterInfo.classList.remove("visible");
-        }, 3000);
-    }
-
-    jumpToChapter(chapter) {
-        if (!this.video) return;
-
-        console.log(`Jumping to chapter: ${chapter.title} at ${chapter.startTime}s`);
-
-        this.video.currentTime = chapter.startTime;
-        this.closeChaptersMenu();
-
-        // Highlight the marker briefly
-        const marker = this.chapterMarkers.querySelector(`[data-chapter-id="${chapter.id}"]`);
-        if (marker) {
-            marker.classList.add("highlight");
-            setTimeout(() => marker.classList.remove("highlight"), 1000);
-        }
-
-        // Show chapter info
-        this.showChapterInfo();
-    }
-
-    showChapterPreview(e) {
-        if (!this.chapterPreview || !this.video.duration || this.chapters.length === 0) return;
-
-        const rect = this.progressBar.getBoundingClientRect();
-        const position = (e.clientX - rect.left) / rect.width;
-        const previewTime = position * this.video.duration;
-
-        // Find chapter at this time
-        const chapter = this.chapters.find((ch) => previewTime >= ch.startTime && previewTime < ch.endTime);
-
-        if (chapter) {
-            const previewTitle = this.chapterPreview.querySelector(".preview-title");
-            const previewTimeEl = this.chapterPreview.querySelector(".preview-time");
-
-            if (previewTitle) previewTitle.textContent = chapter.title;
-            if (previewTimeEl) {
-                const timeFormatted = this.formatTime(previewTime);
-                previewTimeEl.textContent = timeFormatted;
-            }
-
-            // Position the preview
-            this.chapterPreview.style.left = `${e.clientX - rect.left}px`;
-            this.chapterPreview.classList.add("visible");
-        } else {
-            this.chapterPreview.classList.remove("visible");
-        }
-    }
-
-    hideChapterPreview() {
-        if (this.chapterPreview) {
-            this.chapterPreview.classList.remove("visible");
-        }
-    }
-
-    toggleChaptersMenu() {
-        if (this.isMenuOpen) {
-            this.closeChaptersMenu();
-        } else {
-            this.openChaptersMenu();
-        }
-    }
-
-    openChaptersMenu() {
-        if (!this.chaptersMenu) return;
-
-        this.chaptersMenu.style.display = "block";
-        this.chaptersMenu.setAttribute("aria-hidden", "false");
-        this.isMenuOpen = true;
-
-        // Add active state to button
-        this.chaptersBtn?.classList.add("chapters-active");
-
-        // Focus first chapter item
-        const firstChapter = this.chaptersList.querySelector(".chapter-item");
-        if (firstChapter) {
-            setTimeout(() => firstChapter.focus(), 100);
-        }
-
-        console.log("Chapters menu opened");
-    }
-
-    closeChaptersMenu() {
-        if (!this.chaptersMenu) return;
-
-        this.chaptersMenu.style.display = "none";
-        this.chaptersMenu.setAttribute("aria-hidden", "true");
-        this.isMenuOpen = false;
-
-        // Remove active state from button
-        this.chaptersBtn?.classList.remove("chapters-active");
-
-        console.log("Chapters menu closed");
-    }
-
-    // External Chapter Navigation Panel Methods
-
-    toggleExternalPanel() {
-        if (this.isExternalPanelVisible) {
-            this.hideExternalPanel();
-        } else {
-            this.showExternalPanel();
-        }
-    }
-    showExternalPanel() {
-        if (!this.chapterNavigationPanel) return;
-
-        this.isExternalPanelVisible = true;
-        this.chapterNavigationPanel.style.display = "block";
-
-        // Force reflow
-        this.chapterNavigationPanel.getBoundingClientRect();
-
-        this.chapterNavigationPanel.classList.add("visible");
-        this.chaptersBtn.classList.add("chapters-active");
-
-        console.log("External chapter panel shown");
-    }
-
-    hideExternalPanel() {
-        if (!this.chapterNavigationPanel) return;
-
-        this.isExternalPanelVisible = false;
-        this.chapterNavigationPanel.classList.remove("visible");
-        this.chaptersBtn.classList.remove("chapters-active");
-
-        setTimeout(() => {
-            if (!this.isExternalPanelVisible) {
-                this.chapterNavigationPanel.style.display = "none";
-            }
-        }, 300);
-
-        console.log("External chapter panel hidden");
-    }
-
-    toggleExternalPanelCollapse() {
-        if (!this.chapterNavigationPanel) return;
-
-        this.isExternalPanelCollapsed = !this.isExternalPanelCollapsed;
-        this.chapterNavigationPanel.classList.toggle("collapsed", this.isExternalPanelCollapsed);
-
-        console.log(`External panel ${this.isExternalPanelCollapsed ? "collapsed" : "expanded"}`);
-    }
-
-    renderExternalChaptersList() {
-        if (!this.chaptersListExternal) return;
-
-        this.chaptersListExternal.innerHTML = "";
-
-        if (this.chapters.length === 0) {
-            this.chaptersListExternal.innerHTML = '<div class="chapter-loading">Không có phân đoạn cho video này</div>';
-            return;
-        }
-
-        this.chapters.forEach((chapter, index) => {
-            const chapterItem = document.createElement("div");
-            chapterItem.className = "chapter-item";
-            chapterItem.setAttribute("data-chapter-id", chapter.id);
-            chapterItem.setAttribute("tabindex", "0");
-            chapterItem.setAttribute("role", "button");
-            chapterItem.setAttribute("aria-label", `Chuyển đến phân đoạn: ${chapter.title}`);
-
-            const startTimeFormatted = this.formatTime(chapter.startTime);
-            const duration = chapter.endTime - chapter.startTime;
-            const durationFormatted = this.formatTime(duration);
-
-            chapterItem.innerHTML = `
-                <div class="chapter-thumbnail">
-                    <img src="${chapter.thumbnail || "images/video-placeholder.jpg"}" 
-                         alt="Thumbnail phân đoạn ${chapter.title}" 
-                         onerror="this.src='images/video-placeholder.jpg'">
-                </div>
-                <div class="chapter-details">
-                    <div class="chapter-item-title">${chapter.title}</div>
-                    <div class="chapter-item-time">
-                        ${startTimeFormatted}
-                        <span class="chapter-item-duration">(${durationFormatted})</span>
-                    </div>
-                </div>
-            `;
-
-            // Click to jump to chapter
-            chapterItem.addEventListener("click", () => this.jumpToChapter(chapter));
-            chapterItem.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    this.jumpToChapter(chapter);
+                    // Cập nhật phân đoạn hiện tại
+                    this.currentChapter = chapter;
+                    this.updateActiveChapter(index);
                 }
             });
 
-            this.chaptersListExternal.appendChild(chapterItem);
+            chaptersListExternal.appendChild(chapterItem);
         });
-    }
 
-    updateChapterCount() {
-        if (this.chapterCount) {
-            const count = this.chapters.length;
-            this.chapterCount.textContent = `${count} phần`;
+        // Định vị đến phân đoạn hiện tại nếu có
+        if (this.videoElement && this.videoElement.currentTime > 0) {
+            this.updateCurrentChapterFromTime(this.videoElement.currentTime);
         }
     }
 
-    updateChapterIndicator() {
-        if (this.chapterIndicator) {
-            const hasChapters = this.chapters.length > 0;
-            this.chapterIndicator.style.display = hasChapters ? "block" : "none";
+    /**
+     * Hiển thị trạng thái khi không có phân đoạn
+     */
+    renderEmptyChapters() {
+        console.log("Rendering empty chapters state");
+
+        const chaptersListExternal = document.getElementById("chapters-list-external");
+        const chapterCount = document.getElementById("chapter-count");
+        const currentChapterDisplay = document.getElementById("current-chapter-display");
+
+        if (chapterCount) {
+            chapterCount.textContent = "0 phần";
         }
+
+        if (currentChapterDisplay) {
+            currentChapterDisplay.textContent = "Không có phân đoạn";
+        }
+
+        if (chaptersListExternal) {
+            chaptersListExternal.innerHTML = `
+                <div class="empty-chapters">
+                    <div class="empty-icon">📑</div>
+                    <p>Video này không có phân đoạn</p>
+                </div>
+            `;
+        }
+
+        // Xóa các markers nếu có
+        this.clearChapterMarkers();
     }
 
-    updateChapterProgress() {
-        if (!this.currentChapter || !this.chapterProgressFill || !this.chapterTimeInfo || !this.currentChapterDisplay)
+    /**
+     * Tạo các markers trên thanh tiến trình video
+     * @param {Array} chapters - Mảng các phân đoạn
+     */
+    createChapterMarkers(chapters) {
+        console.log("Creating chapter markers");
+
+        // Xóa markers cũ
+        this.clearChapterMarkers();
+
+        // Kiểm tra video và danh sách phân đoạn
+        if (!this.videoElement || !chapters || !Array.isArray(chapters) || chapters.length === 0) {
             return;
+        }
 
-        const currentTime = this.video.currentTime;
-        const chapterStart = this.currentChapter.startTime;
-        const chapterEnd = this.currentChapter.endTime;
-        const chapterDuration = chapterEnd - chapterStart;
-        const chapterProgress = Math.max(0, Math.min(1, (currentTime - chapterStart) / chapterDuration));
+        // Tìm container cho markers - thử nhiều selector khác nhau
+        const possibleProgressSelectors = [
+            ".progress-markers", // Nếu đã tồn tại
+            ".progress-bar",
+            ".video-progress-bar",
+            ".video-progress",
+            ".progress-container",
+            ".progress",
+        ];
 
-        // Update progress bar
-        this.chapterProgressFill.style.width = `${chapterProgress * 100}%`;
+        let markersContainer = null;
+        let progressBar = null;
 
-        // Update time info
-        const currentChapterTime = Math.max(0, currentTime - chapterStart);
-        const currentTimeFormatted = this.formatTime(currentChapterTime);
-        const durationFormatted = this.formatTime(chapterDuration);
-        this.chapterTimeInfo.textContent = `${currentTimeFormatted} / ${durationFormatted}`;
+        // Tìm container markers nếu đã tồn tại
+        for (const selector of possibleProgressSelectors) {
+            const found = document.querySelector(selector);
+            if (found) {
+                if (selector === ".progress-markers") {
+                    markersContainer = found;
+                    break;
+                } else {
+                    progressBar = found;
+                    break;
+                }
+            }
+        }
 
-        // Update current chapter title
-        this.currentChapterDisplay.textContent = this.currentChapter.title;
+        // Nếu không tìm thấy progress bar, tạo một cái mới
+        if (!progressBar && !markersContainer) {
+            console.error("Cannot find progress bar for chapter markers");
+            return;
+        }
 
-        // Update active state in external list
-        this.updateActiveChapterInExternalList();
+        // Nếu chưa có container markers, tạo mới
+        if (!markersContainer) {
+            console.log("Creating new markers container in progress bar:", progressBar);
+
+            const newMarkersContainer = document.createElement("div");
+            newMarkersContainer.className = "progress-markers";
+            progressBar.appendChild(newMarkersContainer);
+
+            markersContainer = newMarkersContainer;
+        }
+
+        // Lưu lại tham chiếu
+        this.markersContainer = markersContainer;
+
+        // Lấy thời lượng video
+        const duration = this.videoElement.duration || 1;
+
+        // Tạo markers cho từng phân đoạn
+        chapters.forEach((chapter, index) => {
+            // Tính toán vị trí theo phần trăm
+            const position = (chapter.time / duration) * 100;
+
+            // Tạo marker
+            const marker = document.createElement("div");
+            marker.className = "chapter-marker";
+            marker.style.left = `${position}%`;
+            marker.dataset.time = chapter.time;
+            marker.dataset.title = chapter.title;
+            marker.dataset.index = index;
+
+            // Thêm tooltip
+            marker.setAttribute("title", `${chapter.title} (${this.formatTime(chapter.time)})`);
+
+            // Thêm sự kiện click
+            marker.addEventListener("click", (e) => {
+                e.stopPropagation(); // Ngăn chặn sự kiện lan sang thanh tiến trình
+
+                if (this.videoElement) {
+                    this.videoElement.currentTime = chapter.time;
+
+                    // Phát video nếu đang tạm dừng
+                    if (this.videoElement.paused) {
+                        this.videoElement.play().catch((err) => {
+                            console.error("Error playing video:", err);
+                        });
+                    }
+                }
+            });
+
+            // Thêm vào container
+            markersContainer.appendChild(marker);
+            this.chapterMarkers.push(marker);
+        });
+
+        console.log(`Created ${chapters.length} chapter markers`);
     }
 
-    updateActiveChapterInExternalList() {
-        if (!this.chaptersListExternal) return;
+    /**
+     * Xóa tất cả markers phân đoạn
+     */
+    clearChapterMarkers() {
+        if (this.markersContainer) {
+            this.markersContainer.innerHTML = "";
+        } else {
+            const markersContainer = document.querySelector(".progress-markers");
+            if (markersContainer) {
+                markersContainer.innerHTML = "";
+            }
+        }
 
-        const chapterItems = this.chaptersListExternal.querySelectorAll(".chapter-item");
-        chapterItems.forEach((item) => {
-            const chapterId = item.getAttribute("data-chapter-id");
-            item.classList.toggle("active", chapterId === this.currentChapter?.id);
+        this.chapterMarkers = [];
+    }
+
+    /**
+     * Cập nhật phân đoạn hiện tại dựa trên thời gian video
+     * @param {number} currentTime - Thời gian hiện tại của video
+     */
+    updateCurrentChapterFromTime(currentTime) {
+        if (!this.currentVideo || !this.chapters || !this.chapters[this.currentVideo]) {
+            return;
+        }
+
+        const chapters = this.chapters[this.currentVideo];
+        let activeIndex = -1;
+
+        // Tìm phân đoạn hiện tại (phân đoạn cuối cùng có time <= currentTime)
+        for (let i = chapters.length - 1; i >= 0; i--) {
+            if (chapters[i].time <= currentTime) {
+                activeIndex = i;
+                this.currentChapter = chapters[i];
+                this.currentChapter.index = i;
+                break;
+            }
+        }
+
+        // Cập nhật UI
+        if (activeIndex >= 0) {
+            this.updateActiveChapter(activeIndex);
+            this.updateChapterDisplay();
+        }
+    }
+
+    /**
+     * Cập nhật trạng thái active cho phân đoạn
+     * @param {number} activeIndex - Chỉ số của phân đoạn hiện tại
+     */
+    updateActiveChapter(activeIndex) {
+        // Cập nhật trạng thái active trong danh sách
+        const chapterItems = document.querySelectorAll(".chapter-item");
+
+        chapterItems.forEach((item, index) => {
+            if (index === activeIndex) {
+                item.classList.add("active");
+
+                // Cuộn đến phần tử active nếu panel đang hiển thị
+                if (this.isVisible) {
+                    item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+            } else {
+                item.classList.remove("active");
+            }
         });
     }
 
-    handleKeyboard(e) {
-        if (!this.isMenuOpen) return;
+    /**
+     * Cập nhật hiển thị thông tin phân đoạn hiện tại
+     */
+    updateChapterDisplay() {
+        if (!this.currentChapter) return;
 
-        const chapterItems = Array.from(this.chaptersList.querySelectorAll(".chapter-item"));
-        const activeItem = document.activeElement;
-        const currentIndex = chapterItems.indexOf(activeItem);
+        const currentChapterDisplay = document.getElementById("current-chapter-display");
+        const chapterProgressFill = document.getElementById("chapter-progress-fill");
+        const chapterTimeInfo = document.getElementById("chapter-time-info");
 
-        switch (e.key) {
-            case "Escape":
-                e.preventDefault();
-                this.closeChaptersMenu();
-                this.chaptersBtn?.focus();
-                break;
-            case "ArrowDown":
-                e.preventDefault();
-                {
-                    const nextIndex = Math.min(currentIndex + 1, chapterItems.length - 1);
-                    chapterItems[nextIndex]?.focus();
-                }
-                break;
+        if (currentChapterDisplay) {
+            currentChapterDisplay.textContent = this.currentChapter.title;
+        }
 
-            case "ArrowUp":
-                e.preventDefault();
-                {
-                    const prevIndex = Math.max(currentIndex - 1, 0);
-                    chapterItems[prevIndex]?.focus();
-                }
-                break;
+        // Nếu có video element và current chapter
+        if (this.videoElement && this.currentVideo && this.chapters && this.chapters[this.currentVideo]) {
+            const chapters = this.chapters[this.currentVideo];
+            const currentIndex = this.currentChapter.index;
+            const currentTime = this.videoElement.currentTime;
 
-            case "Home":
-                e.preventDefault();
-                chapterItems[0]?.focus();
-                break;
+            // Xác định thời gian kết thúc của phân đoạn hiện tại
+            let endTime;
 
-            case "End":
-                e.preventDefault();
-                chapterItems[chapterItems.length - 1]?.focus();
-                break;
+            if (currentIndex < chapters.length - 1) {
+                // Nếu không phải phân đoạn cuối, lấy thời gian bắt đầu của phân đoạn tiếp theo
+                endTime = chapters[currentIndex + 1].time;
+            } else {
+                // Nếu là phân đoạn cuối, lấy thời lượng video
+                endTime = this.videoElement.duration;
+            }
+
+            // Tính tiến trình phân đoạn
+            if (chapterProgressFill && endTime > this.currentChapter.time) {
+                const chapterProgress =
+                    ((currentTime - this.currentChapter.time) / (endTime - this.currentChapter.time)) * 100;
+                chapterProgressFill.style.width = `${Math.min(100, Math.max(0, chapterProgress))}%`;
+            }
+
+            // Cập nhật thông tin thời gian
+            if (chapterTimeInfo) {
+                const elapsedInChapter = currentTime - this.currentChapter.time;
+                const chapterDuration = endTime - this.currentChapter.time;
+
+                chapterTimeInfo.textContent = `${this.formatTime(elapsedInChapter)} / ${this.formatTime(
+                    chapterDuration
+                )}`;
+            }
         }
     }
 
+    /**
+     * Định dạng thời gian từ giây sang MM:SS
+     * @param {number} seconds - Số giây cần định dạng
+     * @returns {string} - Chuỗi thời gian đã định dạng
+     */
     formatTime(seconds) {
-        if (isNaN(seconds)) return "0:00";
+        if (isNaN(seconds) || seconds < 0) {
+            return "0:00";
+        }
 
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
+        const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    }
 
-        if (hours > 0) {
-            return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-        } else {
-            return `${minutes}:${secs.toString().padStart(2, "0")}`;
+    /**
+     * Phương thức được gọi khi thời gian video thay đổi
+     */
+    updateCurrentChapter() {
+        if (!this.videoElement || !this.currentVideo) return;
+
+        const currentTime = this.videoElement.currentTime;
+        this.updateCurrentChapterFromTime(currentTime);
+    }
+
+    /**
+     * Thêm sự kiện lắng nghe thời gian video thay đổi
+     */
+    addVideoTimeUpdateListener() {
+        if (this.videoElement) {
+            // Xóa listener cũ nếu có
+            this.videoElement.removeEventListener("timeupdate", this._timeUpdateHandler);
+
+            // Tạo và lưu tham chiếu đến handler
+            this._timeUpdateHandler = () => this.updateCurrentChapter();
+
+            // Thêm listener mới
+            this.videoElement.addEventListener("timeupdate", this._timeUpdateHandler);
         }
-    }
-
-    // Public methods for external control
-    getCurrentChapter() {
-        return this.currentChapter;
-    }
-
-    getChapters() {
-        return this.chapters;
-    }
-
-    setChapters(chapters) {
-        this.chapters = chapters;
-        this.renderChaptersList();
-        this.renderChapterMarkers();
-    }
-
-    nextChapter() {
-        if (!this.currentChapter) return;
-
-        const currentIndex = this.chapters.findIndex((ch) => ch.id === this.currentChapter.id);
-        if (currentIndex < this.chapters.length - 1) {
-            this.jumpToChapter(this.chapters[currentIndex + 1]);
-        }
-    }
-
-    previousChapter() {
-        if (!this.currentChapter) return;
-
-        const currentIndex = this.chapters.findIndex((ch) => ch.id === this.currentChapter.id);
-        if (currentIndex > 0) {
-            this.jumpToChapter(this.chapters[currentIndex - 1]);
-        }
-    }
-
-    // Update chapters when video changes
-    onVideoChange(videoId) {
-        this.loadChaptersForVideo(videoId);
-        this.currentChapter = null;
-        this.closeChaptersMenu();
     }
 }
 
-// Export for global use
-window.VideoChapters = VideoChapters;
+// Đảm bảo chỉ có một instance duy nhất
+let videoChaptersInstance = null;
+
+// Hàm khởi tạo instance duy nhất
+function initVideoChapters() {
+    console.log("Initializing VideoChapters singleton");
+    if (!videoChaptersInstance) {
+        videoChaptersInstance = new VideoChapters();
+        window.videoChapters = videoChaptersInstance;
+        console.log("VideoChapters initialized and assigned to window.videoChapters");
+    }
+    return videoChaptersInstance;
+}
+
+// Khởi tạo instance ngay khi tệp được tải
+initVideoChapters();
+
+// Export cho module system
+export default videoChaptersInstance;

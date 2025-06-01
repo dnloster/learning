@@ -4,7 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Bài Giảng Điện Tử - Bộ Vi Xử Lý</title>
-        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="stylesheet" href="./styles/style.css" />
+        <link rel="stylesheet" href="./styles/new-styles.css" />
+        <link rel="stylesheet" href="./styles/chapter-navigation-fix.css" />
+        <link rel="stylesheet" href="./styles/notes-editor.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -41,7 +44,7 @@
                         <div class="loading-percentage">0%</div>
                     </div>
                     <div class="school-logo-loading">
-                        <img id="loading-logo" src="images/TCDKTTT.png" alt="Logo Trường" />
+                        <img id="loading-logo" src="./images/TCDKTTT.png" alt="Logo Trường" />
                         <div class="logo-placeholder">
                             <div class="placeholder-icon">🎓</div>
                             <div class="placeholder-text">LOGO</div>
@@ -49,7 +52,7 @@
                     </div>
                 </div>
                 <div class="loading-text">Đang tải bài giảng...</div>
-                <div class="loading-subtitle">Bộ Vi Xử Lý - CPU, RAM, ROM</div>
+                <div class="loading-subtitle">Bộ Vi Xử Lý - CPU, Bộ nhớ trong, Bộ nhớ ngoài</div>
             </div>
         </div>
 
@@ -61,7 +64,7 @@
                 <div class="floating-elements">
                     <div class="element cpu-icon">CPU</div>
                     <div class="element ram-icon">RAM</div>
-                    <div class="element rom-icon">ROM</div>
+                    <div class="element rom-icon">Hard disk</div>
                     <div class="element binary-code">01010101</div>
                     <div class="element binary-code">11010011</div>
                     <div class="element binary-code">10101010</div>
@@ -71,7 +74,7 @@
             <!-- Header with Logo -->
             <header class="banner-header">
                 <div class="logo-container">
-                    <img id="school-logo" src="images/TCDKTTT.png" alt="Logo Trường" class="school-logo" />
+                    <img id="school-logo" src="./images/TCDKTTT.png" alt="Logo Trường" class="school-logo" />
                     <div class="school-info">
                         <h3>TRƯỜNG CAO ĐẲNG KỸ THUẬT THÔNG TIN</h3>
                         <p>KHOA CÔNG NGHỆ THÔNG TIN</p>
@@ -87,8 +90,7 @@
                         <span class="title-line highlight">BỘ VI XỬ LÝ</span>
                     </h1>
                     <div class="subtitle">
-                        <p>Tìm hiểu về CPU, RAM và ROM</p>
-                        <p class="tech-specs">Công nghệ - Kiến trúc - Ứng dụng</p>
+                        <p>Tìm hiểu về CPU, Bộ nhớ trong và Bộ nhớ ngoài</p>
                     </div>
                 </div>
 
@@ -107,8 +109,8 @@
                     <div class="tab-container">
                         <div class="tab-buttons">
                             <button class="tab-btn active" data-tab="cpu">CPU</button>
-                            <button class="tab-btn" data-tab="ram">RAM</button>
-                            <button class="tab-btn" data-tab="rom">ROM</button>
+                            <button class="tab-btn" data-tab="ram">Bộ nhớ trong</button>
+                            <button class="tab-btn" data-tab="rom">Bộ nhớ ngoài</button>
                         </div>
                         <div class="tab-content">
                             <!-- CPU 3D Model -->
@@ -154,12 +156,13 @@
                                         </div>
                                     </div>
                                     <div class="model-info">
-                                        <h3>Random Access Memory</h3>
-                                        <p>Bộ nhớ truy cập ngẫu nhiên - lưu trữ tạm thời</p>
+                                        <h3>Bộ nhớ trong (Internal Memory)</h3>
+                                        <p>Bộ phận lưu trữ chính của máy tính</p>
                                         <ul>
-                                            <li>Lưu trữ dữ liệu và chương trình đang chạy</li>
-                                            <li>Truy cập nhanh, mất dữ liệu khi tắt nguồn</li>
-                                            <li>Dung lượng đo bằng GB (gigabyte)</li>
+                                            <li>Các loại bộ nhớ được lắp đặt sẵn</li>
+                                            <li>Bộ nhớ chính (RAM, ROM) và bộ nhớ đệm (Cache)</li>
+                                            <li>RAM lưu chương trình và dữ liệu đang chạy, mất khi tắt nguồn</li>
+                                            <li>Cache là bộ nhớ đệm tốc độ cao, lưu dữ liệu thường xuyên sử dụng</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -169,7 +172,7 @@
                             <div class="tab-panel" id="rom-panel">
                                 <div class="model-3d rom-3d">
                                     <div class="threejs-container">
-                                        <canvas id="rom-canvas"></canvas>
+                                        <canvas id="hardDisk-canvas"></canvas>
                                         <div class="model-controls">
                                             <button class="control-btn" data-action="rotate">🔄 Xoay</button>
                                             <button class="control-btn" data-action="zoom">🔍 Phóng to</button>
@@ -181,12 +184,12 @@
                                         </div>
                                     </div>
                                     <div class="model-info">
-                                        <h3>Read Only Memory</h3>
-                                        <p>Bộ nhớ chỉ đọc - lưu trữ vĩnh viễn</p>
+                                        <h3>Bộ nhớ ngoài (External Memory)</h3>
+                                        <p>Bộ nhớ ngoài - lưu trữ dữ liệu dài hạn</p>
                                         <ul>
-                                            <li>Chứa firmware và BIOS của hệ thống</li>
-                                            <li>Dữ liệu không mất khi tắt nguồn</li>
-                                            <li>Không thể ghi đè trong điều kiện bình thường</li>
+                                            <li>Ổ cứng HDD, SSD, USB, và thẻ nhớ</li>
+                                            <li>Dữ liệu được lưu trữ vĩnh viễn khi tắt nguồn</li>
+                                            <li>Dung lượng lớn từ GB đến TB, tốc độ đọc ghi thay đổi</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -210,35 +213,37 @@
 
             <!-- Video Learning Section -->
             <div class="video-learning-container">
-                <!-- Topic Navigation -->
-                <div class="topic-nav">
-                    <div class="topic-nav-header">
-                        <h3>📚 Danh mục bài học</h3>
+                <!-- Side Navigation -->
+                <div class="side-navigation">
+                    <div class="side-nav-header">
+                        <h3>📚 Menu</h3>
                     </div>
-                    <div class="topic-buttons">
-                        <button class="topic-btn active" data-topic="cpu">
-                            <span class="topic-icon">🔥</span>
-                            <span class="topic-name">CPU - Bộ Vi Xử Lý</span>
-                            <span class="topic-count">5 videos</span>
-                        </button>
-                        <button class="topic-btn" data-topic="ram">
-                            <span class="topic-icon">⚡</span>
-                            <span class="topic-name">RAM - Bộ Nhớ</span>
-                            <span class="topic-count">4 videos</span>
-                        </button>
-                        <button class="topic-btn" data-topic="rom">
-                            <span class="topic-icon">💾</span>
-                            <span class="topic-name">ROM - Bộ Nhớ Chỉ Đọc</span>
-                            <span class="topic-count">3 videos</span>
-                        </button>
-                        <div class="topic-btn">
-                            <a href="quiz.html" class="quiz-nav-btn">
-                                <span class="quiz-nav-icon">📝</span>
-                                <div class="quiz-nav-content">
-                                    <span class="quiz-nav-title">Bài tập trắc nghiệm</span>
-                                </div>
-                            </a>
-                        </div>
+                    <div class="side-nav-items">
+                        <a href="#" class="side-nav-item active" id="video-content-link">
+                            <span class="side-nav-icon">🎬</span>
+                            <span class="side-nav-name">Nội dung bài giảng</span>
+                        </a>
+                        <a href="./quiz.html" class="side-nav-item">
+                            <span class="side-nav-icon">📝</span>
+                            <span class="side-nav-name">Bài tập trắc nghiệm</span>
+                        </a>
+                        <a href="./references.html" class="side-nav-item">
+                            <span class="side-nav-icon">📚</span>
+                            <span class="side-nav-name">Tài liệu tham khảo</span>
+                        </a>
+                        <a href="./contact.html" class="side-nav-item">
+                            <span class="side-nav-icon">👥</span>
+                            <span class="side-nav-name">Liên hệ nhóm tác giả</span>
+                        </a>
+                        <a href="./build-pc.html" class="side-nav-item">
+                            <span class="side-nav-icon">💻</span>
+                            <span class="side-nav-name">Build PC</span>
+                        </a>
+                        <a href="#" class="side-nav-item" id="bookmarks-btn">
+                            <span class="side-nav-icon">🔖</span>
+                            <span class="side-nav-name">Video đã đánh dấu</span>
+                            <span class="bookmark-count" id="bookmark-count">0</span>
+                        </a>
                     </div>
                 </div>
 
@@ -249,7 +254,7 @@
                         <div class="video-player">
                             <video
                                 id="main-video"
-                                poster="images/video-placeholder.jpg"
+                                poster="./images/video-placeholder.jpg"
                                 aria-label="Video bài giảng chính"
                                 aria-describedby="current-video-title"
                                 preload="metadata"
@@ -326,23 +331,14 @@
                                                 >•</span
                                             >
                                         </button>
-                                        <button
-                                            class="control-btn"
-                                            id="bookmark-btn"
-                                            title="Đánh dấu bài học quan trọng"
-                                        >
-                                            <span class="icon">🔖</span>
-                                            <span
-                                                class="bookmark-indicator"
-                                                id="bookmark-indicator"
-                                                style="display: none"
-                                                >•</span
-                                            >
+                                        <button id="bookmark-btn" class="control-btn" title="Đánh dấu video này">
+                                            <span class="control-icon">🔖</span>
                                         </button>
                                         <button
                                             class="control-btn"
                                             id="notes-btn"
                                             title="Thêm ghi chú tại thời điểm này"
+                                            style="display: none"
                                         >
                                             <span class="icon">📋</span>
                                             <span class="notes-indicator" id="notes-indicator" style="display: none"
@@ -428,61 +424,29 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Note Add Button Below Video -->
+                    <div class="note-add-button-container">
+                        <button class="note-add-button" id="note-add-btn">
+                            <span class="note-icon">📋</span>
+                            <span class="note-btn-text"
+                                >Thêm ghi chú tại <span id="current-note-time">00:00</span></span
+                            >
+                        </button>
+                        <button class="note-panel-toggle-btn" id="note-panel-toggle" title="Xem tất cả ghi chú">
+                            <span class="note-icon" style="margin-right: 0">📖</span>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Video Playlist -->
+                <!-- Video Playlist with Accordion -->
                 <div class="video-playlist">
                     <div class="playlist-header">
-                        <h4 id="playlist-title">Danh sách bài học - CPU</h4>
-                        <span id="playlist-progress">0/5 hoàn thành</span>
+                        <h4 id="playlist-title">Danh sách bài học</h4>
+                        <span id="playlist-progress">0/12 hoàn thành</span>
                     </div>
 
-                    <!-- CPU Playlist -->
-                    <div class="video-list active" id="cpu-playlist">
-                        <div class="video-item" data-video="cpu-1" data-src="videos/cpu-intro.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/cpu-thumb-1.jpg" alt="CPU Intro" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">15:20</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>1. Giới thiệu về CPU</h5>
-                                <p>Tìm hiểu về bộ xử lý trung tâm và vai trò của nó</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="cpu-2" data-src="videos/cpu-architecture.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/cpu-thumb-2.jpg" alt="CPU Architecture" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">22:15</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>2. Kiến trúc CPU</h5>
-                                <p>ALU, Control Unit, Registers và Bus</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="video-item" data-video="cpu-3" data-src="videos/cpu-instruction.mp4">
-                            <div class="video-thumbnail">
-                                <img src="images/cpu-thumb-3.jpg" alt="CPU Instructions" />
-                                <div class="play-overlay">▶️</div>
-                                <span class="video-duration">18:30</span>
-                            </div>
-                            <div class="video-info">
-                                <h5>3. Tập lệnh CPU</h5>
-                                <p>Machine Language, Assembly và quá trình thực thi</p>
-                                <div class="video-meta">
-                                    <span class="video-status">chưa xem</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="accordion-playlist" id="accordion-playlist">
+                        <!--  -->
                     </div>
                 </div>
             </div>
@@ -494,7 +458,7 @@
                 <div class="notes-modal-header">
                     <div class="notes-modal-title">
                         <span class="notes-icon">📋</span>
-                        <span class="notes-text">Ghi chú tại thời điểm: <span id="note-timestamp">00:00</span></span>
+                        <span class="notes-text">Thêm ghi chú tại <span id="note-timestamp">00:24</span></span>
                     </div>
                     <button class="notes-modal-close" id="notes-modal-close" title="Đóng">
                         <span class="close-icon">✕</span>
@@ -502,34 +466,42 @@
                 </div>
                 <div class="notes-modal-body">
                     <div class="note-form">
+                        <!-- <div class="note-toolbar">
+                            <select class="format-selector" id="format-selector">
+                                <option value="normal">Normal</option>
+                                <option value="h1">Heading 1</option>
+                                <option value="h2">Heading 2</option>
+                                <option value="h3">Heading 3</option>
+                                <option value="quote">Quote</option>
+                                <option value="code">Code</option>
+                            </select>
+                            <div class="note-toolbar-separator"></div>
+                            <button class="note-toolbar-btn" id="bold-btn" title="In đậm">B</button>
+                            <button class="note-toolbar-btn" id="italic-btn" title="In nghiêng">I</button>
+                            <button class="note-toolbar-btn" id="underline-btn" title="Gạch chân">U</button>
+                            <div class="note-toolbar-separator"></div>
+                            <button class="note-toolbar-btn" id="bullet-list-btn" title="Danh sách dấu chấm">•</button>
+                            <button class="note-toolbar-btn" id="number-list-btn" title="Danh sách số">1.</button>
+                        </div> -->
                         <div class="note-input-group">
-                            <label for="note-title">Tiêu đề ghi chú:</label>
-                            <input
-                                type="text"
-                                id="note-title"
-                                placeholder="Nhập tiêu đề cho ghi chú..."
-                                maxlength="100"
-                            />
-                        </div>
-                        <div class="note-input-group">
-                            <label for="note-content">Nội dung ghi chú:</label>
-                            <textarea
-                                id="note-content"
-                                placeholder="Nhập nội dung ghi chú của bạn..."
-                                rows="6"
-                            ></textarea>
+                            <div
+                                id="note-content-editor"
+                                contenteditable="true"
+                                class="rich-text-editor"
+                                placeholder="Nội dung ghi chú..."
+                            ></div>
                         </div>
                         <div class="note-timestamp-info">
                             <small
                                 >Ghi chú sẽ được lưu tại thời điểm:
-                                <span id="note-timestamp-display">00:00</span></small
+                                <span id="note-timestamp-display">00:24</span></small
                             >
                         </div>
                     </div>
                 </div>
                 <div class="notes-modal-footer">
-                    <button class="btn btn-secondary" id="cancel-note">Hủy</button>
-                    <button class="btn btn-primary" id="save-note">Lưu ghi chú</button>
+                    <button class="btn btn-secondary" id="cancel-note">Hủy bỏ</button>
+                    <button class="btn btn-primary" id="save-note">Tạo ghi chú</button>
                 </div>
             </div>
         </div>
@@ -540,14 +512,7 @@
                 <div class="notes-panel-title">
                     <span class="notes-icon">📋</span>
                     <span class="notes-text">Danh sách ghi chú</span>
-                    <span class="notes-count" id="notes-count">(0)</span>
-                </div>
-                <div class="notes-panel-actions">
-                    <button class="btn btn-small" id="export-notes" title="Xuất ghi chú">📤</button>
-                    <button class="btn btn-small" id="import-notes" title="Nhập ghi chú">📥</button>
-                    <button class="notes-panel-close" id="notes-panel-close" title="Đóng">
-                        <span class="close-icon">✕</span>
-                    </button>
+                    <span class="notes-count" id="notes-count">0</span>
                 </div>
             </div>
             <div class="notes-panel-body">
@@ -565,15 +530,59 @@
         </div>
 
         <!-- Scripts -->
-        <script type="module" src="scripts/video-player.js"></script>
-        <script type="module" src="scripts/video-chapters.js"></script>
-        <script type="module" src="scripts/custom-video-controls.js"></script>
-        <script type="module" src="scripts/bookmark-manager.js"></script>
-        <script type="module" src="scripts/notes-manager.js"></script>
-        <script type="module" src="scripts/quiz-manager.js"></script>
-        <script type="module" src="scripts/threejs-models.js"></script>
-        <script type="module" src="scripts/video-state-manager.js"></script>
-        <script type="module" src="scripts/script.js"></script>
+        <script type="module">
+            // Import các module theo thứ tự đúng
+            import "./scripts/video-state-manager.js";
+            import "./scripts/accordion.js";
+            import "./scripts/video-player.js";
+
+            // Đảm bảo VideoChapters được khởi tạo đúng
+            import("./scripts/video-chapters.js")
+                .then((module) => {
+                    window.videoChapters = module.default;
+                    console.log("VideoChapters imported successfully");
+                })
+                .catch((err) => {
+                    console.error("Error importing VideoChapters:", err);
+                });
+
+            // Tiếp tục import các module khác
+            import "./scripts/custom-video-controls.js";
+            import "./scripts/bookmark-manager.js";
+            import "./scripts/notes-manager.js";
+            import "./scripts/quiz-manager.js";
+            import "./scripts/threejs-models.js";
+            import "./scripts/script.js";
+        </script>
+        <script>
+            // Đảm bảo nút Hiển thị/Ẩn phân đoạn video luôn hoạt động
+            document.addEventListener("DOMContentLoaded", function () {
+                setTimeout(function () {
+                    var chaptersBtn = document.getElementById("chapters-btn");
+                    var chapterPanel = document.getElementById("chapter-navigation-panel");
+
+                    if (chaptersBtn && !chaptersBtn._hasClickHandler) {
+                        chaptersBtn._hasClickHandler = true;
+                        chaptersBtn.addEventListener("click", function (e) {
+                            console.log("Fallback chapter button handler");
+
+                            // Thử sử dụng module nếu có
+                            if (window.videoChapters && typeof window.videoChapters.toggleChapterPanel === "function") {
+                                window.videoChapters.toggleChapterPanel();
+                                return;
+                            }
+
+                            // Fallback xử lý thủ công
+                            if (chapterPanel) {
+                                var isVisible = chapterPanel.style.display !== "none";
+                                chapterPanel.style.display = isVisible ? "none" : "flex";
+                                chaptersBtn.classList.toggle("active", !isVisible);
+                            }
+                        });
+                    }
+                }, 2000); // Đợi 2 giây sau khi trang tải xong
+            });
+        </script>
     </body>
 </html>
 

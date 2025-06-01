@@ -2,31 +2,284 @@
 class VideoPlayerController {
     constructor() {
         this.currentVideo = null;
-        this.currentPlaylist = "cpu";
+        this.currentPlaylist = "cpu"; // Mặc định vẫn là CPU
         this.videoData = {
             cpu: [
-                { id: "cpu-1", title: "1. Giới thiệu về CPU", src: "videos/cpu-intro.mp4", duration: "15:30" },
-                { id: "cpu-2", title: "2. Kiến trúc CPU", src: "videos/cpu-architecture.mp4", duration: "22:45" },
-                { id: "cpu-3", title: "3. Bộ lệnh CPU", src: "videos/cpu-instructions.mp4", duration: "18:20" },
-                { id: "cpu-4", title: "4. Hiệu năng CPU", src: "videos/cpu-performance.mp4", duration: "25:10" },
-                { id: "cpu-5", title: "5. Thực hành với CPU", src: "videos/cpu-practical.mp4", duration: "30:15" },
+                {
+                    id: "cpu-1",
+                    title: "1. Giới thiệu về CPU",
+                    src: "videos/cpu-intro.mp4",
+                    duration: "15:30",
+                    chapters: [
+                        { time: 0, title: "Giới thiệu" },
+                        { time: 80, title: "Định nghĩa CPU" },
+                        { time: 180, title: "Lịch sử phát triển" },
+                        { time: 300, title: "Kiến trúc cơ bản" },
+                        { time: 500, title: "Vai trò trong hệ thống" },
+                        { time: 750, title: "Tổng kết" },
+                    ],
+                },
+                {
+                    id: "cpu-2",
+                    title: "2. Kiến trúc CPU",
+                    src: "videos/cpu-architecture.mp4",
+                    duration: "22:45",
+                    chapters: [
+                        { time: 0, title: "Giới thiệu kiến trúc" },
+                        { time: 120, title: "ALU - Đơn vị tính toán" },
+                        { time: 300, title: "Control Unit" },
+                        { time: 480, title: "Registers" },
+                        { time: 720, title: "Cache Memory" },
+                        { time: 900, title: "Bus hệ thống" },
+                        { time: 1080, title: "Kết luận" },
+                    ],
+                },
+                {
+                    id: "cpu-3",
+                    title: "3. Bộ lệnh CPU",
+                    src: "videos/cpu-instructions.mp4",
+                    duration: "18:20",
+                    chapters: [
+                        { time: 0, title: "Tổng quan về bộ lệnh" },
+                        { time: 100, title: "Các loại lệnh cơ bản" },
+                        { time: 280, title: "Chu kỳ lệnh" },
+                        { time: 500, title: "Pipeline" },
+                        { time: 780, title: "Tối ưu hóa thực thi" },
+                    ],
+                },
+                {
+                    id: "cpu-4",
+                    title: "4. Hiệu năng CPU",
+                    src: "videos/cpu-performance.mp4",
+                    duration: "25:10",
+                    chapters: [
+                        { time: 0, title: "Các yếu tố ảnh hưởng hiệu năng" },
+                        { time: 200, title: "Clock speed và IPC" },
+                        { time: 450, title: "Multi-core và thread" },
+                        { time: 750, title: "Benchmark và đánh giá" },
+                        { time: 1000, title: "So sánh các thế hệ CPU" },
+                        { time: 1300, title: "Kết luận" },
+                    ],
+                },
+                {
+                    id: "cpu-5",
+                    title: "5. Thực hành với CPU",
+                    src: "videos/cpu-practical.mp4",
+                    duration: "30:15",
+                    chapters: [
+                        { time: 0, title: "Giới thiệu bài thực hành" },
+                        { time: 120, title: "Tháo lắp CPU" },
+                        { time: 500, title: "Làm mát CPU" },
+                        { time: 800, title: "Overclocking cơ bản" },
+                        { time: 1200, title: "Khắc phục sự cố" },
+                        { time: 1500, title: "Tổng kết" },
+                    ],
+                },
             ],
-            ram: [
-                { id: "ram-1", title: "1. Giới thiệu về RAM", src: "videos/ram-intro.mp4", duration: "12:30" },
-                { id: "ram-2", title: "2. Các loại RAM", src: "videos/ram-types.mp4", duration: "18:45" },
-                { id: "ram-3", title: "3. Hiệu năng RAM", src: "videos/ram-performance.mp4", duration: "20:15" },
-                { id: "ram-4", title: "4. Lắp đặt RAM", src: "videos/ram-installation.mp4", duration: "15:30" },
+            boNhoTrong: [
+                // Danh mục mới: Bộ nhớ trong (RAM + ROM)
+                {
+                    // Videos từ RAM
+                    id: "ram-1",
+                    title: "1. Giới thiệu về RAM",
+                    src: "videos/ram-intro.mp4",
+                    duration: "12:30",
+                    chapters: [
+                        { time: 0, title: "Khái niệm RAM" },
+                        { time: 90, title: "Vai trò của RAM" },
+                        { time: 220, title: "So sánh các loại bộ nhớ" },
+                        { time: 400, title: "Cách thức hoạt động" },
+                        { time: 600, title: "Tổng kết" },
+                    ],
+                },
+                {
+                    id: "ram-2",
+                    title: "2. Các loại RAM",
+                    src: "videos/ram-types.mp4",
+                    duration: "18:45",
+                    chapters: [
+                        { time: 0, title: "SRAM và DRAM" },
+                        { time: 150, title: "DDR, DDR2, DDR3, DDR4, DDR5" },
+                        { time: 300, title: "SDRAM vs RDRAM" },
+                        { time: 600, title: "ECC Memory" },
+                        { time: 800, title: "Tương lai của RAM" },
+                    ],
+                },
+                {
+                    id: "ram-3",
+                    title: "3. Hiệu năng RAM",
+                    src: "videos/ram-performance.mp4",
+                    duration: "20:15",
+                    chapters: [
+                        { time: 0, title: "Các thông số hiệu năng" },
+                        { time: 180, title: "Latency và timing" },
+                        { time: 400, title: "Băng thông và tốc độ" },
+                        { time: 700, title: "Dual-channel, Quad-channel" },
+                        { time: 950, title: "Tối ưu hóa RAM" },
+                    ],
+                },
+                {
+                    id: "ram-4",
+                    title: "4. Lắp đặt RAM",
+                    src: "videos/ram-installation.mp4",
+                    duration: "15:30",
+                    chapters: [
+                        { time: 0, title: "Chuẩn bị lắp đặt" },
+                        { time: 120, title: "Quy trình lắp đặt" },
+                        { time: 300, title: "Cấu hình BIOS/UEFI" },
+                        { time: 500, title: "Kiểm tra sau lắp đặt" },
+                        { time: 800, title: "Xử lý sự cố thường gặp" },
+                    ],
+                },
+                {
+                    // Videos từ ROM
+                    id: "rom-1",
+                    title: "5. Giới thiệu về ROM", // Đánh số lại title cho phù hợp
+                    src: "videos/rom-intro.mp4",
+                    duration: "10:20",
+                    chapters: [
+                        { time: 0, title: "Khái niệm ROM" },
+                        { time: 90, title: "Đặc điểm và vai trò" },
+                        { time: 200, title: "So sánh với RAM" },
+                        { time: 350, title: "Ứng dụng của ROM" },
+                        { time: 500, title: "Kết luận" },
+                    ],
+                },
+                {
+                    id: "rom-2",
+                    title: "6. BIOS và UEFI", // Đánh số lại title
+                    src: "videos/rom-bios.mp4",
+                    duration: "16:40",
+                    chapters: [
+                        { time: 0, title: "Giới thiệu BIOS" },
+                        { time: 150, title: "Chức năng của BIOS" },
+                        { time: 300, title: "UEFI và sự khác biệt" },
+                        { time: 500, title: "Cập nhật firmware" },
+                        { time: 700, title: "Cấu hình và tùy chỉnh" },
+                        { time: 900, title: "Tổng kết" },
+                    ],
+                },
+                {
+                    id: "rom-3",
+                    title: "7. Các loại ROM", // Đánh số lại title
+                    src: "videos/rom-types.mp4",
+                    duration: "14:15",
+                    chapters: [
+                        { time: 0, title: "ROM truyền thống" },
+                        { time: 120, title: "PROM và EPROM" },
+                        { time: 250, title: "EEPROM và Flash ROM" },
+                        { time: 400, title: "Mask ROM" },
+                        { time: 600, title: "Xu hướng phát triển" },
+                        { time: 780, title: "Kết luận" },
+                    ],
+                },
             ],
-            rom: [
-                { id: "rom-1", title: "1. Giới thiệu về ROM", src: "videos/rom-intro.mp4", duration: "10:20" },
-                { id: "rom-2", title: "2. BIOS và UEFI", src: "videos/rom-bios.mp4", duration: "16:40" },
-                { id: "rom-3", title: "3. Các loại ROM", src: "videos/rom-types.mp4", duration: "14:15" },
+            boNhoNgoai: [
+                // Danh mục: Bộ nhớ ngoài (Ổ cứng, SSD, USB,...)
+                {
+                    id: "hdd-1",
+                    title: "1. Giới thiệu về ổ cứng HDD",
+                    src: "videos/hdd-intro.mp4",
+                    duration: "14:30",
+                    chapters: [
+                        { time: 0, title: "Khái niệm ổ cứng HDD" },
+                        { time: 120, title: "Cấu tạo cơ bản" },
+                        { time: 280, title: "Nguyên lý hoạt động" },
+                        { time: 450, title: "Các thông số chính" },
+                        { time: 650, title: "Ưu và nhược điểm" },
+                        { time: 780, title: "Tổng kết" },
+                    ],
+                },
+                {
+                    id: "hdd-2",
+                    title: "2. Cấu trúc và hoạt động của HDD",
+                    src: "videos/hdd-structure.mp4",
+                    duration: "18:15",
+                    chapters: [
+                        { time: 0, title: "Chi tiết cấu trúc vật lý" },
+                        { time: 180, title: "Đĩa từ và đầu đọc" },
+                        { time: 390, title: "Bộ điều khiển" },
+                        { time: 600, title: "Quy trình đọc/ghi dữ liệu" },
+                        { time: 850, title: "Công nghệ ghi từ hiện đại" },
+                        { time: 1000, title: "Kết luận" },
+                    ],
+                },
+                {
+                    id: "ssd-1",
+                    title: "3. Giới thiệu về ổ cứng SSD",
+                    src: "videos/ssd-intro.mp4",
+                    duration: "16:20",
+                    chapters: [
+                        { time: 0, title: "Khái niệm ổ SSD" },
+                        { time: 150, title: "Lịch sử phát triển" },
+                        { time: 300, title: "Cấu tạo cơ bản" },
+                        { time: 480, title: "Nguyên lý hoạt động" },
+                        { time: 720, title: "So sánh với HDD" },
+                        { time: 900, title: "Kết luận" },
+                    ],
+                },
+                {
+                    id: "ssd-2",
+                    title: "4. Công nghệ và hiệu năng SSD",
+                    src: "videos/ssd-technology.mp4",
+                    duration: "21:40",
+                    chapters: [
+                        { time: 0, title: "Các loại chip nhớ" },
+                        { time: 200, title: "Giao tiếp SATA và NVMe" },
+                        { time: 450, title: "Hiệu năng và benchmark" },
+                        { time: 720, title: "Độ bền và tuổi thọ" },
+                        { time: 950, title: "Công nghệ tối ưu" },
+                        { time: 1150, title: "Xu hướng phát triển" },
+                    ],
+                },
+                {
+                    id: "usb-1",
+                    title: "5. Thiết bị lưu trữ di động",
+                    src: "videos/usb-storage.mp4",
+                    duration: "15:10",
+                    chapters: [
+                        { time: 0, title: "Tổng quan về lưu trữ di động" },
+                        { time: 120, title: "USB Flash Drive" },
+                        { time: 300, title: "Thẻ nhớ (SD, microSD)" },
+                        { time: 500, title: "Ổ cứng di động" },
+                        { time: 700, title: "Tiêu chí lựa chọn" },
+                        { time: 850, title: "Kết luận" },
+                    ],
+                },
+                {
+                    id: "cloud-1",
+                    title: "6. Lưu trữ đám mây",
+                    src: "videos/cloud-storage.mp4",
+                    duration: "19:25",
+                    chapters: [
+                        { time: 0, title: "Khái niệm lưu trữ đám mây" },
+                        { time: 180, title: "Các dịch vụ phổ biến" },
+                        { time: 400, title: "Cơ chế đồng bộ hóa" },
+                        { time: 650, title: "Bảo mật và riêng tư" },
+                        { time: 900, title: "Ưu điểm và hạn chế" },
+                        { time: 1050, title: "Tổng kết" },
+                    ],
+                },
+                {
+                    id: "raid-1",
+                    title: "7. Công nghệ RAID",
+                    src: "videos/raid-tech.mp4",
+                    duration: "22:30",
+                    chapters: [
+                        { time: 0, title: "Khái niệm RAID" },
+                        { time: 180, title: "Các cấp độ RAID phổ biến" },
+                        { time: 450, title: "RAID 0, 1, 5, 10" },
+                        { time: 780, title: "Hardware vs Software RAID" },
+                        { time: 1100, title: "Thiết lập và quản lý" },
+                        { time: 1250, title: "Kết luận" },
+                    ],
+                },
             ],
         };
         this.progress = {
-            cpu: { completed: 0, total: 5 },
-            ram: { completed: 0, total: 4 },
-            rom: { completed: 0, total: 3 },
+            cpu: { completed: 0, total: this.videoData.cpu.length },
+            boNhoTrong: { completed: 0, total: this.videoData.boNhoTrong.length },
+            boNhoNgoai: { completed: 0, total: this.videoData.boNhoNgoai.length },
         };
 
         this.customControls = null;
@@ -35,13 +288,215 @@ class VideoPlayerController {
     init() {
         this.setupEventListeners();
         this.updateVideoLevels();
+        this.generateAccordionPlaylist();
         this.switchPlaylist("cpu");
+        this.getChapterForVideo();
 
         // Auto-load first video when app starts
         this.autoLoadFirstVideo();
 
         // Wait for custom controls to be initialized
         this.waitForCustomControls();
+
+        // Initialize bookmark count
+        const bookmarkCountElement = document.getElementById("bookmark-count");
+        if (bookmarkCountElement && this.bookmarks.length > 0) {
+            bookmarkCountElement.textContent = this.bookmarks.length;
+            bookmarkCountElement.classList.add("active");
+        }
+    }
+
+    getChapterForVideo() {
+        // Nếu không có video hiện tại, không làm gì cả
+        if (!this.currentVideo || !this.currentVideo.id) {
+            console.log("No current video to get chapters for");
+            return [];
+        }
+
+        const videoId = this.currentVideo.id;
+        console.log("Getting chapters for video:", videoId);
+
+        // Tìm video trong các danh mục
+        for (const category in this.videoData) {
+            const video = this.videoData[category].find((v) => v.id === videoId);
+            if (video && video.chapters) {
+                console.log(`Found ${video.chapters.length} chapters for video ${videoId}`);
+
+                // Kích hoạt sự kiện để thông báo phân đoạn video đã sẵn sàng
+                const chaptersEvent = new CustomEvent("video-chapters-ready", {
+                    detail: {
+                        videoId: videoId,
+                        chapters: video.chapters,
+                    },
+                });
+                window.dispatchEvent(chaptersEvent);
+
+                // Cập nhật indicator nếu có phân đoạn
+                const indicator = document.getElementById("chapter-indicator");
+                if (indicator && video.chapters.length > 0) {
+                    indicator.style.display = "inline-block";
+                }
+
+                return video.chapters;
+            }
+        }
+
+        console.log("No chapters found for video:", videoId);
+        return [];
+    }
+
+    checkIfBookmarked(videoId) {
+        // Check if the video is bookmarked
+        if (!this.bookmarks) {
+            this.bookmarks = JSON.parse(localStorage.getItem("videoBookmarks")) || [];
+        }
+        return this.bookmarks.some((bookmark) => bookmark.id === videoId);
+    }
+
+    generateAccordionPlaylist() {
+        const accordionContainer = document.getElementById("accordion-playlist");
+        if (!accordionContainer) {
+            console.error("Accordion playlist container not found!");
+            return;
+        }
+
+        // Clear any existing content
+        accordionContainer.innerHTML = "";
+
+        // Topic icons mapping
+        const topicIcons = {
+            cpu: "💻",
+            boNhoTrong: "🧠", // Icon cho Bộ nhớ trong
+            boNhoNgoai: "💽", // Icon cho Bộ nhớ ngoài
+        };
+
+        // Topic titles mapping
+        const topicTitles = {
+            cpu: "CPU - Bộ xử lý trung tâm",
+            boNhoTrong: "Bộ nhớ trong (RAM, ROM)",
+            boNhoNgoai: "Bộ nhớ ngoài (Ổ cứng, SSD,...)",
+        };
+
+        // Generate accordion items for each topic
+        for (const topic in this.videoData) {
+            const videos = this.videoData[topic];
+            const isFirstTopic = topic === "cpu"; // First topic expanded by default
+
+            // Create accordion item
+            const accordionItem = document.createElement("div");
+            accordionItem.className = `accordion-item ${isFirstTopic ? "active" : ""}`;
+
+            // Create header
+            const header = document.createElement("div");
+            header.className = "accordion-header";
+            header.innerHTML = `
+                <span class="topic-icon">${topicIcons[topic] || "📚"}</span>
+                <span class="topic-title">${topicTitles[topic] || topic.toUpperCase()}</span>
+                <span class="accordion-icon">▼</span>
+            `;
+
+            // Create content container
+            const content = document.createElement("div");
+            content.className = "accordion-content";
+
+            // Add videos to content
+            videos.forEach((video, index) => {
+                const videoItem = document.createElement("div");
+                videoItem.className = "video-item";
+                videoItem.dataset.video = video.id;
+                videoItem.dataset.src = video.src;
+
+                // If first video in first topic, mark as active
+                if (isFirstTopic && index === 0) {
+                    videoItem.classList.add("active");
+                }
+
+                // Check if this video is bookmarked using global bookmark manager
+                let isBookmarked = false;
+                try {
+                    if (window.bookmarkManager) {
+                        isBookmarked = window.bookmarkManager.isVideoBookmarked(video.id);
+                    }
+                } catch (error) {
+                    console.warn("Error checking bookmark status:", error);
+                }
+
+                // Create thumbnail image path from video src
+                const thumbnailSrc = video.src.replace(".mp4", ".jpg").replace("videos/", "images/thumbnails/");
+
+                videoItem.innerHTML = `
+                    <div class="video-thumbnail">
+                        <img src="${thumbnailSrc}" alt="${video.title}">
+                        <span class="video-duration">${video.duration}</span>
+                        <span class="video-bookmark-icon ${isBookmarked ? "active" : ""}" 
+                              style="display: ${isBookmarked ? "flex" : "none"}">🔖</span>
+                    </div>
+                    <div class="video-info">
+                        <h4>${video.title}</h4>
+                        <p>Bài học ${index + 1} - ${topic.toUpperCase()}</p>
+                    </div>
+                `;
+
+                content.appendChild(videoItem);
+            });
+
+            // Assemble accordion item
+            accordionItem.appendChild(header);
+            accordionItem.appendChild(content);
+
+            // Add to container
+            accordionContainer.appendChild(accordionItem);
+        }
+
+        // Add event listeners for accordion headers
+        this.setupAccordionEvents();
+    }
+
+    setupAccordionEvents() {
+        const accordionHeaders = document.querySelectorAll(".accordion-header");
+
+        accordionHeaders.forEach((header) => {
+            header.addEventListener("click", () => {
+                const accordionItem = header.parentElement;
+                const isActive = accordionItem.classList.contains("active");
+
+                // Close all accordion items
+                document.querySelectorAll(".accordion-item").forEach((item) => {
+                    item.classList.remove("active");
+                });
+
+                // If clicked item wasn't active, activate it
+                if (!isActive) {
+                    accordionItem.classList.add("active");
+                }
+            });
+        });
+
+        // Video item click handler
+        document.addEventListener("click", (e) => {
+            const videoItem = e.target.closest(".video-item");
+            if (videoItem) {
+                const videoId = videoItem.dataset.video;
+                const videoSrc = videoItem.dataset.src;
+                if (videoId && videoSrc) {
+                    this.playVideo(videoId, videoSrc);
+                }
+            }
+        });
+
+        // Add click handler for bookmark icons in playlist
+        document.addEventListener("click", (e) => {
+            if (e.target.closest(".video-bookmark-icon")) {
+                e.stopPropagation(); // Prevent video selection
+                const videoItem = e.target.closest(".video-item");
+                if (videoItem && window.bookmarkManager) {
+                    const videoId = videoItem.dataset.video;
+                    if (videoId) {
+                        window.bookmarkManager.toggleBookmark(videoId);
+                    }
+                }
+            }
+        });
     }
 
     autoLoadFirstVideo() {
@@ -199,16 +654,36 @@ class VideoPlayerController {
         // Update playlist title
         const titles = {
             cpu: "Danh sách bài học - CPU",
-            ram: "Danh sách bài học - RAM",
-            rom: "Danh sách bài học - ROM",
+            boNhoTrong: "Danh sách bài học - Bộ nhớ trong",
+            boNhoNgoai: "Danh sách bài học - Bộ nhớ ngoài",
         };
 
-        document.getElementById("playlist-title").textContent = titles[topic];
+        const playlistTitleElement = document.getElementById("playlist-title");
+        if (playlistTitleElement) {
+            playlistTitleElement.textContent = titles[topic] || `Danh sách bài học - ${topic.toUpperCase()}`;
+        }
 
         // Update progress
-        const progress = this.progress[topic];
-        document.getElementById("playlist-progress").textContent = `${progress.completed}/${progress.total} hoàn thành`;
+        const progressData = this.progress[topic];
+        const playlistProgressElement = document.getElementById("playlist-progress");
+        if (playlistProgressElement && progressData) {
+            playlistProgressElement.textContent = `${progressData.completed}/${progressData.total} hoàn thành`;
+        } else if (playlistProgressElement) {
+            playlistProgressElement.textContent = `0/0 hoàn thành`; // Fallback for new/empty categories
+        }
     }
+
+    getChaptersForVideo(videoId) {
+        // Tìm video theo ID trong tất cả các danh mục
+        for (const category in this.videoData) {
+            const video = this.videoData[category].find((v) => v.id === videoId);
+            if (video && video.chapters) {
+                return video.chapters;
+            }
+        }
+        return []; // Trả về mảng rỗng nếu không tìm thấy
+    }
+
     playVideo(videoId, videoSrc) {
         // Check if we actually have a new video to play
         if (this.currentVideo && this.currentVideo.id === videoId) {
@@ -238,9 +713,6 @@ class VideoPlayerController {
         setTimeout(() => {
             videoElement.src = videoSrc; // When metadata is loaded, play the video
             videoElement.onloadedmetadata = () => {
-                console.log("VideoPlayer: Metadata loaded for video:", videoId);
-                console.log("VideoPlayer: Video duration:", videoElement.duration);
-
                 // If custom controls are available, reset them
                 if (this.customControls) {
                     console.log("VideoPlayer: Calling resetControls");
@@ -251,15 +723,15 @@ class VideoPlayerController {
                     this.customControls.updateDuration();
                 }
 
-                // Play the video
-                videoElement
-                    .play()
-                    .then(() => {
-                        console.log("Video playback started");
-                    })
-                    .catch((error) => {
-                        console.error("Error playing video:", error);
-                    });
+                // // Play the video
+                // videoElement
+                //     .play()
+                //     .then(() => {
+                //         console.log("Video playback started");
+                //     })
+                //     .catch((error) => {
+                //         console.error("Error playing video:", error);
+                //     });
 
                 // Remove transition overlay after video starts playing
                 this.removeVideoTransitionEffect(videoElement);
@@ -277,6 +749,27 @@ class VideoPlayerController {
 
             // Dispatch video change event for bookmark system
             this.dispatchVideoChangeEvent(videoData);
+
+            // Cập nhật trạng thái bookmark
+            if (window.bookmarkManager) {
+                const isBookmarked = window.bookmarkManager.isVideoBookmarked(videoId);
+                window.bookmarkManager.updateBookmarkUI(videoId, isBookmarked);
+            }
+
+            const chapters = this.getChapterForVideo();
+
+            // Thông báo cho các thành phần khác về sự thay đổi video
+            const videoChangedEvent = new CustomEvent("video-changed", {
+                detail: {
+                    id: videoId,
+                    src: videoSrc,
+                    title: this.findVideoById(videoId)?.title || "Unknown video",
+                    topic: this.getCategoryFromVideoId(videoId),
+                    duration: this.findVideoById(videoId)?.duration || 0,
+                    chapters: chapters,
+                },
+            });
+            window.dispatchEvent(videoChangedEvent);
         }, 400); // Short delay for transition effect
     }
 
@@ -531,15 +1024,27 @@ class VideoPlayerController {
     }
     updatePlayingStatus(id, videoItems) {
         // Update the playing status for all videos
-        videoItems.forEach((item) => {
+        document.querySelectorAll(".video-item").forEach((item) => {
             if (item.dataset.video === id) {
                 if (!item.classList.contains("playing")) {
                     // Add playing class with animation
-                    item.classList.add("playing");
+                    item.classList.add("playing", "active");
                     this.addPlayingAnimation(item);
+
+                    // Make sure the accordion section is expanded
+                    const accordionItem = item.closest(".accordion-item");
+                    if (accordionItem && !accordionItem.classList.contains("active")) {
+                        // Close all accordion items
+                        document.querySelectorAll(".accordion-item").forEach((accItem) => {
+                            accItem.classList.remove("active");
+                        });
+
+                        // Open this accordion item
+                        accordionItem.classList.add("active");
+                    }
                 }
             } else {
-                item.classList.remove("playing");
+                item.classList.remove("playing", "active");
             }
         });
 
@@ -585,26 +1090,18 @@ class VideoPlayerController {
      */
     scrollToPlayingVideo() {
         const playingItem = document.querySelector(".video-item.playing");
-        const playlist = document.querySelector(".video-playlist");
 
-        if (playingItem && playlist) {
-            // Get the position of the playing item relative to the playlist
-            const itemTop = playingItem.offsetTop;
-            const itemHeight = playingItem.offsetHeight;
-            const playlistHeight = playlist.offsetHeight;
-            const playlistScroll = playlist.scrollTop;
-
-            // If the item is not fully visible, scroll to it
-            if (itemTop < playlistScroll || itemTop + itemHeight > playlistScroll + playlistHeight) {
-                // Calculate position to scroll to (center the item)
-                const scrollTo = itemTop - playlistHeight / 2 + itemHeight / 2;
-
-                // Smooth scroll to the item
-                playlist.scrollTo({
-                    top: scrollTo,
-                    behavior: "smooth",
-                });
+        if (playingItem) {
+            // Make sure the accordion item is expanded
+            const accordionItem = playingItem.closest(".accordion-item");
+            if (accordionItem) {
+                accordionItem.classList.add("active");
             }
+
+            // Scroll the item into view with a small delay to allow the accordion to expand
+            setTimeout(() => {
+                playingItem.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 300);
         }
     }
 
@@ -899,6 +1396,34 @@ class VideoPlayerController {
     showMuteFeedback(isMuted) {
         // Create the volume feedback and then update it
         this.showVolumeFeedback(isMuted ? 0 : document.getElementById("main-video")?.volume || 0.5);
+    }
+
+    /**
+     * Lấy danh mục/thể loại từ ID video
+     * @param {string} videoId - ID của video cần kiểm tra
+     * @returns {string} - Danh mục của video (cpu, ram, rom, etc.)
+     */
+    getCategoryFromVideoId(videoId) {
+        if (!videoId) return null;
+
+        // Kiểm tra ID để xác định danh mục
+        if (videoId.startsWith("cpu-")) return "cpu";
+        if (videoId.startsWith("ram-")) return "boNhoTrong"; // RAM thuộc Bộ nhớ trong
+        if (videoId.startsWith("rom-")) return "boNhoTrong"; // ROM thuộc Bộ nhớ trong
+        // Thêm prefix cho Bộ nhớ ngoài nếu có, ví dụ:
+        // if (videoId.startsWith("hdd-")) return "boNhoNgoai";
+        // if (videoId.startsWith("ssd-")) return "boNhoNgoai";
+
+        // Nếu ID không có tiền tố rõ ràng, tìm kiếm trong dữ liệu
+        for (const category in this.videoData) {
+            if (this.videoData[category].some((video) => video.id === videoId)) {
+                return category;
+            }
+        }
+
+        // Không tìm thấy danh mục
+        console.warn(`Category not found for video ID: ${videoId}`);
+        return null;
     }
 }
 
