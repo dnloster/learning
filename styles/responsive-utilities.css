@@ -1,0 +1,89 @@
+/* Responsive Utilities - Các class tiện ích cho responsive */
+
+/* Hide/Show elements based on screen size */
+.hide-on-desktop {
+    display: none !important;
+}
+
+.show-on-desktop {
+    display: block !important;
+}
+
+@media screen and (max-width: 1023px) {
+    .hide-on-tablet {
+        display: none !important;
+    }
+
+    .show-on-tablet {
+        display: block !important;
+    }
+
+    .hide-on-desktop {
+        display: block !important;
+    }
+
+    .show-on-desktop {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+
+    .show-on-mobile {
+        display: block !important;
+    }
+}
+
+/* Flexible containers */
+.flex-wrap-responsive {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.grid-responsive {
+    display: grid;
+    gap: 15px;
+}
+
+@media screen and (min-width: 1200px) {
+    .grid-responsive {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+    .grid-responsive {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 991px) and (min-width: 768px) {
+    .grid-responsive {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .grid-responsive {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Text responsive */
+.text-responsive {
+    font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+}
+
+.title-responsive {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* Spacing responsive */
+.spacing-responsive {
+    padding: clamp(10px, 3vw, 30px);
+    margin: clamp(5px, 2vw, 20px) 0;
+}

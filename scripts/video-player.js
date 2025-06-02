@@ -422,7 +422,7 @@ class VideoPlayerController {
                 }
 
                 // Create thumbnail image path from video src
-                const thumbnailSrc = video.src.replace(".mp4", ".jpg").replace("videos/", "images/thumbnails/");
+                const thumbnailSrc = video.thumb;
 
                 videoItem.innerHTML = `
                     <div class="video-thumbnail">

@@ -6,13 +6,14 @@
         <title>Build PC</title>
         <link rel="stylesheet" href="styles/style.css" />
         <link rel="stylesheet" href="styles/build-pc.css" />
+        <link rel="stylesheet" href="./styles/responsive-utilities.css" />
     </head>
     <body>
-        <header>
+        <header class="container">
             <h1>Build PC</h1>
-            <nav>
-                <a href="index.html">Trang chủ</a>
-                <a href="contact.html">Nhóm tác giả</a>
+            <nav class="content-nav">
+                <button id="back-to-home" class="nav-btn" onClick="goToVideoSection()">◀ Về trang chủ</button>
+                <h2 style="color: #000">Thông tin nhóm tác giả</h2>
             </nav>
         </header>
 
@@ -44,6 +45,12 @@
                 </div>
             </div>
         </main>
+        <script>
+            // Hàm chuyển về phần xem video thay vì trang ban đầu
+            function goToVideoSection() {
+                window.location.href = "index.html?showVideo=true";
+            }
+        </script>
         <script src="scripts/build-pc.js"></script>
     </body>
 </html>

@@ -349,70 +349,174 @@ header nav a:hover {
     font-weight: 500;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .container {
-        width: 95%;
-        padding: 20px;
-    }
+/* ===== BUILD PC PAGE RESPONSIVE ===== */
 
-    .modal-content {
-        width: 90%; /* Wider modal on smaller screens */
-        margin: 10% auto;
-        padding: 20px;
+/* Large Desktop (1920px+) */
+@media screen and (min-width: 1920px) {
+    .container {
+        max-width: 1700px;
     }
 
     .component-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust for smaller screens */
-        gap: 15px;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 30px;
     }
-    header h1 {
-        font-size: 1.8rem;
-    }
-    header nav a {
-        padding: 0 1rem;
+
+    .selected-components-summary {
+        min-width: 350px;
     }
 }
 
-@media (max-width: 480px) {
+/* Standard Desktop (1366px - 1919px) */
+@media screen and (max-width: 1919px) and (min-width: 1366px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    .component-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+}
+
+/* Medium Desktop (1024px - 1365px) */
+@media screen and (max-width: 1365px) and (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+        padding: 20px;
+    }
+
+    .build-pc-layout {
+        gap: 25px;
+    }
+
+    .component-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .component-card {
+        padding: 15px;
+    }
+
     .component-card img {
         max-width: 100px;
         height: 80px;
     }
-    .component-card h4 {
-        font-size: 1.1em;
+
+    .selected-components-summary {
+        min-width: 250px;
     }
-    .component-card .select-btn,
-    .component-card .remove-selection-btn {
-        padding: 10px 15px;
-        font-size: 0.9em;
+}
+
+/* Small Desktop (768px - 1023px) */
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+    .container {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .build-pc-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .component-selection-area {
+        order: 2;
+    }
+
+    .selected-components-summary {
+        order: 1;
+        position: static;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .component-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .component-card {
+        padding: 12px;
+    }
+
+    .component-card img {
+        max-width: 80px;
+        height: 70px;
+    }
+
+    .component-card h4 {
+        font-size: 0.9rem;
+    }
+
+    .component-card p {
+        font-size: 0.8rem;
+    }
+}
+
+/* Very Small Desktop (Below 768px) */
+@media screen and (max-width: 767px) {
+    .container {
+        padding: 10px;
+    }
+
+    .component-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .component-card {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .component-card img {
+        max-width: 60px;
+        height: 50px;
+    }
+
+    .component-card h4 {
+        font-size: 0.8rem;
+        margin: 8px 0;
+    }
+
+    .component-card p {
+        font-size: 0.7rem;
+    }
+
+    .action-buttons {
+        gap: 5px;
+    }
+
+    .select-btn,
+    .change-btn,
+    .remove-selection-btn {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+    }
+
+    /* Modal Responsive */
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        max-height: 90vh;
     }
 
     .modal-item {
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: center; /* Center text in column layout */
+        padding: 10px;
     }
+
     .modal-item img {
-        margin-right: 0; /* Remove right margin */
-        margin-bottom: 10px;
-        align-self: center; /* Center image */
+        width: 40px;
+        height: 40px;
     }
-    .modal-item .select-model-btn {
-        margin-left: 0;
-        margin-top: 15px; /* Increased top margin */
-        width: 100%;
+
+    .modal-item-info h5 {
+        font-size: 0.8rem;
     }
-    .modal-content {
-        width: 95%;
-        padding: 15px;
-    }
-    #modal-title {
-        font-size: 1.3rem;
-    }
-    .close-button {
-        font-size: 28px;
-        top: 10px;
-        right: 15px;
+
+    .modal-item-info p {
+        font-size: 0.7rem;
     }
 }

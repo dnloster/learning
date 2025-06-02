@@ -701,6 +701,108 @@
     }
 }
 
+/* ===== NOTES RESPONSIVE ===== */
+
+/* Large Desktop (1920px+) */
+@media screen and (min-width: 1920px) {
+    .notes-panel {
+        width: 450px;
+    }
+
+    .notes-modal-content {
+        max-width: 700px;
+    }
+}
+
+/* Medium Desktop (1024px - 1365px) */
+@media screen and (max-width: 1365px) and (min-width: 1024px) {
+    .notes-panel {
+        width: 350px;
+    }
+
+    .notes-modal-content {
+        max-width: 500px;
+    }
+
+    .rich-text-editor {
+        min-height: 120px;
+    }
+}
+
+/* Small Desktop (768px - 1023px) */
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+    .notes-panel {
+        width: 100%;
+        right: 0;
+        transform: translateX(100%);
+    }
+
+    .notes-panel[style*="display: block"] {
+        transform: translateX(0);
+    }
+
+    .notes-modal-content {
+        width: 90%;
+        max-width: 600px;
+    }
+
+    .note-item {
+        padding: 12px;
+    }
+
+    .note-content {
+        font-size: 0.9rem;
+    }
+}
+
+/* Very Small Desktop (Below 768px) */
+@media screen and (max-width: 767px) {
+    .notes-panel {
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        border-radius: 0;
+    }
+
+    .notes-panel-header {
+        border-top-left-radius: 0;
+        padding: 12px 15px;
+    }
+
+    .notes-modal {
+        padding: 10px;
+    }
+
+    .notes-modal-content {
+        width: 95%;
+        margin: 20px auto;
+        max-height: 90vh;
+    }
+
+    .notes-modal-header {
+        padding: 12px 15px;
+    }
+
+    .notes-modal-title .notes-text {
+        font-size: 0.9rem;
+    }
+
+    .rich-text-editor {
+        min-height: 100px;
+        font-size: 0.9rem;
+    }
+
+    .notes-modal-footer {
+        padding: 12px 15px;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
 /* Scrollbar design */
 .notes-list::-webkit-scrollbar {
     width: 6px;

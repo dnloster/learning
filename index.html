@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="./styles/new-styles.css" />
         <link rel="stylesheet" href="./styles/chapter-navigation-fix.css" />
         <link rel="stylesheet" href="./styles/notes-editor.css" />
+        <link rel="stylesheet" href="./styles/responsive-utilities.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -557,6 +558,47 @@
         <script>
             // Đảm bảo nút Hiển thị/Ẩn phân đoạn video luôn hoạt động
             document.addEventListener("DOMContentLoaded", function () {
+                // Kiểm tra URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const showVideo = urlParams.get("showVideo");
+
+                // Nếu có parameter showVideo=true, hiển thị ngay video section
+                if (showVideo === "true") {
+                    showVideoSectionDirectly();
+                    // Xóa parameter khỏi URL để tránh hiển thị lại khi refresh
+                    const newUrl = window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
+                }
+                // Hàm hiển thị video section ngay lập tức
+                function showVideoSectionDirectly() {
+                    const mainBanner = document.querySelector("#main-banner");
+                    const contentSection = document.getElementById("content-section");
+
+                    if (mainBanner && contentSection) {
+                        // Ẩn banner ngay lập tức
+                        mainBanner.style.display = "none";
+
+                        // Hiển thị content section
+                        contentSection.style.display = "block";
+
+                        // Scroll to top
+                        window.scrollTo(0, 0);
+
+                        // Initialize video player nếu chưa được khởi tạo
+                        if (window.videoPlayerController) {
+                            setTimeout(() => {
+                                window.videoPlayerController.generateAccordionPlaylist();
+                            }, 100);
+                        }
+
+                        console.log("Video section displayed directly");
+                    }
+                }
+
+                // Cập nhật hàm showVideoContent hiện có để sử dụng chung logic
+                function showVideoContent() {
+                    showVideoSectionDirectly();
+                }
                 setTimeout(function () {
                     var chaptersBtn = document.getElementById("chapters-btn");
                     var chapterPanel = document.getElementById("chapter-navigation-panel");
