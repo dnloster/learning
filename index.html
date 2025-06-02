@@ -514,7 +514,6 @@
             import("./scripts/video-chapters.js")
                 .then((module) => {
                     window.videoChapters = module.default;
-                    console.log("VideoChapters imported successfully");
                 })
                 .catch((err) => {
                     console.error("Error importing VideoChapters:", err);
@@ -564,8 +563,6 @@
                                 window.videoPlayerController.generateAccordionPlaylist();
                             }, 100);
                         }
-
-                        console.log("Video section displayed directly");
                     }
                 }
             });

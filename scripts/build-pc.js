@@ -303,7 +303,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- SELECTION LOGIC ---
     function selectComponentModel(modelId, componentType) {
         selectedConfiguration[componentType] = modelId;
-        console.log("Selected:", selectedConfiguration);
         closeModal();
         initializeComponentGrid(); // Re-render grid to show selection/update button text
         updateSelectedSummary(); // Ensure summary is updated after selection
@@ -312,7 +311,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function removeSelectedComponentModel(componentType) {
         if (selectedConfiguration[componentType]) {
             delete selectedConfiguration[componentType];
-            console.log("Removed selection for:", componentType, "New config:", selectedConfiguration);
             initializeComponentGrid(); // Re-render to update buttons and selected text
             updateSelectedSummary(); // Update the summary view
         }

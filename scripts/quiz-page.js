@@ -28,8 +28,6 @@ class QuizPageManager {
         this.updateProgress();
         this.updateOverallStats();
         this.setFilter(this.currentFilter); // Initial call to set filter and render iframe containers visibility
-
-        console.log("Quiz Page Manager initialized for comprehensive quiz with iframe content");
     }
 
     /**
@@ -272,7 +270,6 @@ class QuizPageManager {
         });
 
         this.renderExercises();
-        console.log(`Set filter to: ${filter}`);
     }
 
     /**
@@ -298,8 +295,6 @@ class QuizPageManager {
      * Start an exercise
      */
     startExercise(exerciseId, category, exerciseTitle) {
-        console.log(`Starting exercise: ${exerciseId} (Category: ${category}, Title: ${exerciseTitle})`);
-
         if (!this.quizManager && window.QuizManager) {
             this.quizManager = new window.QuizManager();
         }
@@ -418,7 +413,6 @@ class QuizPageManager {
 document.addEventListener("DOMContentLoaded", () => {
     if (!window.quizPageManager) {
         window.quizPageManager = new QuizPageManager();
-        console.log("Quiz Page Manager instance created and available as window.quizPageManager");
     }
 
     const progressSidebar = document.getElementById("progress-overview-sidebar");

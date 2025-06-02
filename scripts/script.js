@@ -6,7 +6,6 @@ window.fixModelColors = {
     debug: () => {
         if (window.threeJSModels) {
             window.threeJSModels.toggleDebugMode();
-            console.log("Debug mode toggled. Check browser console for detailed logs.");
             return "Use these commands for debugging:\nfixModelColors.analyze('cpu');\nfixModelColors.fixBlack('cpu');\nfixModelColors.adjustLighting(0.9);";
         } else {
             console.error("ThreeJS models not loaded yet");
@@ -269,20 +268,6 @@ window.addEventListener("scroll", function () {
     }, 16); // ~60fps
 });
 
-// Console welcome message
-console.log(`
-🖥️ Bài Giảng Điện Tử - Bộ Vi Xử Lý
-═══════════════════════════════════
-Chào mừng bạn đến với bài giảng!
-📚 Nội dung: CPU, RAM, ROM
-⚡ Công nghệ: HTML5, CSS3, JavaScript
-🎯 Mục tiêu: Hiểu rõ kiến trúc máy tính
-
-Nhấn F12 để mở Developer Tools
-Nhấn Escape để quay về trang chủ
-Nhấn Enter để xem nội dung
-`);
-
 // Add touch support for mobile devices
 if ("ontouchstart" in window) {
     document.body.classList.add("touch-device");
@@ -305,13 +290,8 @@ if ("ontouchstart" in window) {
 
 // 3D Models Tab Functionality
 function init3DModelTabs() {
-    console.log("🚀 Initializing tab functionality...");
-
     const tabButtons = document.querySelectorAll(".tab-btn");
     const tabPanels = document.querySelectorAll(".tab-panel");
-
-    console.log("Found tab buttons:", tabButtons.length);
-    console.log("Found tab panels:", tabPanels.length);
 
     if (tabButtons.length === 0) {
         console.warn("⚠️ No tab buttons found");
@@ -319,11 +299,8 @@ function init3DModelTabs() {
     }
 
     tabButtons.forEach((button, index) => {
-        console.log(`Adding click listener to button ${index}:`, button.getAttribute("data-tab"));
-
         button.addEventListener("click", function () {
             const targetTab = this.getAttribute("data-tab");
-            console.log("🔄 Tab clicked:", targetTab);
 
             // Remove active class from all buttons and panels
             tabButtons.forEach((btn) => btn.classList.remove("active"));
@@ -335,13 +312,11 @@ function init3DModelTabs() {
             // Show corresponding panel with animation
             const targetPanel = document.getElementById(targetTab + "-panel");
             if (targetPanel) {
-                console.log("✅ Showing panel:", targetTab + "-panel");
                 setTimeout(() => {
                     targetPanel.classList.add("active");
 
                     // Initialize Three.js model if not already done
                     if (threeJSModels && !threeJSModels.isInitialized) {
-                        console.log("🔧 Initializing Three.js models...");
                         threeJSModels.init();
                     }
 
@@ -363,8 +338,6 @@ function init3DModelTabs() {
             }, 150);
         });
     });
-
-    console.log("✅ Tab functionality initialized successfully");
 }
 
 // Add keyboard navigation for tabs
@@ -469,7 +442,6 @@ function optimizeAnimations() {
 
 // Initialize tab functionality when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("📄 DOM Content Loaded - Initializing tab functionality...");
     // Wait a bit to ensure all elements are rendered
     setTimeout(() => {
         init3DModelTabs();
@@ -480,7 +452,6 @@ document.addEventListener("DOMContentLoaded", () => {
 if (document.readyState === "loading") {
     console.log("📄 DOM is still loading, waiting...");
 } else {
-    console.log("📄 DOM already loaded, initializing immediately");
     setTimeout(() => {
         init3DModelTabs();
     }, 100);
@@ -494,9 +465,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Wait a bit for the page to fully load
     setTimeout(async () => {
         try {
-            console.log("🔧 Starting Three.js initialization...");
             await threeJSModels.init();
-            console.log("✅ Three.js models initialized successfully");
         } catch (error) {
             console.error("❌ Error initializing Three.js models:", error);
         }
@@ -547,7 +516,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Remove custom control addition since we're using our own controls
     const customControls = document.querySelectorAll(".video-controls-overlay");
     if (customControls.length > 0) {
-        console.log("Using custom video controls");
     }
 });
 
@@ -600,22 +568,18 @@ let bookmarkManager;
 
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize global bookmark manager
-    console.log("Initializing global BookmarkManager");
     bookmarkManager = new BookmarkManager();
     window.bookmarkManager = bookmarkManager;
 
     // Connect to video player if available
     if (window.videoPlayerController) {
-        console.log("Connecting BookmarkManager to videoPlayerController");
         bookmarkManager.setVideoPlayerController(window.videoPlayerController);
     }
 
     // Manually attach event to bookmarks button
     const bookmarksBtn = document.getElementById("bookmarks-btn");
     if (bookmarksBtn) {
-        console.log("Attaching click event to bookmarks button from script.js");
         bookmarksBtn.addEventListener("click", function (e) {
-            console.log("Bookmarks button clicked from script.js handler");
             e.preventDefault();
             if (window.bookmarkManager) {
                 window.bookmarkManager.showBookmarksDialog();
@@ -631,14 +595,12 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize BookmarkManager if not already initialized
     if (!window.bookmarkManager) {
-        console.log("Initializing global BookmarkManager");
         window.bookmarkManager = new BookmarkManager();
     }
 
     // Connect to video player controller when it's ready
     const connectToVideoController = () => {
         if (window.videoPlayerController) {
-            console.log("Connecting BookmarkManager to videoPlayerController");
             window.bookmarkManager.setVideoPlayerController(window.videoPlayerController);
 
             // Update UI for currently playing video (if any)
@@ -667,8 +629,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         // Connect video chapters to video player controller
         if (window.videoPlayerController && window.videoChapters) {
-            console.log("Connecting video chapters system");
-
             // Initial load of chapters for current video
             if (window.videoPlayerController.currentVideo) {
                 const videoId = window.videoPlayerController.currentVideo.id;
@@ -689,7 +649,6 @@ document.addEventListener("DOMContentLoaded", () => {
         import("./video-chapters.js")
             .then((module) => {
                 if (!window.videoChapters) {
-                    console.log("Setting up videoChapters from script.js import");
                     window.videoChapters = module.default || new module.default.constructor();
                 }
 
@@ -738,11 +697,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         if (window.videoPlayer && !window.videoPlayerController) {
             window.videoPlayerController = window.videoPlayer;
-            console.log("Set videoPlayerController reference to videoPlayer");
 
             // Kích hoạt getChapterForVideo cho video hiện tại nếu có
             if (window.videoPlayerController.currentVideo) {
-                console.log("Triggering chapter update for current video");
                 window.videoPlayerController.getChapterForVideo();
             }
         }

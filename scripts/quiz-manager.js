@@ -22,8 +22,6 @@ class QuizManager {
         this.setupElements();
         this.bindEvents();
         this.loadQuizData();
-
-        console.log("Quiz Manager initialized");
     }
 
     /**
@@ -179,8 +177,6 @@ class QuizManager {
 
         // Load content for current tab if not loaded
         this.loadTabContent(this.currentTab);
-
-        console.log("Quiz panel shown");
     }
 
     /**
@@ -197,8 +193,6 @@ class QuizManager {
                 this.panel.style.display = "none";
             }
         }, 300);
-
-        console.log("Quiz panel hidden");
     }
 
     /**
@@ -226,8 +220,6 @@ class QuizManager {
 
         this.currentTab = tabType;
         this.loadTabContent(tabType);
-
-        console.log(`Switched to ${tabType} tab`);
     }
 
     /**
@@ -304,7 +296,6 @@ class QuizManager {
      */ getCurrentVideoId() {
         // Try to get from video player or custom controls
         if (window.videoPlayer?.currentVideo) {
-            console.log("Current video from videoPlayer:", window.videoPlayer.currentVideo);
             return window.videoPlayer.currentVideo;
         }
 
@@ -312,11 +303,9 @@ class QuizManager {
         const activeVideo = document.querySelector(".video-item.playing");
         if (activeVideo) {
             const videoId = activeVideo.getAttribute("data-video");
-            console.log("Current video from active item:", videoId);
             return videoId;
         }
 
-        console.log("No current video found, using default");
         return "default";
     }
 
@@ -326,10 +315,8 @@ class QuizManager {
      * @param {string} tabType - Tab type
      * @returns {string|null} Quiz URL or null if not found
      */ getQuizUrl(videoId, tabType) {
-        console.log(`Getting quiz URL for video: ${videoId}, tab: ${tabType}`);
         const videoQuizzes = this.quizData[videoId] || this.quizData.default;
         const url = videoQuizzes ? videoQuizzes[tabType] : null;
-        console.log(`Quiz URL: ${url}`);
         return url;
     }
 
@@ -338,8 +325,6 @@ class QuizManager {
      * @param {string} videoId - New video ID
      */
     updateQuizForVideo(videoId) {
-        console.log(`Updating quiz for video: ${videoId}`);
-
         // Clear all iframes to force reload
         Object.values(this.iframes).forEach((iframe) => {
             iframe.src = "";
@@ -402,7 +387,6 @@ window.QuizManager = QuizManager;
 // Initialize quiz manager when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
     window.quizManager = new QuizManager();
-    console.log("Quiz Manager instance created and available as window.quizManager");
 });
 
 // Export for module use

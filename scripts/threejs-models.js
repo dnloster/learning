@@ -13,45 +13,30 @@ class ThreeJSModels {
         this.models = {};
         this.isInitialized = false;
         this.debugMode = false; // Add debug mode flag
-        console.log("🏗️ ThreeJSModels class instantiated");
     }
 
     // Helper method to toggle debug mode
     toggleDebugMode() {
         this.debugMode = !this.debugMode;
-        console.log(`🐞 Debug mode ${this.debugMode ? "enabled" : "disabled"}`);
         return this.debugMode;
-    }
-
-    // Debug log helper - only logs when debug mode is enabled
-    debugLog(message, ...args) {
-        if (this.debugMode) {
-            console.log(`🔍 DEBUG: ${message}`, ...args);
-        }
     }
 
     async init() {
         if (this.isInitialized) {
-            console.log("⚠️ Three.js models already initialized");
             return;
         }
 
-        console.log("🚀 Starting Three.js models initialization...");
         try {
             // Initialize CPU model
-            console.log("🔧 Initializing CPU model...");
             await this.initModel("cpu", "cpu.glb");
 
             // Initialize RAM model
-            console.log("🔧 Initializing RAM model...");
             await this.initModel("ram", "RAM.glb");
 
             // Initialize hard disk model
-            console.log("🔧 Initializing hard disk model...");
             await this.initModel("hardDisk", "hardDisk.glb");
 
             this.isInitialized = true;
-            console.log("✅ Three.js models initialized successfully");
         } catch (error) {
             console.error("❌ Error initializing Three.js models:", error);
         }
@@ -115,7 +100,6 @@ class ThreeJSModels {
 
             // If loading fails, use fallback models
             if (!model) {
-                console.log(`⚠️ Using fallback model for ${modelType}`);
                 switch (modelType) {
                     case "cpu":
                         model = this.createCPUModel();
@@ -160,8 +144,6 @@ class ThreeJSModels {
             if (loadingIndicator) {
                 loadingIndicator.style.display = "none";
             }
-
-            console.log(`✅ ${modelType.toUpperCase()} model loaded successfully`);
         } catch (error) {
             console.error(`❌ Error loading ${modelType} model:`, error);
             if (loadingIndicator) {
@@ -218,13 +200,11 @@ class ThreeJSModels {
     // Load GLTF/GLB model
     async loadGLTFModel(path) {
         return new Promise((resolve, reject) => {
-            console.log(`📁 Loading GLTF model from: ${path}`);
             const loader = new GLTFLoader();
 
             loader.load(
                 path,
                 (gltf) => {
-                    console.log(`✅ GLTF model loaded successfully: ${path}`);
                     const model = gltf.scene;
 
                     // Auto-scale based on model size
@@ -242,8 +222,6 @@ class ThreeJSModels {
                     // Center the model
                     model.position.copy(center).multiplyScalar(-scale);
 
-                    console.log(`📏 Model auto-scaled: ${scale.toFixed(3)}x (original size: ${size.toFixed(2)})`);
-
                     // Fix issues with materials
                     this.fixMaterialsInModel(model, path);
 
@@ -252,7 +230,6 @@ class ThreeJSModels {
                 (xhr) => {
                     const percent = (xhr.loaded / xhr.total) * 100;
                     if (xhr.total > 0) {
-                        console.log(`📊 Loading progress: ${percent.toFixed(0)}%`);
                     }
                 },
                 (error) => {
@@ -265,8 +242,6 @@ class ThreeJSModels {
 
     // Apply material fixes to model
     fixMaterialsInModel(model, modelPath) {
-        console.log(`🔧 Fixing materials for model: ${modelPath}`);
-
         model.traverse((child) => {
             if (child.isMesh) {
                 // Ensure the mesh has shadow properties
@@ -281,24 +256,13 @@ class ThreeJSModels {
                     const materials = Array.isArray(child.material) ? child.material : [child.material];
 
                     materials.forEach((material, index) => {
-                        // Log material info
-                        this.debugLog(
-                            `💠 Original material ${index}: Type=${
-                                material.type
-                            }, Has Color=${!!material.color}, Color Value=${
-                                material.color ? "#" + material.color.getHexString() : "none"
-                            }`
-                        );
-
                         // Fix issues with missing colors
                         if (!material.color) {
                             material.color = defaultColor.clone();
-                            this.debugLog(`  ➕ Added missing color: ${material.color.getHexString()}`);
                         }
                         // Fix black materials
                         else if (material.color.r === 0 && material.color.g === 0 && material.color.b === 0) {
                             material.color.copy(defaultColor);
-                            this.debugLog(`  🔄 Replaced black color with default: ${material.color.getHexString()}`);
                         }
 
                         // Convert materials as needed for better lighting response
@@ -319,7 +283,6 @@ class ThreeJSModels {
                             } else {
                                 child.material = newMaterial;
                             }
-                            console.log(`  🔄 Converted MeshBasicMaterial to MeshPhongMaterial`);
                             material = newMaterial;
                         }
                         // Enhance MeshStandardMaterial
@@ -344,7 +307,6 @@ class ThreeJSModels {
                             } else {
                                 child.material = newMaterial;
                             }
-                            console.log(`  🔄 Converted MeshLambertMaterial to MeshPhongMaterial`);
                             material = newMaterial;
                         }
 
@@ -356,7 +318,6 @@ class ThreeJSModels {
                     });
                 } else {
                     // If no material exists, create a MeshPhongMaterial for better lighting response
-                    console.log(`  ⚠️ Mesh missing material, creating default`);
                     child.material = new THREE.MeshPhongMaterial({
                         color: this.getDefaultColorForModel(modelPath),
                         shininess: 75,
@@ -718,7 +679,6 @@ class ThreeJSModels {
     fixBlackMaterials(modelType) {
         const model = this.models[modelType];
         if (!model) {
-            console.log(`❌ No model found for ${modelType}`);
             return false;
         }
 
@@ -742,7 +702,6 @@ class ThreeJSModels {
             }
         });
 
-        console.log(`🔧 Fixed ${fixCount} black materials in ${modelType} model`);
         this.renderers[modelType]?.render(this.scenes[modelType], this.cameras[modelType]);
         return fixCount > 0;
     }
@@ -763,8 +722,6 @@ class ThreeJSModels {
                     }
                 });
 
-            console.log(`💡 Adjusted lighting for ${modelType} model to ${intensity}`);
-
             // Re-render
             this.renderers[modelType]?.render(scene, this.cameras[modelType]);
         });
@@ -774,11 +731,9 @@ class ThreeJSModels {
     analyzeModelColors(modelType) {
         const model = this.models[modelType];
         if (!model) {
-            console.log(`❌ No model found for ${modelType}`);
             return;
         }
 
-        console.log(`🔍 Analyzing model colors for ${modelType}:`);
         let meshCount = 0;
         let colorMap = {};
 
@@ -797,12 +752,6 @@ class ThreeJSModels {
                     }
                 });
             }
-        });
-
-        console.log(`📊 Found ${meshCount} meshes`);
-        console.log("📊 Color distribution:");
-        Object.entries(colorMap).forEach(([color, count]) => {
-            console.log(`   ${color}: ${count} occurrences (${Math.round((count / meshCount) * 100)}%)`);
         });
 
         return { meshCount, colorMap };

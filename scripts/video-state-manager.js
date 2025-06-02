@@ -13,8 +13,6 @@ class VideoStateManager {
     }
 
     init() {
-        console.log("VideoStateManager: Initializing...");
-
         // Wait for video elements to be available
         this.waitForVideoElements();
 
@@ -34,7 +32,6 @@ class VideoStateManager {
             this.customControls = window.customVideoControls;
 
             if (this.videoElement && this.customControls) {
-                console.log("VideoStateManager: Video elements found, setting up event listeners");
                 this.setupVideoEventListeners();
             } else {
                 setTimeout(checkElements, 100);
@@ -71,14 +68,12 @@ class VideoStateManager {
         const backToHomeBtn = document.getElementById("back-to-home");
         if (backToHomeBtn) {
             backToHomeBtn.addEventListener("click", () => {
-                console.log("VideoStateManager: Detected navigation to home");
                 this.handleNavigationAway();
             });
         }
 
         // Detect page unload/refresh
         window.addEventListener("beforeunload", () => {
-            console.log("VideoStateManager: Detected page unload");
             this.handleNavigationAway();
         });
 
@@ -96,7 +91,6 @@ class VideoStateManager {
             // Check if user is clicking on topic navigation or other sections
             const topicBtn = e.target.closest(".topic-btn");
             if (topicBtn && !this.videoElement?.paused) {
-                console.log("VideoStateManager: Detected topic navigation while video playing");
                 // Don't pause for topic changes within video player
                 // This is intentional as per requirements
             }
@@ -105,7 +99,6 @@ class VideoStateManager {
 
     handleNavigationAway() {
         if (this.shouldSaveState()) {
-            console.log("VideoStateManager: Saving state before navigation");
             this.saveCurrentState();
             this.pauseVideo();
         }
@@ -113,7 +106,6 @@ class VideoStateManager {
 
     handleTabHidden() {
         if (this.shouldSaveState()) {
-            console.log("VideoStateManager: Saving state due to tab change");
             this.saveCurrentState();
             this.pauseVideo();
         }
@@ -160,7 +152,6 @@ class VideoStateManager {
         if (this.currentState) {
             try {
                 localStorage.setItem(this.storageKey, JSON.stringify(this.currentState));
-                console.log("VideoStateManager: State saved", this.currentState);
             } catch (error) {
                 console.error("VideoStateManager: Failed to save state", error);
             }
@@ -176,7 +167,6 @@ class VideoStateManager {
                 const isRecent = Date.now() - state.timestamp < 24 * 60 * 60 * 1000;
 
                 if (isRecent) {
-                    console.log("VideoStateManager: Loaded saved state", state);
                     return state;
                 }
             }
@@ -190,9 +180,56 @@ class VideoStateManager {
         const savedState = this.loadSavedState();
         if (savedState && savedState.currentTime > 10) {
             // Only show if more than 10 seconds
-            console.log("VideoStateManager: Found saved state, showing resume option");
             this.showResumeNotification(savedState);
         }
+    }
+
+    showResumeNotification(savedState) {
+        // Remove any existing notification
+        this.hideResumeNotification();
+
+        // Create resume notification
+        this.resumeNotification = document.createElement("div");
+        this.resumeNotification.className = "video-resume-notification";
+        this.resumeNotification.innerHTML = `
+            <div class="resume-content">
+                <div class="resume-icon">▶️</div>
+                <div class="resume-text">
+                    <div class="resume-title">Tiếp tục xem video</div>
+                    <div class="resume-subtitle">
+                        Video "${this.getVideoTitle(savedState.videoId)}" đã dừng tại ${this.formatTime(
+            savedState.currentTime
+        )}
+                    </div>
+                </div>
+                <div class="resume-actions">
+                    <button class="resume-btn" data-action="resume">Tiếp tục</button>
+                    <button class="resume-btn secondary" data-action="start-over">Xem từ đầu</button>
+                    <button class="resume-btn dismiss" data-action="dismiss">×</button>
+                </div>
+            </div>
+        `;
+
+        // Add to page
+        document.body.appendChild(this.resumeNotification);
+
+        // Setup event listeners
+        this.resumeNotification.addEventListener("click", (e) => {
+            const action = e.target.dataset.action;
+            if (action) {
+                this.handleResumeAction(action, savedState);
+            }
+        });
+
+        // Auto-hide after 15 seconds
+        setTimeout(() => {
+            this.hideResumeNotification();
+        }, 15000);
+
+        // Add animation
+        setTimeout(() => {
+            this.resumeNotification.classList.add("visible");
+        }, 100);
     }
 
     // showResumeNotification(savedState) {
@@ -259,8 +296,6 @@ class VideoStateManager {
     }
 
     resumeFromState(savedState) {
-        console.log("VideoStateManager: Resuming from saved state", savedState);
-
         // Navigate to video player if not already there
         this.ensureVideoPlayerVisible();
 
@@ -284,7 +319,6 @@ class VideoStateManager {
                 const seekToPosition = () => {
                     if (this.videoElement.readyState >= 1) {
                         this.videoElement.currentTime = savedState.currentTime;
-                        console.log(`VideoStateManager: Resumed at ${savedState.currentTime}s`);
 
                         // Show brief confirmation message
                         this.showMessage(`Tiếp tục từ ${this.formatTime(savedState.currentTime)}`);
@@ -298,8 +332,6 @@ class VideoStateManager {
     }
 
     startVideoFromBeginning(videoId) {
-        console.log("VideoStateManager: Starting video from beginning", videoId);
-
         // Navigate to video player if not already there
         this.ensureVideoPlayerVisible();
 
@@ -330,7 +362,6 @@ class VideoStateManager {
     }
 
     dismissResumeNotification() {
-        console.log("VideoStateManager: Resume notification dismissed");
         this.clearSavedState();
     }
 
@@ -349,7 +380,6 @@ class VideoStateManager {
     clearSavedState() {
         try {
             localStorage.removeItem(this.storageKey);
-            console.log("VideoStateManager: Saved state cleared");
         } catch (error) {
             console.error("VideoStateManager: Failed to clear state", error);
         }
@@ -358,7 +388,6 @@ class VideoStateManager {
     pauseVideo() {
         if (this.videoElement && !this.videoElement.paused) {
             this.videoElement.pause();
-            console.log("VideoStateManager: Video paused");
         }
     }
 
@@ -438,7 +467,6 @@ let videoStateManager;
 document.addEventListener("DOMContentLoaded", () => {
     videoStateManager = new VideoStateManager();
     window.videoStateManager = videoStateManager;
-    console.log("VideoStateManager: Initialized and available globally");
 });
 
 // Export for global use

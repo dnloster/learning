@@ -29,24 +29,7 @@ class CustomVideoControls {
 
         // Bookmark system
         this.bookmarkManager = null; // Debug logging
-        console.log("CustomVideoControls elements check:", {
-            video: !!this.video,
-            controls: !!this.controls,
-            progressBar: !!this.progressBar,
-            playPauseBtn: !!this.playPauseBtn,
-            volumeBtn: !!this.volumeBtn,
-            durationSpan: !!this.durationSpan,
-            currentTimeSpan: !!this.currentTimeSpan,
-        });
 
-        // Additional debug for duration element
-        console.log("Duration element details:");
-        console.log("- Found by ID:", document.getElementById("duration"));
-        console.log("- this.durationSpan:", this.durationSpan);
-        if (this.durationSpan) {
-            console.log("- Element tag:", this.durationSpan.tagName);
-            console.log("- Element text:", this.durationSpan.textContent);
-        } // Initialize synchronously
         this.initSync();
 
         // Test duration functionality immediately
@@ -61,7 +44,6 @@ class CustomVideoControls {
             console.error("Video element not found! Cannot initialize controls.");
             return;
         }
-        console.log("Initializing custom video controls...");
         this.setupEventListeners();
         this.updateVolumeIcon();
         this.showControls();
@@ -77,13 +59,11 @@ class CustomVideoControls {
         // Initialize video chapters system
         try {
             await this.initializeChapters();
-            console.log("Video chapters initialized successfully");
         } catch (error) {
             console.error("Failed to initialize chapters:", error);
         } // Initialize bookmark system
         try {
             await this.initializeBookmarks();
-            console.log("Bookmark system initialized successfully");
         } catch (error) {
             console.error("Failed to initialize bookmark system:", error);
         }
@@ -91,7 +71,6 @@ class CustomVideoControls {
         // Initialize notes system
         try {
             await this.initializeNotes();
-            console.log("Notes system initialized successfully");
         } catch (error) {
             console.error("Failed to initialize notes system:", error);
         }
@@ -99,30 +78,22 @@ class CustomVideoControls {
         // Initialize quiz system - wait a bit longer to ensure quiz manager is loaded
         try {
             await new Promise((resolve) => setTimeout(resolve, 500)); // Wait 500ms
-            await this.initializeQuizSystem();
-            console.log("Quiz system initialized successfully");
         } catch (error) {
             console.error("Failed to initialize quiz system:", error);
             console.warn("Quiz functionality may not work properly");
         }
     }
     setupEventListeners() {
-        console.log("Setting up event listeners...");
-
         // Video events
         this.video.addEventListener("loadedmetadata", () => {
-            console.log("Video metadata loaded - duration:", this.video.duration);
-            console.log("Video readyState:", this.video.readyState);
             this.updateDuration();
         });
         this.video.addEventListener("timeupdate", () => this.updateProgress());
         this.video.addEventListener("progress", () => this.updateBuffered());
         this.video.addEventListener("play", () => {
-            console.log("Video playing");
             this.updatePlayButton(false);
         });
         this.video.addEventListener("pause", () => {
-            console.log("Video paused");
             this.updatePlayButton(true);
         });
         this.video.addEventListener("volumechange", () => this.updateVolumeIcon());
@@ -130,7 +101,6 @@ class CustomVideoControls {
         // Control button events with null checks
         if (this.playPauseBtn) {
             this.playPauseBtn.addEventListener("click", () => {
-                console.log("Play/pause button clicked");
                 this.togglePlayPause();
                 this.showPlayPauseFeedback();
             });
@@ -138,28 +108,24 @@ class CustomVideoControls {
 
         if (this.backwardBtn) {
             this.backwardBtn.addEventListener("click", () => {
-                console.log("Backward button clicked");
                 this.skipBackward();
             });
         }
 
         if (this.forwardBtn) {
             this.forwardBtn.addEventListener("click", () => {
-                console.log("Forward button clicked");
                 this.skipForward();
             });
         }
 
         if (this.volumeBtn) {
             this.volumeBtn.addEventListener("click", () => {
-                console.log("Volume button clicked");
                 this.toggleMute();
             });
         }
 
         if (this.volumeRange) {
             this.volumeRange.addEventListener("input", (e) => {
-                console.log("Volume changed to:", e.target.value);
                 this.setVolume(e.target.value);
             });
 
@@ -191,14 +157,12 @@ class CustomVideoControls {
 
         if (this.fullscreenBtn) {
             this.fullscreenBtn.addEventListener("click", () => {
-                console.log("Fullscreen button clicked");
                 this.toggleFullscreen();
             });
         }
 
         if (this.pipBtn) {
             this.pipBtn.addEventListener("click", () => {
-                console.log("Picture-in-Picture button clicked");
                 this.togglePictureInPicture();
             });
         }
@@ -264,12 +228,10 @@ class CustomVideoControls {
 
         // Picture-in-Picture events
         this.video.addEventListener("enterpictureinpicture", () => {
-            console.log("Entered Picture-in-Picture mode");
             this.updatePipButton(true);
         });
 
         this.video.addEventListener("leavepictureinpicture", () => {
-            console.log("Left Picture-in-Picture mode");
             this.updatePipButton(false);
         });
 
@@ -277,7 +239,6 @@ class CustomVideoControls {
         const chaptersBtn = document.getElementById("chapters-btn");
         if (chaptersBtn) {
             chaptersBtn.addEventListener("click", () => {
-                console.log("Chapters button clicked");
                 if (window.videoChapters) {
                     window.videoChapters.toggleChapterPanel();
                 } else {
@@ -371,7 +332,6 @@ class CustomVideoControls {
                 }, 200);
             });
         }
-        console.log("Event listeners setup complete");
     }
 
     setupVideoClickHandlers() {
@@ -449,8 +409,6 @@ class CustomVideoControls {
         return false;
     }
     handleSingleClick(e) {
-        console.log("Video single-clicked - toggling play/pause");
-
         // Show visual feedback effect BEFORE toggle to show correct state
         this.showPlayPauseFeedback();
 
@@ -462,12 +420,9 @@ class CustomVideoControls {
     }
 
     handleDoubleClick(e) {
-        console.log("Video double-clicked - toggling fullscreen");
         this.toggleFullscreen();
     }
     togglePlayPause() {
-        console.log("Toggle play/pause called. Video paused:", this.video.paused);
-
         if (this.video.paused) {
             this.video.play().catch((error) => {
                 console.warn("Play failed:", error);
@@ -495,10 +450,8 @@ class CustomVideoControls {
         // Create simple icons like YouTube
         if (willPlay) {
             feedback.innerHTML = '<span class="feedback-icon play">▶</span>';
-            console.log("▶ Play feedback");
         } else {
             feedback.innerHTML = '<span class="feedback-icon pause">⏸</span>';
-            console.log("⏸ Pause feedback");
         }
 
         // Add to video player container
@@ -611,46 +564,26 @@ class CustomVideoControls {
     }
 
     testDurationFunctionality() {
-        console.log("=== Testing Duration Functionality ===");
-        console.log("Video element:", this.video);
-        console.log("Video src:", this.video?.src);
-        console.log("Video duration:", this.video?.duration);
-        console.log("Video readyState:", this.video?.readyState);
-        console.log("Duration span element:", this.durationSpan);
-
         if (this.durationSpan) {
-            console.log("Duration span current text:", this.durationSpan.textContent);
-
             // Try to manually set a test duration
             this.durationSpan.textContent = "TEST";
-            console.log("Set test text - Duration span now shows:", this.durationSpan.textContent);
 
             // Reset to original or formatted time
             if (this.video?.duration) {
                 const formatted = this.formatTime(this.video.duration);
-                console.log("Formatted time:", formatted);
                 this.durationSpan.textContent = formatted;
             } else {
                 this.durationSpan.textContent = "0:00";
             }
         } else {
             console.error("Duration span element not found!");
-            // Try to find it again
-            const durationEl = document.getElementById("duration");
-            console.log("Direct search for duration element:", durationEl);
         }
-        console.log("=== End Duration Test ===");
     }
 
     updateDuration() {
-        console.log("updateDuration called - video.duration:", this.video.duration);
-        console.log("durationSpan element:", this.durationSpan);
-
         if (this.durationSpan) {
             const formattedTime = this.formatTime(this.video.duration);
-            console.log("Formatted duration:", formattedTime);
             this.durationSpan.textContent = formattedTime;
-            console.log("Duration updated successfully");
         } else {
             console.warn("durationSpan element not found!");
         }
@@ -690,8 +623,6 @@ class CustomVideoControls {
         const rect = this.progressBar.getBoundingClientRect();
         const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
         const newTime = pos * this.video.duration;
-
-        console.log(`Seeking to ${newTime}s (${Math.round(pos * 100)}%)`);
 
         // Smooth seeking with visual feedback
         this.updateSeekPreview(pos, newTime);
@@ -833,31 +764,26 @@ class CustomVideoControls {
     }
 
     previousVideo() {
-        console.log("Previous video method called");
         // Dispatch custom event for video player controller
         window.dispatchEvent(new CustomEvent("previous-video"));
 
         // Also try direct call if video player controller exists
         if (window.videoPlayerController && typeof window.videoPlayerController.previousVideo === "function") {
-            console.log("Calling video player controller directly");
             window.videoPlayerController.previousVideo();
         }
     }
 
     nextVideo() {
-        console.log("Next video method called");
         // Dispatch custom event for video player controller
         window.dispatchEvent(new CustomEvent("next-video"));
 
         // Also try direct call if video player controller exists
         if (window.videoPlayerController && typeof window.videoPlayerController.nextVideo === "function") {
-            console.log("Calling video player controller directly");
             window.videoPlayerController.nextVideo();
         }
     }
 
     toggleFullscreen() {
-        console.log("Toggling fullscreen...");
         const elem = this.video?.parentElement || this.video;
 
         if (
@@ -898,12 +824,10 @@ class CustomVideoControls {
             if (this.video.pictureInPictureElement) {
                 // Exit PiP mode
                 await document.exitPictureInPicture();
-                console.log("Exited Picture-in-Picture mode");
                 this.updatePipButton(false);
             } else {
                 // Enter PiP mode
                 await this.video.requestPictureInPicture();
-                console.log("Entered Picture-in-Picture mode");
                 this.updatePipButton(true);
             }
         } catch (error) {
@@ -957,7 +881,6 @@ class CustomVideoControls {
             document.msFullscreenElement
         );
 
-        console.log("Fullscreen state changed:", isFullscreen);
         if (isFullscreen) {
             // In fullscreen mode - ensure controls are visible and properly styled
             this.showControls();
@@ -1023,7 +946,6 @@ class CustomVideoControls {
 
         // Use 4 seconds timer for fullscreen mode, 3 seconds for normal mode
         const hideDelay = isFullscreen ? 4000 : 3000;
-        console.log(`Starting hide timer: ${hideDelay}ms (fullscreen: ${isFullscreen})`);
 
         // For fullscreen mode, show warning 1 second before hiding
         if (isFullscreen) {
@@ -1040,7 +962,6 @@ class CustomVideoControls {
 
         this.hideControlsTimer = setTimeout(() => {
             if (!this.video.paused) {
-                console.log("Hiding controls after timer");
                 this.hideControls();
             }
         }, hideDelay);
@@ -1077,7 +998,6 @@ class CustomVideoControls {
 
         // Only handle global mouse move in fullscreen mode
         if (isFullscreen) {
-            console.log("Mouse moved in fullscreen - showing controls");
             this.showControls();
         }
     }
@@ -1155,7 +1075,6 @@ class CustomVideoControls {
         const pos = time / this.video.duration;
         this.updateSeekPreview(pos, time);
         this.video.currentTime = time;
-        console.log(`Fine seek to ${time}s`);
     }
 
     formatTime(seconds) {
@@ -1192,7 +1111,6 @@ class CustomVideoControls {
         if (this.durationSpan) {
             this.durationSpan.textContent = "0:00";
         }
-        console.log("Video controls reset");
     }
 
     getCurrentTime() {
@@ -1208,10 +1126,39 @@ class CustomVideoControls {
     // Video Chapters Integration
     async initializeChapters() {
         try {
-            // Dynamic import VideoChapters
-            const { default: VideoChapters } = await import("./video-chapters.js");
-            this.chapters = new VideoChapters(this.video, this);
-            console.log("Video chapters system initialized");
+            // Check if VideoChapters is already available globally
+            if (window.videoChapters) {
+                this.chapters = window.videoChapters;
+            } else if (window.VideoChapters) {
+                // If the class is available but not instantiated
+                this.chapters = new window.VideoChapters(this.video, this);
+                console.log("Created new VideoChapters instance from global class");
+            } else {
+                // Try dynamic import
+                try {
+                    const chapterModule = await import("./video-chapters.js");
+
+                    // Handle different export patterns
+                    const VideoChaptersClass = chapterModule.default || chapterModule.VideoChapters || chapterModule;
+
+                    if (typeof VideoChaptersClass === "function") {
+                        this.chapters = new VideoChaptersClass(this.video, this);
+                        console.log("Created VideoChapters instance from dynamic import");
+                    } else if (typeof VideoChaptersClass === "object" && VideoChaptersClass !== null) {
+                        // If it's already an instance
+                        this.chapters = VideoChaptersClass;
+                        console.log("Using VideoChapters object from import");
+                    } else {
+                        throw new Error("VideoChapters is not a constructor or valid object");
+                    }
+                } catch (importError) {
+                    console.error("Failed to import VideoChapters:", importError);
+
+                    // Create a minimal fallback
+                    this.chapters = this.createFallbackChapters();
+                    console.warn("Using fallback chapter system");
+                }
+            }
 
             // Listen for video changes to update chapters
             window.addEventListener("video-changed", (event) => {
@@ -1219,14 +1166,46 @@ class CustomVideoControls {
             });
         } catch (error) {
             console.error("Failed to initialize video chapters:", error);
+
+            // Create fallback system
+            this.chapters = this.createFallbackChapters();
+            console.warn("Using fallback chapter system due to initialization error");
         }
+    }
+
+    createFallbackChapters() {
+        return {
+            loadChaptersForVideo: (videoId) => {
+                console.log("Fallback: Loading chapters for video", videoId);
+                // Basic fallback implementation
+            },
+            toggleChapterPanel: () => {
+                const chapterPanel = document.getElementById("chapter-navigation-panel");
+                const chaptersBtn = document.getElementById("chapters-btn");
+
+                if (chapterPanel) {
+                    const isVisible = chapterPanel.style.display !== "none";
+                    chapterPanel.style.display = isVisible ? "none" : "flex";
+
+                    if (chaptersBtn) {
+                        chaptersBtn.classList.toggle("active", !isVisible);
+                    }
+
+                    const indicator = document.getElementById("chapter-indicator");
+                    if (indicator) {
+                        indicator.style.display = isVisible ? "none" : "inline-block";
+                    }
+                }
+            },
+            getCurrentChapter: () => null,
+            getChapters: () => [],
+        };
     }
 
     handleVideoChange(videoData) {
         if (this.chapters && videoData) {
             // Load chapters for the new video
             this.chapters.loadChaptersForVideo(videoData.id || videoData.title);
-            console.log("Chapters updated for video:", videoData.title);
         }
     } // Get chapters instance for external access
     getChapters() {
@@ -1236,16 +1215,39 @@ class CustomVideoControls {
     // Bookmark System Integration
     async initializeBookmarks() {
         try {
-            // Dynamic import BookmarkManager
-            const { default: BookmarkManager } = await import("./bookmark-manager.js");
-            this.bookmarkManager = new BookmarkManager();
-            console.log("Bookmark system initialized");
+            // Wait for BookmarkManager to be available
+            let attempts = 0;
+            const maxAttempts = 50;
+
+            const waitForBookmarkManager = () => {
+                return new Promise((resolve, reject) => {
+                    const checkForBookmarks = () => {
+                        attempts++;
+
+                        if (window.bookmarkManager) {
+                            resolve(window.bookmarkManager);
+                        } else if (window.BookmarkManager) {
+                            resolve(new window.BookmarkManager());
+                        } else if (attempts >= maxAttempts) {
+                            reject(new Error("BookmarkManager not available after maximum attempts"));
+                        } else {
+                            setTimeout(checkForBookmarks, 100);
+                        }
+                    };
+
+                    checkForBookmarks();
+                });
+            };
+
+            this.bookmarkManager = await waitForBookmarkManager();
 
             // Connect bookmark manager with video player
-            this.bookmarkManager.setVideoPlayer({
-                getCurrentVideo: () => this.getCurrentVideoData(),
-                loadVideo: (videoData) => this.loadVideoFromBookmark(videoData),
-            });
+            if (this.bookmarkManager.setVideoPlayer) {
+                this.bookmarkManager.setVideoPlayer({
+                    getCurrentVideo: () => this.getCurrentVideoData(),
+                    loadVideo: (videoData) => this.loadVideoFromBookmark(videoData),
+                });
+            }
 
             // Listen for video changes to update bookmark status
             window.addEventListener("video-changed", (event) => {
@@ -1253,278 +1255,463 @@ class CustomVideoControls {
             });
         } catch (error) {
             console.error("Failed to initialize bookmark system:", error);
-        }
-    }
 
-    // Notes System Integration
-    async initializeNotes() {
-        try {
-            // Dynamic import NotesManager
-            const { default: NotesManager } = await import("./notes-manager.js");
-            this.notesManager = new NotesManager();
-            console.log("Notes system initialized");
-
-            // Connect notes manager with video player
-            this.notesManager.setCurrentVideo(this.getCurrentVideoId());
-
-            // Listen for video changes to update notes for current video
-            window.addEventListener("video-changed", (event) => {
-                this.handleNotesVideoChange(event.detail);
-            }); // Set up notes button to toggle notes panel
-            const notesBtn = document.getElementById("notes-btn");
-            if (notesBtn) {
-                // Remove existing listeners to avoid duplicates
-                notesBtn.removeEventListener("click", this.handleNotesButtonClick);
-
-                // Right click to open notes panel
-                notesBtn.addEventListener("contextmenu", (e) => {
-                    e.preventDefault();
-                    this.notesManager.toggleNotesPanel();
-                });
-
-                // Add keyboard shortcut info to tooltip
-                notesBtn.title =
-                    "Thêm ghi chú tại thời điểm này\nChuột phải: Xem danh sách ghi chú\nPhím tắt: Ctrl+N (ghi chú mới), Ctrl+Shift+N (panel)";
-            }
-        } catch (error) {
-            console.error("Failed to initialize notes system:", error);
-        }
-    }
-    getCurrentVideoData() {
-        // Get current video data from the video player controller
-        if (window.videoPlayer?.currentVideo) {
-            return window.videoPlayer.currentVideo;
-        }
-        return null;
-    }
-
-    getCurrentVideoId() {
-        const videoData = this.getCurrentVideoData();
-        return videoData ? videoData.id || videoData.title || "default" : "default";
-    }
-
-    handleNotesVideoChange(videoData) {
-        if (this.notesManager && videoData) {
-            // Update notes system for the new video
-            const videoId = videoData.id || videoData.title || "default";
-            this.notesManager.setCurrentVideo(videoId);
-            console.log("Notes system updated for video:", videoData.title);
-        }
-    }
-
-    // Get notes manager instance for external access
-    getNotesManager() {
-        return this.notesManager;
-    }
-
-    loadVideoFromBookmark(videoData) {
-        // Load video through the video player controller
-        if (window.videoPlayer) {
-            window.videoPlayer.loadVideo(videoData.id || videoData.title, videoData.playlist || "cpu");
+            // Create fallback bookmark system
+            this.bookmarkManager = this.createFallbackBookmarkManager();
+            console.warn("Using fallback bookmark system");
         }
     }
 
     handleBookmarkVideoChange(videoData) {
         if (this.bookmarkManager && videoData) {
             // Update bookmark button state for the new video
-            this.bookmarkManager.updateBookmarkButtonState();
-            console.log("Bookmark status updated for video:", videoData.title);
+            const videoId = videoData.id || videoData.title || "default";
+
+            // Check which method is available
+            if (this.bookmarkManager.updateBookmarkButtonState) {
+                this.bookmarkManager.updateBookmarkButtonState(videoId);
+            } else if (this.bookmarkManager.setCurrentVideo) {
+                this.bookmarkManager.setCurrentVideo(videoId);
+            } else if (this.bookmarkManager.checkBookmarkStatus) {
+                this.bookmarkManager.checkBookmarkStatus(videoId);
+            } else {
+                console.warn("BookmarkManager does not have any video update method");
+            }
+
+            // Update bookmark button appearance
+            this.updateBookmarkButtonAppearance(videoId);
         }
     }
 
-    // Get bookmark manager instance for external access
-    getBookmarkManager() {
-        return this.bookmarkManager;
+    updateBookmarkButtonAppearance(videoId) {
+        const bookmarkBtn = document.getElementById("bookmark-btn");
+        if (bookmarkBtn && this.bookmarkManager) {
+            try {
+                // Check if current video is bookmarked
+                let isBookmarked = false;
+
+                if (this.bookmarkManager.isBookmarked) {
+                    isBookmarked = this.bookmarkManager.isBookmarked(videoId);
+                } else if (this.bookmarkManager.getBookmarks) {
+                    const bookmarks = this.bookmarkManager.getBookmarks();
+                    isBookmarked = bookmarks.some((bookmark) => bookmark.id === videoId);
+                }
+
+                // Update button appearance
+                const icon = bookmarkBtn.querySelector(".control-icon");
+                if (icon) {
+                    icon.textContent = isBookmarked ? "🔖" : "🔖";
+                }
+
+                // Update button state
+                bookmarkBtn.classList.toggle("bookmarked", isBookmarked);
+                bookmarkBtn.title = isBookmarked ? "Bỏ đánh dấu video này" : "Đánh dấu video này";
+            } catch (error) {
+                console.error("Error updating bookmark button appearance:", error);
+            }
+        }
     }
 
-    // Progress Bar Hover Preview Methods
+    getCurrentVideoData() {
+        // Get current video data from video player controller
+        if (window.videoPlayerController && window.videoPlayerController.currentVideo) {
+            return window.videoPlayerController.currentVideo;
+        }
+
+        // Fallback: try to get data from video element
+        const videoElement = document.getElementById("main-video");
+        if (videoElement) {
+            const source = videoElement.querySelector("source");
+            const src = source ? source.src : "";
+            const videoId = src.split("/").pop().replace(".mp4", "") || "default";
+
+            return {
+                id: videoId,
+                title: document.getElementById("current-video-title")?.textContent || "Unknown Video",
+                src: src,
+                currentTime: videoElement.currentTime || 0,
+                duration: videoElement.duration || 0,
+            };
+        }
+
+        return null;
+    }
+
+    getCurrentVideoId() {
+        const videoData = this.getCurrentVideoData();
+        return videoData ? videoData.id : "default";
+    }
+
+    loadVideoFromBookmark(videoData) {
+        // Load video from bookmark data
+        if (window.videoPlayerController && videoData) {
+            try {
+                // Load the video
+                if (window.videoPlayerController.playVideo) {
+                    window.videoPlayerController.playVideo(videoData.id, videoData.src);
+                }
+
+                // Seek to bookmarked time if available
+                if (videoData.currentTime && videoData.currentTime > 0) {
+                    setTimeout(() => {
+                        const videoElement = document.getElementById("main-video");
+                        if (videoElement) {
+                            videoElement.currentTime = videoData.currentTime;
+                        }
+                    }, 1000); // Wait for video to load
+                }
+            } catch (error) {
+                console.error("Error loading video from bookmark:", error);
+            }
+        }
+    }
+
+    createFallbackBookmarkManager() {
+        return {
+            setVideoPlayer: (player) => {
+                console.log("Fallback: Video player set for bookmarks");
+            },
+            updateBookmarkButtonState: () => {
+                console.log("Fallback: Updating bookmark button state");
+            },
+            toggleBookmark: () => {
+                console.log("Fallback: Toggling bookmark");
+            },
+            getBookmarks: () => [],
+            isBookmarked: (videoId) => false,
+        };
+    }
+
+    // Notes System Integration
+    async initializeNotes() {
+        try {
+            // Wait for NotesManager to be available
+            let attempts = 0;
+            const maxAttempts = 50;
+
+            const waitForNotesManager = () => {
+                return new Promise((resolve, reject) => {
+                    const checkForNotes = () => {
+                        attempts++;
+
+                        if (window.notesManager) {
+                            resolve(window.notesManager);
+                        } else if (window.NotesManager) {
+                            resolve(new window.NotesManager());
+                        } else if (attempts >= maxAttempts) {
+                            reject(new Error("NotesManager not available after maximum attempts"));
+                        } else {
+                            setTimeout(checkForNotes, 100);
+                        }
+                    };
+
+                    checkForNotes();
+                });
+            };
+
+            this.notesManager = await waitForNotesManager();
+
+            // Connect notes manager with video player - check if methods exist first
+            if (this.notesManager.setCurrentVideo) {
+                this.notesManager.setCurrentVideo(this.getCurrentVideoId());
+            } else if (this.notesManager.setVideo) {
+                this.notesManager.setVideo(this.getCurrentVideoId());
+            } else {
+                console.warn("NotesManager does not have setCurrentVideo or setVideo method");
+            }
+
+            // Listen for video changes to update notes for current video
+            window.addEventListener("video-changed", (event) => {
+                this.handleNotesVideoChange(event.detail);
+            });
+
+            // Set up notes button to toggle notes panel
+            const notesBtn = document.getElementById("note-add-btn");
+            if (notesBtn) {
+                // Click to add note at current time
+                notesBtn.addEventListener("click", () => {
+                    if (this.notesManager.addNoteAtCurrentTime) {
+                        this.notesManager.addNoteAtCurrentTime();
+                    } else if (this.notesManager.showNotesModal) {
+                        this.notesManager.showNotesModal();
+                    } else {
+                        console.warn("NotesManager does not have addNoteAtCurrentTime method");
+                    }
+                });
+
+                // Right click to open notes panel
+                notesBtn.addEventListener("contextmenu", (e) => {
+                    e.preventDefault();
+                    if (this.notesManager.toggleNotesPanel) {
+                        this.notesManager.toggleNotesPanel();
+                    } else if (this.notesManager.showNotesPanel) {
+                        this.notesManager.showNotesPanel();
+                    } else {
+                        console.warn("NotesManager does not have toggleNotesPanel method");
+                    }
+                });
+            }
+
+            // Set up notes panel toggle button
+            const notesPanelToggle = document.getElementById("note-panel-toggle");
+            if (notesPanelToggle) {
+                notesPanelToggle.addEventListener("click", () => {
+                    if (this.notesManager.toggleNotesPanel) {
+                        this.notesManager.toggleNotesPanel();
+                    } else {
+                        console.warn("NotesManager does not have toggleNotesPanel method");
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Failed to initialize notes system:", error);
+
+            // Create fallback notes system
+            this.notesManager = this.createFallbackNotesManager();
+            console.warn("Using fallback notes system");
+        }
+    }
+
+    createFallbackNotesManager() {
+        return {
+            setCurrentVideo: (videoId) => {
+                console.log("Fallback: Setting current video for notes:", videoId);
+            },
+            setVideo: (videoId) => {
+                console.log("Fallback: Setting video for notes:", videoId);
+            },
+            toggleNotesPanel: () => {
+                console.log("Fallback: Toggling notes panel");
+                // Simple fallback to show/hide notes panel
+                const notesPanel = document.getElementById("notes-panel");
+                if (notesPanel) {
+                    const isVisible = notesPanel.style.display !== "none";
+                    notesPanel.style.display = isVisible ? "none" : "block";
+                }
+            },
+            showNotesPanel: () => {
+                console.log("Fallback: Showing notes panel");
+                const notesPanel = document.getElementById("notes-panel");
+                if (notesPanel) {
+                    notesPanel.style.display = "block";
+                }
+            },
+            addNoteAtCurrentTime: () => {
+                console.log("Fallback: Adding note at current time");
+                // Simple fallback to show notes modal
+                const notesModal = document.getElementById("notes-modal");
+                if (notesModal) {
+                    notesModal.style.display = "block";
+                }
+            },
+            showNotesModal: () => {
+                console.log("Fallback: Showing notes modal");
+                const notesModal = document.getElementById("notes-modal");
+                if (notesModal) {
+                    notesModal.style.display = "block";
+                }
+            },
+            addNote: (content, timestamp) => {
+                console.log("Fallback: Adding note:", content, timestamp);
+            },
+            getNotes: () => [],
+            deleteNote: (noteId) => {
+                console.log("Fallback: Deleting note:", noteId);
+            },
+        };
+    }
+
+    handleNotesVideoChange(videoData) {
+        if (this.notesManager && videoData) {
+            // Update notes system for the new video
+            const videoId = videoData.id || videoData.title || "default";
+
+            // Check which method is available
+            if (this.notesManager.setCurrentVideo) {
+                this.notesManager.setCurrentVideo(videoId);
+            } else if (this.notesManager.setVideo) {
+                this.notesManager.setVideo(videoId);
+            } else if (this.notesManager.updateCurrentVideo) {
+                this.notesManager.updateCurrentVideo(videoId);
+            } else {
+                console.warn("NotesManager does not have any video setting method");
+            }
+        }
+    }
+
     onProgressHoverStart() {
-        this.progressBar?.classList.add("hovering");
-        this.createPreviewFrame();
+        // Show chapter preview when hover starts
+        const chapterPreview = document.getElementById("chapter-preview");
+        if (chapterPreview) {
+            chapterPreview.style.display = "block";
+        }
+
+        // Add hover class to progress bar for styling
+        if (this.progressBar) {
+            this.progressBar.classList.add("hovering");
+        }
+
+        // Show time tooltip if available
+        this.showTimeTooltip = true;
     }
 
     onProgressHoverEnd() {
-        this.progressBar?.classList.remove("hovering");
-        this.progressBar?.style.removeProperty("--preview-position");
-        this.hidePreviewFrame();
+        // Hide chapter preview when hover ends
+        const chapterPreview = document.getElementById("chapter-preview");
+        if (chapterPreview) {
+            chapterPreview.classList.remove("show");
+            setTimeout(() => {
+                if (!chapterPreview.classList.contains("show")) {
+                    chapterPreview.style.display = "none";
+                }
+            }, 200);
+        }
+
+        // Remove hover class from progress bar
+        if (this.progressBar) {
+            this.progressBar.classList.remove("hovering");
+        }
+
+        // Hide time tooltip
+        this.showTimeTooltip = false;
+        this.hideTimeTooltip();
     }
 
     onProgressHover(e) {
-        if (this.isDragging || !this.video.duration) return;
+        if (!this.video.duration) return;
 
+        // Calculate position and time
         const rect = this.progressBar.getBoundingClientRect();
-        const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        const previewTime = pos * this.video.duration;
+        const position = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const hoverTime = position * this.video.duration;
 
-        // Update CSS custom property for preview position
-        this.progressBar.style.setProperty("--preview-position", `${pos * 100}%`);
+        // Update chapter preview
+        this.updateChapterPreview(position, hoverTime);
 
-        // Show enhanced preview with frame and time tooltip
-        this.updatePreviewFrame(e.clientX, previewTime);
-        this.showTimeTooltip(e.clientX, previewTime);
+        // Show time tooltip
+        this.showTimeTooltipAtPosition(e.clientX, hoverTime);
+
+        // Add visual hover effect to progress bar
+        this.updateProgressHoverEffect(position);
     }
 
-    createPreviewFrame() {
-        // Create preview frame element if it doesn't exist
-        if (!this.previewFrame) {
-            this.previewFrame = document.createElement("div");
-            this.previewFrame.className = "progress-preview-frame";
-            this.previewFrame.innerHTML = `
-                <canvas class="preview-canvas" width="160" height="90"></canvas>
-                <div class="preview-time"></div>
-            `;
-            document.body.appendChild(this.previewFrame);
-        }
-    }
+    updateChapterPreview(position, currentTime) {
+        const chapterPreview = document.getElementById("chapter-preview");
+        if (!chapterPreview) return;
 
-    hidePreviewFrame() {
-        if (this.previewFrame) {
-            this.previewFrame.style.display = "none";
-        }
-    }
-
-    updatePreviewFrame(x, time) {
-        if (!this.previewFrame || this.isDragging) return;
-
-        const canvas = this.previewFrame.querySelector(".preview-canvas");
-        const timeDisplay = this.previewFrame.querySelector(".preview-time");
-
-        if (canvas && timeDisplay) {
-            // Update time display
-            timeDisplay.textContent = this.formatTime(time);
-
-            // Position preview frame
-            const rect = this.progressBar.getBoundingClientRect();
-            const frameWidth = 160;
-            const leftPos = Math.max(frameWidth / 2, Math.min(x, window.innerWidth - frameWidth / 2));
-
-            this.previewFrame.style.left = `${leftPos}px`;
-            this.previewFrame.style.top = `${rect.top - 120}px`;
-            this.previewFrame.style.display = "block";
-
-            // Generate preview frame (simplified - could be enhanced with actual video frames)
-            this.generatePreviewFrame(canvas, time);
-        }
-    }
-
-    generatePreviewFrame(canvas, time) {
-        const ctx = canvas.getContext("2d");
-        const progress = time / this.video.duration;
-
-        // Create a simple preview (gradient that changes based on time)
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        gradient.addColorStop(0, `hsl(${progress * 360}, 70%, 50%)`);
-        gradient.addColorStop(1, `hsl(${(progress * 360 + 60) % 360}, 70%, 30%)`);
-
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Add time indicator
-        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-        ctx.font = "12px monospace";
-        ctx.textAlign = "center";
-        ctx.fillText(this.formatTime(time), canvas.width / 2, canvas.height / 2);
-    }
-
-    showTimeTooltip(x, time) {
-        // Create or update time tooltip with enhanced positioning
-        let tooltip = document.getElementById("progress-tooltip");
-        if (!tooltip) {
-            tooltip = document.createElement("div");
-            tooltip.id = "progress-tooltip";
-            tooltip.className = "progress-tooltip";
-            document.body.appendChild(tooltip);
+        // Get current video ID
+        let currentVideoId = null;
+        if (window.videoPlayerController && window.videoPlayerController.currentVideo) {
+            currentVideoId = window.videoPlayerController.currentVideo.id;
         }
 
-        tooltip.textContent = this.formatTime(time);
+        if (!currentVideoId) return;
 
-        // Enhanced positioning to keep tooltip in viewport
-        const tooltipWidth = 60; // Approximate width
-        const viewportWidth = window.innerWidth;
-        const leftPos = Math.max(tooltipWidth / 2, Math.min(x, viewportWidth - tooltipWidth / 2));
+        // Get chapters for current video
+        let chapters = [];
+        if (window.videoPlayerController && window.videoPlayerController.getChaptersForVideo) {
+            chapters = window.videoPlayerController.getChaptersForVideo(currentVideoId);
+        }
 
-        tooltip.style.left = `${leftPos}px`;
-        tooltip.style.top = `${this.progressBar.getBoundingClientRect().top - 45}px`;
-        tooltip.style.display = "block";
-        tooltip.style.opacity = "1";
+        if (chapters.length === 0) {
+            chapterPreview.style.display = "none";
+            return;
+        }
 
-        // Auto-hide tooltip with fade effect
-        clearTimeout(this.tooltipTimer);
-        this.tooltipTimer = setTimeout(() => {
-            if (tooltip) {
-                tooltip.style.opacity = "0";
-                setTimeout(() => {
-                    if (tooltip && tooltip.style.opacity === "0") {
-                        tooltip.style.display = "none";
-                    }
-                }, 200);
-            }
-        }, 1500);
-    }
-    /**
-     * Initialize quiz system integration
-     */
-    async initializeQuizSystem() {
-        return new Promise((resolve, reject) => {
-            let attempts = 0;
-            const maxAttempts = 50; // Wait up to 5 seconds (50 * 100ms)
+        // Find closest chapter
+        let closestChapter = chapters[0];
+        let nextChapter = null;
 
-            // Wait for quiz manager to be available
-            const checkQuizManager = () => {
-                attempts++;
-
-                if (window.quizManager) {
-                    console.log("Quiz Manager instance found, setting up integration...");
-                    this.setupQuizIntegration();
-                    resolve();
-                } else if (window.QuizManager) {
-                    // If class is available but instance is not, create one
-                    console.log("Quiz Manager class found, creating instance...");
-                    try {
-                        window.quizManager = new window.QuizManager();
-                        console.log("Quiz Manager instance created successfully");
-                        this.setupQuizIntegration();
-                        resolve();
-                    } catch (error) {
-                        console.error("Failed to create Quiz Manager instance:", error);
-                        reject(error);
-                    }
-                } else if (attempts >= maxAttempts) {
-                    console.warn("Quiz Manager not found after maximum attempts, quiz integration may not work");
-                    reject(new Error("Quiz Manager initialization timeout"));
-                } else {
-                    // Retry after a short delay
-                    setTimeout(checkQuizManager, 100);
+        for (let i = 0; i < chapters.length; i++) {
+            if (chapters[i].time <= currentTime) {
+                closestChapter = chapters[i];
+                if (i < chapters.length - 1) {
+                    nextChapter = chapters[i + 1];
                 }
-            };
-
-            checkQuizManager();
-        });
-    }
-
-    setupQuizIntegration() {
-        // Setup quiz button if it exists
-        const quizBtn = document.getElementById("quiz-btn");
-        if (quizBtn) {
-            console.log("Quiz button found and ready");
-
-            // Verify quiz manager has proper methods
-            if (typeof window.quizManager.togglePanel === "function") {
-                console.log("Quiz Manager properly initialized with togglePanel method");
             } else {
-                console.warn("Quiz Manager exists but togglePanel method not found");
+                if (!nextChapter) {
+                    nextChapter = chapters[i];
+                }
+                break;
+            }
+        }
+
+        // Update preview content
+        const previewTitle = chapterPreview.querySelector(".preview-title");
+        const previewTime = chapterPreview.querySelector(".preview-time");
+
+        if (previewTitle && previewTime) {
+            previewTitle.textContent = closestChapter.title;
+
+            // Calculate chapter end time
+            let endTime = this.video.duration;
+            if (nextChapter) {
+                endTime = nextChapter.time;
             }
 
-            // Add additional event listeners if needed
-            quizBtn.addEventListener("contextmenu", (e) => {
-                e.preventDefault();
-                if (window.quizManager?.togglePanel) {
-                    window.quizManager.togglePanel();
-                }
-            });
-        } else {
-            console.warn("Quiz button not found in DOM");
+            previewTime.textContent = `${this.formatTime(closestChapter.time)} - ${this.formatTime(endTime)}`;
         }
+
+        // Position the preview
+        const progressBarRect = this.progressBar.getBoundingClientRect();
+        const previewWidth = chapterPreview.offsetWidth;
+        const maxLeft = progressBarRect.width - previewWidth;
+        const leftPosition = Math.max(0, Math.min(maxLeft, position * progressBarRect.width - previewWidth / 2));
+
+        chapterPreview.style.left = `${leftPosition}px`;
+        chapterPreview.style.display = "block";
+        chapterPreview.classList.add("show");
+    }
+
+    showTimeTooltipAtPosition(clientX, time) {
+        // Create or get time tooltip
+        let timeTooltip = document.getElementById("time-tooltip");
+        if (!timeTooltip) {
+            timeTooltip = document.createElement("div");
+            timeTooltip.id = "time-tooltip";
+            timeTooltip.className = "time-tooltip";
+            document.body.appendChild(timeTooltip);
+        }
+
+        // Update tooltip content
+        timeTooltip.textContent = this.formatTime(time);
+
+        // Position tooltip
+        const tooltipWidth = timeTooltip.offsetWidth || 50; // Fallback width
+        const leftPosition = clientX - tooltipWidth / 2;
+        const topPosition = this.progressBar.getBoundingClientRect().top - 35;
+
+        timeTooltip.style.left = `${Math.max(10, Math.min(window.innerWidth - tooltipWidth - 10, leftPosition))}px`;
+        timeTooltip.style.top = `${topPosition}px`;
+        timeTooltip.style.display = "block";
+        timeTooltip.classList.add("visible");
+    }
+
+    hideTimeTooltip() {
+        const timeTooltip = document.getElementById("time-tooltip");
+        if (timeTooltip) {
+            timeTooltip.classList.remove("visible");
+            setTimeout(() => {
+                if (!timeTooltip.classList.contains("visible")) {
+                    timeTooltip.style.display = "none";
+                }
+            }, 200);
+        }
+    }
+
+    updateProgressHoverEffect(position) {
+        // Add hover line effect on progress bar
+        let hoverLine = document.getElementById("progress-hover-line");
+        if (!hoverLine) {
+            hoverLine = document.createElement("div");
+            hoverLine.id = "progress-hover-line";
+            hoverLine.className = "progress-hover-line";
+            this.progressBar.appendChild(hoverLine);
+        }
+
+        // Position the hover line
+        hoverLine.style.left = `${position * 100}%`;
+        hoverLine.style.display = "block";
     }
 }
 
@@ -1533,7 +1720,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Wait a bit for other scripts to load
     setTimeout(() => {
         window.customVideoControls = new CustomVideoControls();
-        console.log("Custom video controls initialized");
     }, 500);
 });
 
@@ -1552,7 +1738,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const fallbackChaptersHandler = (e) => {
             // Chỉ xử lý nếu module videoChapters không tồn tại
             if (!window.videoChapters) {
-                console.log("Using fallback chapter panel toggle");
                 e.stopPropagation(); // Tránh xử lý trùng lặp
 
                 if (chapterPanel.style.display === "none" || !chapterPanel.style.display) {
@@ -1668,7 +1853,6 @@ function renderSimpleChapters(chapters, container) {
 const chaptersBtn = document.getElementById("chapters-btn");
 if (chaptersBtn) {
     chaptersBtn.addEventListener("click", function (e) {
-        console.log("Chapters button clicked from controls");
         e.preventDefault();
 
         try {

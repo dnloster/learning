@@ -22,8 +22,6 @@ class BookmarkManager {
     }
 
     init() {
-        console.log("Initializing Bookmark Manager...");
-
         // Check dialog support
         this.checkDialogSupport();
 
@@ -36,8 +34,6 @@ class BookmarkManager {
         // Update UI
         this.updateBookmarkCount();
         this.updateBookmarkList();
-
-        console.log("Bookmark Manager initialized successfully");
     }
 
     checkDialogSupport() {
@@ -109,7 +105,6 @@ class BookmarkManager {
             this.bookmarkClose.addEventListener("click", () => this.hideBookmarkPanel());
         } // Listen for video changes
         window.addEventListener("video-changed", (event) => {
-            console.log("Bookmark manager received video-changed event:", event.detail);
             this.onVideoChange(event.detail);
         });
 
@@ -153,9 +148,7 @@ class BookmarkManager {
         // Add bookmark button events
         const bookmarksBtn = document.getElementById("bookmarks-btn");
         if (bookmarksBtn) {
-            console.log("Found bookmarks button, attaching event listener");
             bookmarksBtn.addEventListener("click", (e) => {
-                console.log("Bookmarks button clicked");
                 e.preventDefault();
                 this.showBookmarksDialog();
             });
@@ -164,13 +157,10 @@ class BookmarkManager {
         }
     }
     showBookmarksDialog() {
-        console.log("showBookmarksDialog called");
-
         // Find or create bookmarks dialog
         let dialog = document.getElementById("bookmarks-dialog");
 
         if (!dialog) {
-            console.log("Creating new bookmarks dialog");
             dialog = document.createElement("dialog");
             dialog.id = "bookmarks-dialog";
             dialog.className = "bookmarks-dialog";
@@ -189,28 +179,24 @@ class BookmarkManager {
 
             // Add close button event
             dialog.querySelector(".close-dialog").addEventListener("click", () => {
-                console.log("Dialog close button clicked");
                 dialog.close();
             });
 
             // Close on click outside
             dialog.addEventListener("click", (e) => {
                 if (e.target === dialog) {
-                    console.log("Dialog background clicked, closing");
                     dialog.close();
                 }
             });
         } else {
-            console.log("Using existing bookmarks dialog");
+            console.warn("Using existing bookmarks dialog");
         }
 
         try {
             // Display bookmarks
-            console.log("Displaying bookmarks in dialog");
             this.displayBookmarks();
 
             // Show dialog with support for browsers without dialog
-            console.log("Opening dialog");
             if (this.useDialogPolyfill) {
                 dialog._showModal();
             } else {
@@ -252,8 +238,6 @@ class BookmarkManager {
             const isBookmarked = this.isVideoBookmarked(this.currentVideo.id);
             this.updateBookmarkUI(this.currentVideo.id, isBookmarked);
         }
-
-        console.log("Bookmark manager updated for video:", this.currentVideo.title);
     }
     toggleBookmark(videoId) {
         // Nếu không truyền videoId, sử dụng currentVideo.id
@@ -512,8 +496,6 @@ class BookmarkManager {
         setTimeout(() => {
             this.bookmarkBtn?.classList.remove("bookmark-added");
         }, 600);
-
-        console.log("Bookmark added:", bookmark.title);
     }
 
     removeBookmark(videoId) {
@@ -527,8 +509,6 @@ class BookmarkManager {
 
             // Update UI
             this.updateBookmarkUI(videoId, false);
-
-            console.log("Bookmark removed:", removed.title);
         }
     }
 
@@ -682,8 +662,6 @@ class BookmarkManager {
         } else {
             this.showMessage("Không thể phát video", "error");
         }
-
-        console.log("Playing bookmarked video:", bookmark.title);
     }
 
     toggleBookmarkPanel() {
@@ -711,8 +689,6 @@ class BookmarkManager {
 
         // Update list
         this.updateBookmarkList();
-
-        console.log("Bookmark panel shown");
     }
     hideBookmarkPanel() {
         if (!this.bookmarkPanel) return;
@@ -730,8 +706,6 @@ class BookmarkManager {
                 this.bookmarkPanel.style.display = "none";
             }
         }, 300);
-
-        console.log("Bookmark panel hidden");
     }
 
     saveBookmarks() {
@@ -756,7 +730,6 @@ class BookmarkManager {
             const saved = localStorage.getItem("videoBookmarks");
             if (saved) {
                 this.bookmarks = JSON.parse(saved);
-                console.log(`Loaded ${this.bookmarks.length} bookmarks from storage`);
             }
         } catch (error) {
             console.error("Failed to load bookmarks:", error);
