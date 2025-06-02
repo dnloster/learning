@@ -1,14 +1,18 @@
 /**
  * Quiz Page Manager - Manages the dedicated quiz page functionality
- * Handles quiz listing, filtering, topic switching, and exercise management
+ * Handles quiz listing, filtering, and exercise management for a comprehensive quiz.
  */
 
 class QuizPageManager {
     constructor() {
-        this.currentTopic = "cpu";
-        this.currentFilter = "theory";
-        this.exercises = {};
-        this.progress = {};
+        // currentTopic is removed
+        this.currentFilter = "theory"; // Default filter
+        this.allExercises = { theory: [], thinking: [], visual: [] }; // Combined exercises
+        this.progress = {
+            theory: { completed: 0, total: 0 },
+            thinking: { completed: 0, total: 0 },
+            visual: { completed: 0, total: 0 },
+        }; // Simplified progress
         this.quizManager = null;
 
         this.init();
@@ -19,41 +23,37 @@ class QuizPageManager {
      */
     init() {
         this.setupElements();
+        this.loadAndCombineExercises();
         this.bindEvents();
-        this.loadExercises();
-        this.renderExercises();
         this.updateProgress();
+        this.updateOverallStats();
+        this.setFilter(this.currentFilter); // Initial call to set filter and render iframe containers visibility
 
-        console.log("Quiz Page Manager initialized");
+        console.log("Quiz Page Manager initialized for comprehensive quiz with iframe content");
     }
+
     /**
      * Setup DOM elements
      */
     setupElements() {
-        this.topicButtons = document.querySelectorAll(".quiz-topic-btn");
         this.filterButtons = document.querySelectorAll(".filter-btn");
-        this.exerciseGrid = document.querySelector(".exercise-grid-large");
-        this.progressCards = document.querySelectorAll(".progress-card");
-        this.statsNumbers = document.querySelectorAll(".stat-number");
+        // Direct references to header stat elements by ID
+        this.totalExercisesStatElement = document.getElementById("total-exercises-stat");
+        this.completionStatElement = document.getElementById("completion-stat");
 
-        // Exercise lists
-        this.theoryExercises = document.getElementById("theory-exercises");
-        this.thinkingExercises = document.getElementById("thinking-exercises");
-        this.visualExercises = document.getElementById("visual-exercises");
+        // Exercise list containers per category (used for visibility control)
+        this.theoryExercisesContainer = document.getElementById("theory-exercises");
+        this.thinkingExercisesContainer = document.getElementById("thinking-exercises");
+        this.visualExercisesContainer = document.getElementById("visual-exercises");
+
+        // Progress cards for the sidebar
+        this.progressCards = document.querySelectorAll(".progress-card");
     }
 
     /**
      * Bind event handlers
      */
     bindEvents() {
-        // Topic switching
-        this.topicButtons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                const topic = btn.dataset.topic;
-                this.switchTopic(topic);
-            });
-        });
-
         // Filter switching
         this.filterButtons.forEach((btn) => {
             btn.addEventListener("click", () => {
@@ -61,15 +61,13 @@ class QuizPageManager {
                 this.setFilter(filter);
             });
         });
-
-        // Exercise click handlers will be bound dynamically
     }
 
     /**
-     * Load exercise data
+     * Load and combine exercise data from all topics.
      */
-    loadExercises() {
-        this.exercises = {
+    loadAndCombineExercises() {
+        const rawExercisesByTopic = {
             cpu: {
                 theory: [
                     {
@@ -243,177 +241,91 @@ class QuizPageManager {
             },
         };
 
-        // Initialize progress
+        this.allExercises = { theory: [], thinking: [], visual: [] };
         this.progress = {
-            cpu: {
-                theory: { completed: 0, total: 4 },
-                thinking: { completed: 0, total: 3 },
-                visual: { completed: 0, total: 3 },
-            },
-            ram: {
-                theory: { completed: 0, total: 3 },
-                thinking: { completed: 0, total: 2 },
-                visual: { completed: 0, total: 2 },
-            },
-            rom: {
-                theory: { completed: 0, total: 2 },
-                thinking: { completed: 0, total: 1 },
-                visual: { completed: 0, total: 1 },
-            },
+            theory: { completed: 0, total: 0 },
+            thinking: { completed: 0, total: 0 },
+            visual: { completed: 0, total: 0 },
         };
-    }
 
-    /**
-     * Switch to different topic
-     */
-    switchTopic(topic) {
-        if (topic === this.currentTopic) return;
-
-        this.currentTopic = topic;
-
-        // Update topic buttons
-        this.topicButtons.forEach((btn) => {
-            btn.classList.toggle("active", btn.dataset.topic === topic);
-        });
-
-        this.renderExercises();
-        this.updateProgress();
-
-        console.log(`Switched to topic: ${topic}`);
+        for (const topic in rawExercisesByTopic) {
+            for (const category in rawExercisesByTopic[topic]) {
+                if (this.allExercises[category]) {
+                    rawExercisesByTopic[topic][category].forEach((exercise) => {
+                        this.allExercises[category].push(exercise);
+                        this.progress[category].total++;
+                    });
+                }
+            }
+        }
     }
 
     /**
      * Set filter for exercises
      */
     setFilter(filter) {
-        if (filter === this.currentFilter) return;
-
+        if (filter === this.currentFilter && filter !== "all") return; // Allow re-filtering for 'all'
         this.currentFilter = filter;
 
-        // Update filter buttons
         this.filterButtons.forEach((btn) => {
             btn.classList.toggle("active", btn.dataset.filter === filter);
         });
 
         this.renderExercises();
-
         console.log(`Set filter to: ${filter}`);
     }
 
     /**
-     * Render exercises for current topic and filter
+     * Render exercises based on the current filter.
+     * This will now primarily control the visibility of category containers (which will host iframes).
      */
     renderExercises() {
-        const topicExercises = this.exercises[this.currentTopic];
+        // Hide all category sections initially
+        document.querySelectorAll(".exercise-category").forEach((catEl) => (catEl.style.display = "none"));
 
-        // Clear existing exercises
-        const categories = ["theory", "thinking", "visual"];
-        categories.forEach((category) => {
-            const container = document.getElementById(`${category}-exercises`);
-            if (container) {
-                container.innerHTML = "";
+        const categoriesToDisplay =
+            this.currentFilter === "all" ? ["theory", "thinking", "visual"] : [this.currentFilter];
+
+        categoriesToDisplay.forEach((category) => {
+            const categoryContainerElement = document.querySelector(`.exercise-category[data-category="${category}"]`);
+            if (categoryContainerElement) {
+                categoryContainerElement.style.display = "block";
             }
-        });
-
-        // Render exercises by category
-        categories.forEach((category) => {
-            if (this.currentFilter === "all" || this.currentFilter === category) {
-                this.renderCategoryExercises(category, topicExercises[category]);
-            }
-        });
-
-        // Show/hide categories based on filter
-        document.querySelectorAll(".exercise-category").forEach((categoryEl) => {
-            const category = categoryEl.dataset.category;
-            if (this.currentFilter === "all" || this.currentFilter === category) {
-                categoryEl.style.display = "block";
-            } else {
-                categoryEl.style.display = "none";
-            }
-        });
-    }
-
-    /**
-     * Render exercises for a specific category
-     */
-    renderCategoryExercises(category, exercises) {
-        const container = document.getElementById(`${category}-exercises`);
-        if (!container || !exercises) return;
-
-        exercises.forEach((exercise, index) => {
-            const exerciseCard = document.createElement("div");
-            exerciseCard.className = `exercise-item ${exercise.completed ? "completed" : ""}`;
-            exerciseCard.innerHTML = `
-                <div class="exercise-item-header">
-                    <div class="exercise-number">${index + 1}</div>
-                    <div class="exercise-status">
-                        ${exercise.completed ? "✅" : "⭕"}
-                    </div>
-                </div>
-                <div class="exercise-content">
-                    <h5 class="exercise-title">${exercise.title}</h5>
-                    <div class="exercise-meta">
-                        <span class="exercise-difficulty difficulty-${exercise.difficulty
-                            .toLowerCase()
-                            .replace(" ", "-")}">${exercise.difficulty}</span>
-                        <span class="exercise-questions">${exercise.questions} câu hỏi</span>
-                    </div>
-                    <div class="exercise-actions">
-                        <button class="exercise-start-btn" data-exercise-id="${
-                            exercise.id
-                        }" data-quiz-type="${category}">
-                            ${exercise.completed ? "Làm lại" : "Bắt đầu"}
-                        </button>
-                        ${exercise.completed ? '<button class="exercise-review-btn">Xem lại</button>' : ""}
-                    </div>
-                </div>
-            `;
-
-            // Bind click event
-            const startBtn = exerciseCard.querySelector(".exercise-start-btn");
-            startBtn.addEventListener("click", () => {
-                this.startExercise(exercise.id, category);
-            });
-
-            container.appendChild(exerciseCard);
         });
     }
 
     /**
      * Start an exercise
      */
-    startExercise(exerciseId, category) {
-        console.log(`Starting exercise: ${exerciseId} (${category})`);
+    startExercise(exerciseId, category, exerciseTitle) {
+        console.log(`Starting exercise: ${exerciseId} (Category: ${category}, Title: ${exerciseTitle})`);
 
-        // Initialize quiz manager if not already done
         if (!this.quizManager && window.QuizManager) {
             this.quizManager = new window.QuizManager();
         }
-
-        // Show quiz panel with specific tab
         if (this.quizManager) {
-            this.quizManager.showPanelWithTab(category);
+            this.quizManager.showPanelWithTab(category, exerciseId, exerciseTitle);
+        } else {
+            console.error("QuizManager not available to start exercise.");
         }
     }
 
     /**
-     * Update progress statistics
+     * Update progress statistics in the right sidebar.
      */
     updateProgress() {
-        const topicProgress = this.progress[this.currentTopic];
-        const cards = ["theory", "thinking", "visual"];
+        const categories = ["theory", "thinking", "visual"];
 
-        cards.forEach((category, index) => {
+        categories.forEach((category, index) => {
             const progressCard = this.progressCards[index];
             if (!progressCard) return;
 
-            const categoryProgress = topicProgress[category];
+            const categoryProgress = this.progress[category];
             const percentage =
                 categoryProgress.total > 0
                     ? Math.round((categoryProgress.completed / categoryProgress.total) * 100)
                     : 0;
 
-            // Update progress circle
             const circle = progressCard.querySelector(".circle");
             const percentageText = progressCard.querySelector(".percentage");
             const completedSpan = progressCard.querySelector(".completed");
@@ -432,79 +344,113 @@ class QuizPageManager {
                 totalSpan.textContent = categoryProgress.total;
             }
         });
-
-        // Update overall stats
         this.updateOverallStats();
     }
 
     /**
-     * Update overall statistics in header
+     * Update overall statistics in the main header.
      */
     updateOverallStats() {
-        const topicProgress = this.progress[this.currentTopic];
+        let totalExercisesAllCategories = 0;
+        let completedExercisesAllCategories = 0;
 
-        let totalExercises = 0;
-        let completedExercises = 0;
+        for (const category in this.progress) {
+            totalExercisesAllCategories += this.progress[category].total;
+            completedExercisesAllCategories += this.progress[category].completed;
+        }
 
-        Object.values(topicProgress).forEach((category) => {
-            totalExercises += category.total;
-            completedExercises += category.completed;
-        });
+        const overallPercentage =
+            totalExercisesAllCategories > 0
+                ? Math.round((completedExercisesAllCategories / totalExercisesAllCategories) * 100)
+                : 0;
 
-        const overallPercentage = totalExercises > 0 ? Math.round((completedExercises / totalExercises) * 100) : 0;
-
-        // Update header stats
-        const statsNumbers = document.querySelectorAll(".stat-number");
-        if (statsNumbers[0]) statsNumbers[0].textContent = totalExercises;
-        if (statsNumbers[2]) statsNumbers[2].textContent = `${overallPercentage}%`;
+        if (this.totalExercisesStatElement) {
+            this.totalExercisesStatElement.textContent = totalExercisesAllCategories;
+        }
+        if (this.completionStatElement) {
+            this.completionStatElement.textContent = `${overallPercentage}%`;
+        }
     }
 
     /**
      * Mark exercise as completed
      */
     completeExercise(exerciseId) {
-        // Find and mark exercise as completed
-        Object.keys(this.exercises).forEach((topic) => {
-            Object.keys(this.exercises[topic]).forEach((category) => {
-                const exercise = this.exercises[topic][category].find((ex) => ex.id === exerciseId);
-                if (exercise && !exercise.completed) {
-                    exercise.completed = true;
-                    this.progress[topic][category].completed++;
-                }
-            });
-        });
+        let exerciseFound = false;
+        let completedCategory = null;
+        for (const category in this.allExercises) {
+            const exercise = this.allExercises[category].find((ex) => ex.id === exerciseId);
+            if (exercise && !exercise.completed) {
+                exercise.completed = true;
+                this.progress[category].completed++;
+                exerciseFound = true;
+                completedCategory = category;
+                break;
+            }
+        }
 
-        this.renderExercises();
-        this.updateProgress();
+        if (exerciseFound) {
+            this.updateProgress();
+
+            // Notify the specific iframe to update its display.
+            const iframe = document.querySelector(`.exercise-category[data-category="${completedCategory}"] iframe`);
+            if (iframe && iframe.contentWindow && typeof iframe.contentWindow.markExerciseAsCompleted === "function") {
+                iframe.contentWindow.markExerciseAsCompleted(exerciseId);
+            }
+        }
     }
 
     /**
-     * Get exercise statistics
+     * Get exercise statistics (simplified)
      */
     getStats() {
+        let totalExercises = 0;
+        Object.values(this.allExercises).forEach((catList) => (totalExercises += catList.length));
+
         return {
-            currentTopic: this.currentTopic,
             currentFilter: this.currentFilter,
             progress: this.progress,
-            totalExercises: Object.values(this.exercises).reduce((total, topic) => {
-                return (
-                    total +
-                    Object.values(topic).reduce((topicTotal, category) => {
-                        return topicTotal + category.length;
-                    }, 0)
-                );
-            }, 0),
+            totalExercises: totalExercises,
         };
     }
 }
 
-// Initialize quiz page manager when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-    window.quizPageManager = new QuizPageManager();
-    console.log("Quiz Page Manager instance created and available as window.quizPageManager");
+    if (!window.quizPageManager) {
+        window.quizPageManager = new QuizPageManager();
+        console.log("Quiz Page Manager instance created and available as window.quizPageManager");
+    }
+
+    const progressSidebar = document.getElementById("progress-overview-sidebar");
+    const toggleProgressSidebarBtn = document.getElementById("toggle-progress-sidebar-btn");
+
+    if (toggleProgressSidebarBtn && progressSidebar) {
+        toggleProgressSidebarBtn.addEventListener("click", () => {
+            progressSidebar.classList.toggle("collapsed");
+            const isCollapsed = progressSidebar.classList.contains("collapsed");
+            toggleProgressSidebarBtn.setAttribute("aria-expanded", !isCollapsed);
+
+            const icon = toggleProgressSidebarBtn.querySelector(".toggle-icon");
+            if (isCollapsed) {
+                icon.innerHTML = "&laquo;";
+            } else {
+                icon.innerHTML = "&raquo;";
+            }
+        });
+
+        const isInitiallyCollapsed = progressSidebar.classList.contains("collapsed");
+        toggleProgressSidebarBtn.setAttribute("aria-expanded", !isInitiallyCollapsed);
+        const initialIcon = toggleProgressSidebarBtn.querySelector(".toggle-icon");
+        if (initialIcon) {
+            initialIcon.innerHTML = isInitiallyCollapsed ? "&laquo;" : "&raquo;";
+        }
+    } else {
+        console.warn(
+            "Sidebar toggle elements not found. Ensure IDs 'progress-overview-sidebar' and 'toggle-progress-sidebar-btn' are correct."
+        );
+    }
 });
 
-// Export for module use
 if (typeof module !== "undefined" && module.exports) {
     module.exports = QuizPageManager;
 }

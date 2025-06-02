@@ -1677,7 +1677,6 @@ body {
 .video-main-content {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
 }
 
 .video-player-container {
@@ -2769,8 +2768,8 @@ video::-webkit-media-controls {
 
 /* Chapters Button Active State */
 .control-btn.chapters-active,
-.control-btn.bookmark-active {
-    background: rgba(76, 175, 80, 0.2);
+.control-btn.active {
+    background: rgb(12, 231, 19);
     color: #4caf50;
 }
 

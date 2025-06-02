@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tài liệu tham khảo - Bộ Vi Xử Lý</title>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="styles/style.css" />
         <link rel="stylesheet" href="styles/new-styles.css" />
         <link rel="stylesheet" href="./styles/responsive-utilities.css" />
@@ -13,15 +14,39 @@
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
             rel="stylesheet"
         />
+        <style>
+            .container {
+                width: 95%; /* Wider container, changed from 100% */
+                max-width: 1600px; /* Max width for large screens, changed from 1200px */
+                margin: 30px auto;
+                overflow: hidden;
+                background: #1a1f4a; /* Darker card-like background for container */
+                border-radius: 12px; /* Rounded corners */
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Softer shadow for dark theme */
+            }
+
+            .content-nav {
+                display: flex;
+                align-items: center;
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                color: #fff;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                margin-bottom: 0;
+            }
+        </style>
     </head>
     <body>
         <div class="content-container">
-            <nav class="content-nav">
-                <button id="back-to-home" class="nav-btn" onclick="window.location.href='index.html'">
-                    ◀ Về trang chủ
-                </button>
-                <h2>Tài liệu tham khảo</h2>
-            </nav>
+            <header class="container">
+                <nav class="content-nav">
+                    <button id="back-to-home" class="nav-btn" onClick="goToVideoSection()">◀ Về trang chủ</button>
+                    <h1>Tài liệu tham khảo</h1>
+                </nav>
+            </header>
 
             <div class="references-content">
                 <div class="references-section">

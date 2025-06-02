@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Liên hệ nhóm tác giả - Bộ Vi Xử Lý</title>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="styles/style.css" />
         <!-- <link rel="stylesheet" href="styles/new-styles.css" /> -->
         <link rel="stylesheet" href="./styles/responsive-utilities.css" />
@@ -14,142 +15,179 @@
             rel="stylesheet"
         />
         <style>
-            /* Basic styling for contact page */
             body {
-                font-family: "Roboto", sans-serif;
-                background-color: #f4f7f6;
-                color: #333;
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                min-height: 100vh;
                 margin: 0;
-                padding: 0;
+                font-family: "Roboto", sans-serif;
+                color: #fff;
             }
 
             .container {
-                min-height: 100vh;
-                background: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 25%, #2a3f7a 50%, #1a1f4a 75%, #0a0e27 100%);
-                position: relative;
+                width: 95%;
+                max-width: 1600px;
+                margin: 30px auto;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                border: 1px solid rgba(255, 255, 255, 0.18);
                 overflow: hidden;
-            }
-
-            .content-container {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 20px;
             }
 
             .content-nav {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                padding: 10px 20px;
-                border-bottom: 1px solid #e0e0e0;
-                margin-bottom: 30px;
-            }
-
-            .content-nav h2 {
-                margin: 0;
-                font-size: 24px;
-                color: #333;
-            }
-
-            .nav-btn {
-                background-color: #4a90e2;
-                color: white;
-                border: none;
-                padding: 10px 15px;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 14px;
-                text-decoration: none;
-                transition: background-color 0.3s;
-            }
-
-            .nav-btn:hover {
-                background-color: #357abd;
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.1);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(5px);
+                margin-bottom: 0;
             }
 
             .contact-content {
-                padding: 20px;
+                padding: 40px;
             }
 
             .team-section h3 {
                 text-align: center;
-                font-size: 28px;
-                color: #333;
-                margin-bottom: 40px;
+                font-size: 32px;
+                color: #fff;
+                margin-bottom: 50px;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
 
             .team-members {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 30px;
-                justify-content: center;
+                grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+                gap: 40px;
+                padding: 20px;
             }
 
             .team-member-card {
-                background-color: #fff;
-                border-radius: 10px;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                overflow: hidden;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(5px);
+                border-radius: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                padding: 30px;
                 text-align: center;
-                padding: 25px;
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .team-member-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+                z-index: 1;
             }
 
             .team-member-card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            }
+
+            .member-avatar {
+                position: relative;
+                margin-bottom: 25px;
             }
 
             .member-avatar img {
-                width: 240px;
-                height: 240px;
+                width: 180px;
+                height: 180px;
                 border-radius: 50%;
                 object-fit: cover;
-                margin-bottom: 20px;
-                border: 4px solid #4a90e2;
+                border: 4px solid rgba(255, 255, 255, 0.2);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
             }
 
-            .avatar-placeholder {
-                width: 120px;
-                height: 120px;
-                border-radius: 50%;
-                background-color: #e0e0e0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 50px;
-                color: #aaa;
-                margin: 0 auto 20px auto;
-                border: 4px solid #4a90e2;
+            .team-member-card:hover .member-avatar img {
+                transform: scale(1.05);
+                border-color: rgba(255, 255, 255, 0.4);
+            }
+
+            .member-info {
+                position: relative;
+                z-index: 2;
             }
 
             .member-info h4 {
-                font-size: 20px;
-                color: #333;
+                font-size: 24px;
+                color: #fff;
+                margin-bottom: 10px;
+                font-weight: 600;
+            }
+
+            .member-rank {
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.9);
                 margin-bottom: 8px;
                 font-weight: 500;
             }
 
-            .member-rank,
             .member-position {
-                font-size: 14px;
-                color: #555;
-                margin-bottom: 5px;
-                line-height: 1.4;
-            }
-            .member-position {
+                font-size: 15px;
+                color: rgba(255, 255, 255, 0.7);
                 font-style: italic;
-                color: #777;
+            }
+
+            .social-links {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+
+            .social-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-3px);
+            }
+
+            @media (max-width: 768px) {
+                .team-members {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 30px;
+                }
+
+                .member-avatar img {
+                    width: 150px;
+                    height: 150px;
+                }
+
+                .contact-content {
+                    padding: 20px;
+                }
             }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="content-container">
-                <nav class="content-nav">
-                    <button id="back-to-home" class="nav-btn">◀ Về trang chủ</button>
-                    <h2>Thông tin nhóm tác giả</h2>
-                </nav>
+                <header class="container">
+                    <nav class="content-nav">
+                        <button id="back-to-home" class="nav-btn" onClick="goToVideoSection()">◀ Về trang chủ</button>
+                        <h1>Nhóm tác giả</h1>
+                    </nav>
+                </header>
 
                 <div class="contact-content">
                     <div class="team-section">
@@ -157,12 +195,12 @@
                             <div class="team-member-card">
                                 <div class="member-avatar">
                                     <!-- Sử dụng ảnh thật hoặc placeholder -->
-                                    <img src="path/to/author1-avatar.jpg" alt="Nguyễn Văn A" />
+                                    <img src="images/avatars/author1.jpg" alt="Nguyễn Văn A" />
                                 </div>
                                 <div class="member-info">
                                     <h4>Nguyễn Văn A</h4>
-                                    <p class="member-rank">Cấp bậc: Tiến sĩ</p>
-                                    <p class="member-position">Chức vụ: Giảng viên chính</p>
+                                    <p class="member-rank">Tiến sĩ</p>
+                                    <p class="member-position">Giảng viên chính</p>
                                 </div>
                             </div>
 

@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Bài Giảng Điện Tử - Bộ Vi Xử Lý</title>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="./styles/style.css" />
         <link rel="stylesheet" href="./styles/new-styles.css" />
         <link rel="stylesheet" href="./styles/chapter-navigation-fix.css" />
@@ -207,9 +208,9 @@
         </div>
         <!-- Content Section (Hidden initially) -->
         <div id="content-section" class="content-container" style="display: none">
-            <nav class="content-nav">
+            <nav class="content-nav" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)">
                 <button id="back-to-home" class="nav-btn">◀ Về trang chủ</button>
-                <h2>Nội dung bài giảng</h2>
+                <h1 style="color: #fff">Nội dung bài giảng</h1>
             </nav>
 
             <!-- Video Learning Section -->
@@ -335,23 +336,7 @@
                                         <button id="bookmark-btn" class="control-btn" title="Đánh dấu video này">
                                             <span class="control-icon">🔖</span>
                                         </button>
-                                        <button
-                                            class="control-btn"
-                                            id="notes-btn"
-                                            title="Thêm ghi chú tại thời điểm này"
-                                            style="display: none"
-                                        >
-                                            <span class="icon">📋</span>
-                                            <span class="notes-indicator" id="notes-indicator" style="display: none"
-                                                >•</span
-                                            >
-                                        </button>
-                                        <button class="control-btn" id="prev-video-btn" title="Video trước">
-                                            <span class="icon">⏮️</span>
-                                        </button>
-                                        <button class="control-btn" id="next-video-btn" title="Video tiếp theo">
-                                            <span class="icon">⏭️</span>
-                                        </button>
+                                        <button style="display: none"></button>
                                         <button class="control-btn" id="pip-btn" title="Picture-in-Picture">
                                             <span class="icon">📱</span>
                                         </button>
@@ -425,6 +410,13 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Video Navigation Buttons -->
+                    <div class="video-navigation-buttons" style="text-align: center; margin-top: 10px">
+                        <button class="control-btn" id="prev-video-btn" title="Video trước">Video trước</button>
+                        <button class="control-btn" id="next-video-btn" title="Video tiếp theo" disabled>
+                            Video tiếp theo
+                        </button>
+                    </div>
                     <!-- Note Add Button Below Video -->
                     <div class="note-add-button-container">
                         <button class="note-add-button" id="note-add-btn">
@@ -438,9 +430,8 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Video Playlist with Accordion -->
-                <div class="video-playlist">
+                <!-- Video Playlist -->
+                <div class="video-playlist" id="video-playlist">
                     <div class="playlist-header">
                         <h4 id="playlist-title">Danh sách bài học</h4>
                         <span id="playlist-progress">0/12 hoàn thành</span>
@@ -467,23 +458,6 @@
                 </div>
                 <div class="notes-modal-body">
                     <div class="note-form">
-                        <!-- <div class="note-toolbar">
-                            <select class="format-selector" id="format-selector">
-                                <option value="normal">Normal</option>
-                                <option value="h1">Heading 1</option>
-                                <option value="h2">Heading 2</option>
-                                <option value="h3">Heading 3</option>
-                                <option value="quote">Quote</option>
-                                <option value="code">Code</option>
-                            </select>
-                            <div class="note-toolbar-separator"></div>
-                            <button class="note-toolbar-btn" id="bold-btn" title="In đậm">B</button>
-                            <button class="note-toolbar-btn" id="italic-btn" title="In nghiêng">I</button>
-                            <button class="note-toolbar-btn" id="underline-btn" title="Gạch chân">U</button>
-                            <div class="note-toolbar-separator"></div>
-                            <button class="note-toolbar-btn" id="bullet-list-btn" title="Danh sách dấu chấm">•</button>
-                            <button class="note-toolbar-btn" id="number-list-btn" title="Danh sách số">1.</button>
-                        </div> -->
                         <div class="note-input-group">
                             <div
                                 id="note-content-editor"
@@ -535,7 +509,6 @@
             // Import các module theo thứ tự đúng
             import "./scripts/video-state-manager.js";
             import "./scripts/accordion.js";
-            import "./scripts/video-player.js";
 
             // Đảm bảo VideoChapters được khởi tạo đúng
             import("./scripts/video-chapters.js")
@@ -549,6 +522,7 @@
 
             // Tiếp tục import các module khác
             import "./scripts/custom-video-controls.js";
+            import "./scripts/video-player.js";
             import "./scripts/bookmark-manager.js";
             import "./scripts/notes-manager.js";
             import "./scripts/quiz-manager.js";
@@ -594,35 +568,6 @@
                         console.log("Video section displayed directly");
                     }
                 }
-
-                // Cập nhật hàm showVideoContent hiện có để sử dụng chung logic
-                function showVideoContent() {
-                    showVideoSectionDirectly();
-                }
-                setTimeout(function () {
-                    var chaptersBtn = document.getElementById("chapters-btn");
-                    var chapterPanel = document.getElementById("chapter-navigation-panel");
-
-                    if (chaptersBtn && !chaptersBtn._hasClickHandler) {
-                        chaptersBtn._hasClickHandler = true;
-                        chaptersBtn.addEventListener("click", function (e) {
-                            console.log("Fallback chapter button handler");
-
-                            // Thử sử dụng module nếu có
-                            if (window.videoChapters && typeof window.videoChapters.toggleChapterPanel === "function") {
-                                window.videoChapters.toggleChapterPanel();
-                                return;
-                            }
-
-                            // Fallback xử lý thủ công
-                            if (chapterPanel) {
-                                var isVisible = chapterPanel.style.display !== "none";
-                                chapterPanel.style.display = isVisible ? "none" : "flex";
-                                chaptersBtn.classList.toggle("active", !isVisible);
-                            }
-                        });
-                    }
-                }, 2000); // Đợi 2 giây sau khi trang tải xong
             });
         </script>
     </body>

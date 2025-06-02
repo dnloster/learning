@@ -9,9 +9,7 @@ body {
 }
 
 header {
-    background: #12183a; /* Slightly lighter dark shade for header */
     color: #fff;
-    padding: 1.5rem 0; /* Increased padding */
     text-align: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -19,13 +17,11 @@ header {
 header h1 {
     margin: 0;
     font-size: 2rem; /* Larger title */
-    color: #64b5f6; /* Accent color for title */
 }
 
 header nav a {
     color: #b0bec5; /* Lighter nav link color */
     text-decoration: none;
-    padding: 0 1.5rem;
     font-size: 1rem;
     transition: color 0.3s ease;
 }
@@ -40,10 +36,22 @@ header nav a:hover {
     max-width: 1600px; /* Max width for large screens, changed from 1200px */
     margin: 30px auto;
     overflow: hidden;
-    padding: 25px;
     background: #1a1f4a; /* Darker card-like background for container */
     border-radius: 12px; /* Rounded corners */
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Softer shadow for dark theme */
+}
+
+.content-nav {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin-bottom: 0;
 }
 
 /* New layout styles */

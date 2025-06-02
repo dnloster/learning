@@ -18,6 +18,7 @@ class VideoPlayerController {
                         { time: 500, title: "Vai trò trong hệ thống" },
                         { time: 750, title: "Tổng kết" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "cpu-2",
@@ -33,6 +34,7 @@ class VideoPlayerController {
                         { time: 900, title: "Bus hệ thống" },
                         { time: 1080, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "cpu-3",
@@ -46,6 +48,7 @@ class VideoPlayerController {
                         { time: 500, title: "Pipeline" },
                         { time: 780, title: "Tối ưu hóa thực thi" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "cpu-4",
@@ -60,6 +63,7 @@ class VideoPlayerController {
                         { time: 1000, title: "So sánh các thế hệ CPU" },
                         { time: 1300, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "cpu-5",
@@ -74,6 +78,7 @@ class VideoPlayerController {
                         { time: 1200, title: "Khắc phục sự cố" },
                         { time: 1500, title: "Tổng kết" },
                     ],
+                    completed: false, // Added completion status
                 },
             ],
             boNhoTrong: [
@@ -91,6 +96,7 @@ class VideoPlayerController {
                         { time: 400, title: "Cách thức hoạt động" },
                         { time: 600, title: "Tổng kết" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "ram-2",
@@ -104,6 +110,7 @@ class VideoPlayerController {
                         { time: 600, title: "ECC Memory" },
                         { time: 800, title: "Tương lai của RAM" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "ram-3",
@@ -117,6 +124,7 @@ class VideoPlayerController {
                         { time: 700, title: "Dual-channel, Quad-channel" },
                         { time: 950, title: "Tối ưu hóa RAM" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "ram-4",
@@ -130,6 +138,7 @@ class VideoPlayerController {
                         { time: 500, title: "Kiểm tra sau lắp đặt" },
                         { time: 800, title: "Xử lý sự cố thường gặp" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     // Videos từ ROM
@@ -144,6 +153,7 @@ class VideoPlayerController {
                         { time: 350, title: "Ứng dụng của ROM" },
                         { time: 500, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "rom-2",
@@ -158,6 +168,7 @@ class VideoPlayerController {
                         { time: 700, title: "Cấu hình và tùy chỉnh" },
                         { time: 900, title: "Tổng kết" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "rom-3",
@@ -172,6 +183,7 @@ class VideoPlayerController {
                         { time: 600, title: "Xu hướng phát triển" },
                         { time: 780, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
             ],
             boNhoNgoai: [
@@ -189,6 +201,7 @@ class VideoPlayerController {
                         { time: 650, title: "Ưu và nhược điểm" },
                         { time: 780, title: "Tổng kết" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "hdd-2",
@@ -203,6 +216,7 @@ class VideoPlayerController {
                         { time: 850, title: "Công nghệ ghi từ hiện đại" },
                         { time: 1000, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "ssd-1",
@@ -217,6 +231,7 @@ class VideoPlayerController {
                         { time: 720, title: "So sánh với HDD" },
                         { time: 900, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "ssd-2",
@@ -231,6 +246,7 @@ class VideoPlayerController {
                         { time: 950, title: "Công nghệ tối ưu" },
                         { time: 1150, title: "Xu hướng phát triển" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "usb-1",
@@ -245,6 +261,7 @@ class VideoPlayerController {
                         { time: 700, title: "Tiêu chí lựa chọn" },
                         { time: 850, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "cloud-1",
@@ -259,6 +276,7 @@ class VideoPlayerController {
                         { time: 900, title: "Ưu điểm và hạn chế" },
                         { time: 1050, title: "Tổng kết" },
                     ],
+                    completed: false, // Added completion status
                 },
                 {
                     id: "raid-1",
@@ -273,6 +291,7 @@ class VideoPlayerController {
                         { time: 1100, title: "Thiết lập và quản lý" },
                         { time: 1250, title: "Kết luận" },
                     ],
+                    completed: false, // Added completion status
                 },
             ],
         };
@@ -297,6 +316,9 @@ class VideoPlayerController {
 
         // Wait for custom controls to be initialized
         this.waitForCustomControls();
+
+        // Initialize completion status for all videos from localStorage
+        this.loadCompletionStatus();
 
         // Initialize bookmark count
         const bookmarkCountElement = document.getElementById("bookmark-count");
@@ -343,6 +365,21 @@ class VideoPlayerController {
 
         console.log("No chapters found for video:", videoId);
         return [];
+    }
+
+    updateVideoLevels() {
+        // Placeholder for video levels update logic
+        // This function will be called to update any UI elements
+        // related to video levels or progress within a series.
+        console.log("updateVideoLevels called. Implement specific logic here.");
+        // Example: You might want to update a visual indicator for the current video's level
+        // or the overall progress through a series of videos.
+        // const currentVideoLevel = this.currentVideo ? this.currentVideo.level : 0; // Assuming 'level' property
+        // const totalLevels = this.videoData[this.currentPlaylist] ? this.videoData[this.currentPlaylist].length : 0;
+        // const levelIndicator = document.getElementById('video-level-indicator');
+        // if (levelIndicator) {
+        //     levelIndicator.textContent = `Level ${currentVideoLevel} / ${totalLevels}`;
+        // }
     }
 
     checkIfBookmarked(videoId) {
@@ -589,6 +626,44 @@ class VideoPlayerController {
     }
 
     setupEventListeners() {
+        // Listen for custom events from video controls
+        window.addEventListener("previous-video", () => {
+            console.log("Previous video event received");
+            this.previousVideo();
+        });
+
+        window.addEventListener("next-video", () => {
+            console.log("Next video event received");
+            this.nextVideo();
+        });
+        const prevVideoBtn = document.getElementById("prev-video-btn");
+        const nextVideoBtn = document.getElementById("next-video-btn");
+
+        if (prevVideoBtn) {
+            prevVideoBtn.addEventListener("click", () => {
+                console.log("Previous video button clicked directly");
+                this.previousVideo();
+            });
+        }
+
+        if (nextVideoBtn) {
+            nextVideoBtn.addEventListener("click", () => {
+                console.log("Next video button clicked directly");
+                this.nextVideo();
+            });
+        }
+        // Listen for video ended event to auto-advance and track progress
+        const videoElement = document.getElementById("main-video");
+        if (videoElement) {
+            videoElement.addEventListener("timeupdate", () => {
+                this.onVideoTimeUpdate();
+            });
+
+            videoElement.addEventListener("ended", () => {
+                console.log("Video ended - marking as completed and advancing to next");
+                this.onVideoEnded();
+            });
+        }
         // Topic navigation
         document.querySelectorAll(".topic-btn").forEach((btn) => {
             btn.addEventListener("click", (e) => {
@@ -606,36 +681,240 @@ class VideoPlayerController {
                 this.playVideo(videoId, videoSrc);
             }
         }); // Custom control integration - listen for next/prev events from custom controls
-        // (This will be handled in setupCustomControlsIntegration)
+    }
 
-        // Video events
+    onVideoTimeUpdate() {
         const videoElement = document.getElementById("main-video");
-        if (videoElement) {
-            videoElement.addEventListener("ended", () => this.onVideoEnded());
+        if (!videoElement || !this.currentVideo) return;
+
+        const currentTime = videoElement.currentTime;
+        const duration = videoElement.duration;
+
+        if (duration && currentTime >= duration * 0.75) {
+            // Mark video as completed when 75% watched
+            if (!this.currentVideo.completed) {
+                console.log(`Video ${this.currentVideo.id} reached 75% completion`);
+                this.markVideoAsCompleted(this.currentVideo.id);
+            }
         }
     }
 
-    updateVideoLevels() {
-        // Add appropriate classes to video level spans
-        document.querySelectorAll(".video-level").forEach((span) => {
-            const text = span.textContent.trim();
-            span.classList.remove("level-basic", "level-intermediate", "level-advanced", "level-practical");
+    checkVideoCompletion() {
+        const videoElement = document.getElementById("main-video");
+        if (!videoElement || !this.currentVideo || this.currentVideo.completed) {
+            return;
+        }
 
-            switch (text) {
-                case "Cơ bản":
-                    span.classList.add("level-basic");
-                    break;
-                case "Trung bình":
-                    span.classList.add("level-intermediate");
-                    break;
-                case "Nâng cao":
-                    span.classList.add("level-advanced");
-                    break;
-                case "Thực hành":
-                    span.classList.add("level-practical");
-                    break;
+        if (videoElement.duration > 0 && videoElement.currentTime / videoElement.duration >= 0.75) {
+            this.markVideoAsCompleted(this.currentVideo.id);
+        }
+    }
+
+    markVideoAsCompleted(videoId) {
+        const videoData = this.findVideoById(videoId);
+        if (videoData && !videoData.completed) {
+            videoData.completed = true;
+            // Update progress tracking
+            // this.updateProgress(category);
+            this.updatePlaylistProgress();
+            this.updateNextButtonState();
+            this.saveCompletionStatus(); // Save to localStorage
+            this.updateVideoItemUI(videoId);
+
+            // Update UI for the completed video item in the playlist
+            const videoItemElement = document.querySelector(`.video-item[data-video="${videoId}"]`);
+            if (videoItemElement) {
+                videoItemElement.classList.add("completed");
+                // Optionally, add a visual indicator like a checkmark
+                let statusIndicator = videoItemElement.querySelector(".video-completion-status");
+                if (!statusIndicator) {
+                    statusIndicator = document.createElement("span");
+                    statusIndicator.className = "video-completion-status material-icons";
+                    // Insert it into a suitable place, e.g., next to the title or duration
+                    const videoInfo = videoItemElement.querySelector(".video-info p");
+                    if (videoInfo) {
+                        videoInfo.insertAdjacentElement("beforeend", statusIndicator);
+                    }
+                }
+                statusIndicator.innerHTML = ` <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="12" cy="12" r="10" fill="#4CAF50"/>
+                                                <path d="M7 12.5L10 15.5L17 8.5" stroke="white" stroke-width="2" fill="none"/>
+                                            </svg>`;
+                statusIndicator.title = "Đã hoàn thành";
             }
-        });
+        }
+    }
+    updateVideoItemUI(videoId) {
+        const videoItemElement = document.querySelector(`.video-item[data-video="${videoId}"]`);
+        if (videoItemElement) {
+            videoItemElement.classList.add("completed");
+
+            // Add completion indicator if not present
+            let statusIndicator = videoItemElement.querySelector(".video-completion-status");
+            if (!statusIndicator) {
+                statusIndicator = document.createElement("span");
+                statusIndicator.className = "video-completion-status";
+                statusIndicator.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#4CAF50"/>
+                    <path d="M7 12.5L10 15.5L17 8.5" stroke="white" stroke-width="2" fill="none"/>
+                </svg>`;
+                statusIndicator.title = "Đã hoàn thành";
+
+                // Insert into video info area
+                const videoInfo = videoItemElement.querySelector(".video-info");
+                if (videoInfo) {
+                    videoInfo.appendChild(statusIndicator);
+                }
+            }
+        }
+    }
+
+    updateNextButtonState() {
+        const nextVideoBtn = document.getElementById("next-video-btn");
+        if (nextVideoBtn && this.currentVideo) {
+            nextVideoBtn.disabled = !this.currentVideo.completed;
+            nextVideoBtn.title = this.currentVideo.completed
+                ? "Chuyển sang video tiếp theo"
+                : "Xem hết 75% video hiện tại để mở khóa";
+        }
+    }
+
+    updatePlaylistProgress() {
+        const progressElement = document.getElementById("playlist-progress");
+        if (!progressElement) return;
+
+        const currentPlaylistVideos = this.videoData[this.currentPlaylist];
+        if (!currentPlaylistVideos) return;
+
+        const completedCount = currentPlaylistVideos.filter((video) => video.completed).length;
+        const totalCount = currentPlaylistVideos.length;
+
+        progressElement.textContent = `${completedCount}/${totalCount} hoàn thành`;
+
+        // Update progress percentage in UI if there's a progress bar
+        const progressBar = document.querySelector(".playlist-progress-bar");
+        if (progressBar) {
+            const percentage = (completedCount / totalCount) * 100;
+            progressBar.style.width = `${percentage}%`;
+        }
+    }
+
+    updateProgress(category) {
+        if (!this.progress[category]) return;
+
+        const completedVideos = this.videoData[category].filter((video) => video.completed);
+        this.progress[category].completed = completedVideos.length;
+
+        console.log(
+            `Progress updated for ${category}: ${this.progress[category].completed}/${this.progress[category].total}`
+        );
+    }
+
+    saveCompletionStatus() {
+        const completionData = {};
+        for (const category in this.videoData) {
+            this.videoData[category].forEach((video) => {
+                if (video.completed) {
+                    if (!completionData[category]) {
+                        completionData[category] = [];
+                    }
+                    completionData[category].push(video.id);
+                }
+            });
+        }
+        localStorage.setItem("videoCompletionStatus", JSON.stringify(completionData));
+    }
+
+    showMessage(message) {
+        // Create a toast-style message
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = message;
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-size: 14px;
+            max-width: 300px;
+            word-wrap: break-word;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.3s ease-out;
+        `;
+
+        // Add animation keyframes if not already present
+        if (!document.querySelector("#message-animations")) {
+            const style = document.createElement("style");
+            style.id = "message-animations";
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(messageDiv);
+
+        // Remove after 4 seconds with animation
+        setTimeout(() => {
+            messageDiv.style.animation = "slideOutRight 0.3s ease-in";
+            setTimeout(() => {
+                if (messageDiv.parentElement) {
+                    document.body.removeChild(messageDiv);
+                }
+            }, 300);
+        }, 4000);
+    }
+
+    loadCompletionStatus() {
+        const storedCompletion = localStorage.getItem("videoCompletionStatus");
+        if (storedCompletion) {
+            const completionData = JSON.parse(storedCompletion);
+            for (const category in completionData) {
+                if (this.videoData[category]) {
+                    completionData[category].forEach((videoId) => {
+                        const video = this.videoData[category].find((v) => v.id === videoId);
+                        if (video) {
+                            video.completed = true;
+                            // Update UI for initially completed videos
+                            const videoItemElement = document.querySelector(`.video-item[data-video="${videoId}"]`);
+                            if (videoItemElement) {
+                                videoItemElement.classList.add("completed");
+                                let statusIndicator = videoItemElement.querySelector(".video-completion-status");
+                                if (!statusIndicator) {
+                                    statusIndicator = document.createElement("span");
+                                    statusIndicator.className = "video-completion-status material-icons";
+                                    const videoInfo = videoItemElement.querySelector(".video-info p");
+                                    if (videoInfo) {
+                                        videoInfo.insertAdjacentElement("beforeend", statusIndicator);
+                                    }
+                                }
+                                statusIndicator.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" fill="#4CAF50"/>
+        <path d="M7 12.5L10 15.5L17 8.5" stroke="white" stroke-width="2" fill="none"/>
+      </svg>`;
+                                statusIndicator.title = "Đã hoàn thành";
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        // Update progress for all playlists initially
+        for (const topic in this.progress) {
+            this.updatePlaylistProgress(topic);
+        }
     }
 
     switchPlaylist(topic) {
@@ -667,7 +946,10 @@ class VideoPlayerController {
         const progressData = this.progress[topic];
         const playlistProgressElement = document.getElementById("playlist-progress");
         if (playlistProgressElement && progressData) {
-            playlistProgressElement.textContent = `${progressData.completed}/${progressData.total} hoàn thành`;
+            // Recalculate completed count for the topic
+            const completedCount = this.videoData[topic] ? this.videoData[topic].filter((v) => v.completed).length : 0;
+            this.progress[topic].completed = completedCount;
+            playlistProgressElement.textContent = `${completedCount}/${progressData.total} hoàn thành`;
         } else if (playlistProgressElement) {
             playlistProgressElement.textContent = `0/0 hoàn thành`; // Fallback for new/empty categories
         }
@@ -708,6 +990,7 @@ class VideoPlayerController {
 
         // Update the currentVideo reference
         this.currentVideo = videoData;
+        this.updateNextButtonState(); // Update next button state when video changes
 
         // Update video source and play after a slight delay for transition effect
         setTimeout(() => {
@@ -723,15 +1006,16 @@ class VideoPlayerController {
                     this.customControls.updateDuration();
                 }
 
-                // // Play the video
-                // videoElement
-                //     .play()
-                //     .then(() => {
-                //         console.log("Video playback started");
-                //     })
-                //     .catch((error) => {
-                //         console.error("Error playing video:", error);
-                //     });
+                // Play the video
+                videoElement
+                    .play()
+                    .then(() => {
+                        console.log("Video playback started for:", videoId);
+                    })
+                    .catch((error) => {
+                        console.error("Error playing video:", videoId, error);
+                        // Potentially show a user-facing error or fallback
+                    });
 
                 // Remove transition overlay after video starts playing
                 this.removeVideoTransitionEffect(videoElement);
@@ -912,27 +1196,86 @@ class VideoPlayerController {
     }
 
     onVideoEnded() {
-        console.log("Video ended, attempting to play next video");
-        this.playNextVideo();
+        if (this.currentVideo) {
+            console.log(`Video ${this.currentVideo.id} ended`);
+
+            // Mark as completed if not already
+            if (!this.currentVideo.completed) {
+                this.markVideoAsCompleted(this.currentVideo.id);
+            }
+
+            // Auto-advance to next video after a short delay
+            setTimeout(() => {
+                this.nextVideo();
+            }, 1000);
+        }
     }
 
     previousVideo() {
-        const currentPlaylist = this.videoData[this.currentPlaylist];
-        const currentIndex = currentPlaylist.findIndex((v) => v.id === this.currentVideo);
+        console.log("Previous video requested");
+
+        const currentPlaylistVideos = this.videoData[this.currentPlaylist];
+        if (!currentPlaylistVideos || !this.currentVideo) {
+            console.log("No current video or playlist");
+            return;
+        }
+
+        const currentIndex = currentPlaylistVideos.findIndex((video) => video.id === this.currentVideo.id);
 
         if (currentIndex > 0) {
-            const prevVideo = currentPlaylist[currentIndex - 1];
-            this.playVideo(prevVideo.id, prevVideo.src);
+            const previousVideo = currentPlaylistVideos[currentIndex - 1];
+            console.log(`Loading previous video: ${previousVideo.title}`);
+            this.playVideo(previousVideo.id);
+        } else {
+            console.log("Already at the first video in playlist");
+            // Optionally show a message or loop to last video
         }
     }
 
     nextVideo() {
-        const currentPlaylist = this.videoData[this.currentPlaylist];
-        const currentIndex = currentPlaylist.findIndex((v) => v.id === this.currentVideo);
+        console.log("Next video requested");
 
-        if (currentIndex < currentPlaylist.length - 1) {
-            const nextVideo = currentPlaylist[currentIndex + 1];
-            this.playVideo(nextVideo.id, nextVideo.src);
+        const currentPlaylistVideos = this.videoData[this.currentPlaylist];
+        if (!currentPlaylistVideos || !this.currentVideo) {
+            console.log("No current video or playlist");
+            return;
+        }
+
+        // Check if current video is completed for next video access
+        if (!this.currentVideo.completed) {
+            console.log("Current video not completed, cannot advance to next");
+            return;
+        }
+
+        const currentIndex = currentPlaylistVideos.findIndex((video) => video.id === this.currentVideo.id);
+
+        if (currentIndex < currentPlaylistVideos.length - 1) {
+            const nextVideo = currentPlaylistVideos[currentIndex + 1];
+            console.log(`Loading next video: ${nextVideo.title}`);
+            this.playVideo(nextVideo.id);
+        } else {
+            console.log("Already at the last video in playlist");
+            // Check if there are more playlists to advance to
+            this.advanceToNextPlaylist();
+        }
+    }
+    advanceToNextPlaylist() {
+        const playlistOrder = ["cpu", "boNhoTrong", "boNhoNgoai"];
+        const currentPlaylistIndex = playlistOrder.indexOf(this.currentPlaylist);
+
+        if (currentPlaylistIndex < playlistOrder.length - 1) {
+            const nextPlaylist = playlistOrder[currentPlaylistIndex + 1];
+            console.log(`Advancing to next playlist: ${nextPlaylist}`);
+
+            this.switchPlaylist(nextPlaylist);
+            // Load first video of the new playlist
+            const firstVideo = this.videoData[nextPlaylist][0];
+            if (firstVideo) {
+                this.playVideo(firstVideo.id);
+            }
+        } else {
+            console.log("Completed all playlists");
+            this.showMessage("Chúc mừng! Bạn đã hoàn thành tất cả các video");
         }
     }
     togglePlayPause() {
@@ -991,30 +1334,6 @@ class VideoPlayerController {
                 feedback.remove();
             }
         }, 600);
-    }
-
-    onVideoEnded() {
-        // Mark video as completed
-        const videoItem = document.querySelector(`[data-video="${this.currentVideo}"]`);
-        if (videoItem) {
-            const statusSpan = videoItem.querySelector(".video-status");
-            statusSpan.textContent = "đã xem";
-            statusSpan.classList.add("completed");
-        }
-
-        // Update progress
-        this.updatePlaylistProgress(); // Auto play next video
-        this.nextVideo();
-    }
-
-    updatePlaylistProgress() {
-        const completedVideos = document.querySelectorAll(
-            `#${this.currentPlaylist}-playlist .video-status.completed`
-        ).length;
-        this.progress[this.currentPlaylist].completed = completedVideos;
-
-        const progress = this.progress[this.currentPlaylist];
-        document.getElementById("playlist-progress").textContent = `${progress.completed}/${progress.total} hoàn thành`;
     }
 
     formatTime(seconds) {

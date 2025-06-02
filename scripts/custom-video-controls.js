@@ -1,7 +1,3 @@
-// Debug: Script loading check
-console.log("custom-video-controls.js script loaded!");
-
-// Custom Video Controls Controller
 class CustomVideoControls {
     constructor() {
         // Get DOM elements with error checking
@@ -129,7 +125,6 @@ class CustomVideoControls {
             console.log("Video paused");
             this.updatePlayButton(true);
         });
-        this.video.addEventListener("ended", () => this.onVideoEnded());
         this.video.addEventListener("volumechange", () => this.updateVolumeIcon());
 
         // Control button events with null checks
@@ -184,14 +179,12 @@ class CustomVideoControls {
 
         if (this.prevVideoBtn) {
             this.prevVideoBtn.addEventListener("click", () => {
-                console.log("Previous video button clicked");
                 this.previousVideo();
             });
         }
 
         if (this.nextVideoBtn) {
             this.nextVideoBtn.addEventListener("click", () => {
-                console.log("Next video button clicked");
                 this.nextVideo();
             });
         }
@@ -840,18 +833,27 @@ class CustomVideoControls {
     }
 
     previousVideo() {
+        console.log("Previous video method called");
         // Dispatch custom event for video player controller
         window.dispatchEvent(new CustomEvent("previous-video"));
+
+        // Also try direct call if video player controller exists
+        if (window.videoPlayerController && typeof window.videoPlayerController.previousVideo === "function") {
+            console.log("Calling video player controller directly");
+            window.videoPlayerController.previousVideo();
+        }
     }
 
     nextVideo() {
+        console.log("Next video method called");
         // Dispatch custom event for video player controller
         window.dispatchEvent(new CustomEvent("next-video"));
-    }
 
-    onVideoEnded() {
-        // Auto play next video
-        this.nextVideo();
+        // Also try direct call if video player controller exists
+        if (window.videoPlayerController && typeof window.videoPlayerController.nextVideo === "function") {
+            console.log("Calling video player controller directly");
+            window.videoPlayerController.nextVideo();
+        }
     }
 
     toggleFullscreen() {
