@@ -499,10 +499,11 @@ class NotesManager {
         this.updateNotesDisplay();
 
         // Đóng modal
-        this.closeNoteModal();
-
-        // Hiển thị thông báo thành công
+        this.closeNoteModal(); // Hiển thị thông báo thành công
         this.showNotification(this.isEditing ? "Ghi chú đã được cập nhật" : "Ghi chú đã được tạo");
+
+        // Mở panel để hiển thị ghi chú vừa thêm
+        this.toggleNotesPanel(true);
     }
 
     /**
@@ -885,14 +886,21 @@ class NotesManager {
             this.renderNotesList();
         }
     }
-
     renderNotesList() {
-        if (!this.notesList) return;
+        console.log("NotesManager: Rendering notes list");
+
+        if (!this.notesList) {
+            console.error("NotesManager: Notes list element not found");
+            return;
+        }
 
         if (this.notes.length === 0) {
+            console.log("NotesManager: No notes to display");
             this.notesList.innerHTML = '<div class="no-notes">Chưa có ghi chú nào</div>';
             return;
         }
+
+        console.log(`NotesManager: Rendering ${this.notes.length} notes`);
 
         const notesHTML = this.notes
             .map(
@@ -1221,6 +1229,24 @@ class NotesManager {
 
         console.log("NotesManager: Notes statistics by video:", stats);
         return stats;
+    }
+
+    /**
+     * Tải ghi chú vào panel
+     */
+    loadNotesIntoPanel() {
+        if (!this.notesList) return;
+
+        // Load notes từ localStorage
+        this.loadNotes();
+
+        // Render danh sách notes
+        this.renderNotesList();
+
+        // Cập nhật số lượng notes
+        if (this.notesCount) {
+            this.notesCount.textContent = `${this.notes.length} ghi chú`;
+        }
     }
 }
 
