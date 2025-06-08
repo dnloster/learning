@@ -1,39 +1,36 @@
 /* Fix for Chapter Navigation Panel CSS conflict */
 .chapter-navigation-panel {
     position: absolute;
-    right: 0px;
-    bottom: 0 !important;
+    right: 15px; /* Consistent positioning */
+    bottom: 100%; /* Consistent positioning */
     width: 350px;
     max-width: 90%;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(10, 14, 39, 0.95));
     border-radius: 12px;
     color: white;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-    z-index: 100 !important;
+    z-index: 10000 !important; /* Ensure it's on top */
     font-family: "Roboto", Arial, sans-serif;
     backdrop-filter: blur(15px);
     border: 1px solid rgba(76, 175, 80, 0.3);
     max-height: calc(80vh - 100px);
-    transform: translateY(10px);
+
+    display: flex; /* Always flex, manage appearance with opacity/visibility */
+    flex-direction: column; /* Or your desired flex layout */
+
     opacity: 0;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    visibility: hidden;
+    transform: translateY(10px); /* Initial state for animation */
+    pointer-events: none; /* Not interactive when hidden */
+
+    /* Transition opacity, transform, and visibility (with delay for hiding) */
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s; /* Delay making it visibility:hidden on hide */
 }
 
-.chapter-navigation-panel.visible,
 .chapter-navigation-panel.show {
-    display: flex !important;
     opacity: 1;
-    transform: translateY(0);
-}
-
-/* Animation override */
-@keyframes fadeInPanel {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    visibility: visible;
+    transform: translateY(0); /* Final state for animation */
+    pointer-events: auto; /* Interactive when shown */
+    transition-delay: 0s; /* Ensure visibility becomes visible immediately when .show is added */
 }

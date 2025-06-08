@@ -39,39 +39,603 @@
                 top: 0;
                 z-index: 1000;
                 margin-bottom: 0;
+            } /* Tab Navigation Styles */
+            .tab-navigation {
+                display: flex;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0.05) 50%,
+                    rgba(255, 255, 255, 0.1) 100%
+                );
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                margin-bottom: 2rem;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 8px 25px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(20px);
+                position: relative;
+                padding: 8px;
+                gap: 4px;
+            }
+
+            .tab-btn {
+                position: relative;
+                padding: 1.2rem 2.5rem;
+                background: transparent;
+                border: none;
+                color: var(--text-secondary);
+                font-size: 1.1rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                border-radius: 16px;
+                flex: 1;
+                z-index: 2;
+                overflow: hidden;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 60px;
+            }
+
+            .tab-btn::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0.02) 50%,
+                    rgba(255, 255, 255, 0.1) 100%
+                );
+                opacity: 0;
+                transition: all 0.4s ease;
+                z-index: -1;
+                border-radius: 16px;
+            }
+
+            .tab-btn:hover::before {
+                opacity: 1;
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            }
+
+            .tab-btn:hover {
+                color: var(--text-primary);
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .tab-btn.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 20px 40px rgba(102, 126, 234, 0.5), 0 10px 25px rgba(118, 75, 162, 0.3),
+                    0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+                animation: activeTabPulse 3s ease-in-out infinite;
+            }
+
+            .tab-btn.active::before {
+                opacity: 0;
+            }
+
+            /* Tab hover glow effect */
+            .tab-btn:not(.active)::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background: radial-gradient(
+                    circle,
+                    rgba(102, 126, 234, 0.4) 0%,
+                    rgba(118, 75, 162, 0.2) 40%,
+                    transparent 70%
+                );
+                border-radius: 50%;
+                transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: translate(-50%, -50%);
+                z-index: -1;
+            }
+
+            .tab-btn:not(.active):hover::after {
+                width: 120px;
+                height: 120px;
+            } /* Active tab indicator line */
+            .tab-navigation::after {
+                content: "";
+                position: absolute;
+                bottom: 4px;
+                left: 12px;
+                width: calc(50% - 12px);
+                height: 4px;
+                background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+                border-radius: 3px;
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1;
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.6), 0 0 40px rgba(118, 75, 162, 0.4);
+                animation: indicatorGlow 2s ease-in-out infinite alternate;
+                transform: translateX(var(--indicator-offset, 0%));
+            }
+
+            /* Mobile responsiveness for tabs */
+            @media (max-width: 768px) {
+                .tab-navigation {
+                    padding: 6px;
+                    margin-bottom: 1.5rem;
+                }
+
+                .tab-btn {
+                    padding: 1rem 1.5rem;
+                    font-size: 0.9rem;
+                    letter-spacing: 0.5px;
+                    min-height: 50px;
+                }
+
+                .tab-content {
+                    padding: 1.5rem;
+                    border-radius: 16px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .tab-btn {
+                    padding: 0.8rem 1rem;
+                    font-size: 0.8rem;
+                    min-height: 45px;
+                }
+
+                .tab-navigation::after {
+                    height: 3px;
+                }
+            }
+
+            /* Animation for active tab pulse */
+            @keyframes activeTabPulse {
+                0%,
+                100% {
+                    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.5), 0 10px 25px rgba(118, 75, 162, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+                }
+                50% {
+                    box-shadow: 0 25px 50px rgba(102, 126, 234, 0.6), 0 15px 35px rgba(118, 75, 162, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+                }
+            }
+
+            /* Animation for indicator glow */
+            @keyframes indicatorGlow {
+                0% {
+                    box-shadow: 0 0 20px rgba(102, 126, 234, 0.6), 0 0 40px rgba(118, 75, 162, 0.4);
+                }
+                100% {
+                    box-shadow: 0 0 30px rgba(102, 126, 234, 0.8), 0 0 60px rgba(118, 75, 162, 0.6);
+                }
+            }
+
+            /* Tab Content */
+            .tab-content {
+                display: none;
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+                transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 20px;
+                padding: 2rem;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+
+            .tab-content.active {
+                display: block;
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                animation: slideInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            @keyframes slideInUp {
+                0% {
+                    opacity: 0;
+                    transform: translateY(50px) scale(0.9) rotateX(10deg);
+                    filter: blur(10px);
+                }
+                50% {
+                    opacity: 0.8;
+                    transform: translateY(-10px) scale(1.05) rotateX(-2deg);
+                    filter: blur(2px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1) rotateX(0deg);
+                    filter: blur(0px);
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px) scale(0.95);
+                    filter: blur(5px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                    filter: blur(0px);
+                }
+            } /* Documents Section */
+            .document-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .document-item {
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+                padding: 2rem;
+                border-radius: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.05);
+                backdrop-filter: blur(10px);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .document-item::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .document-item:hover::before {
+                opacity: 1;
+            }
+
+            .document-item:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 15px 35px rgba(102, 126, 234, 0.1);
+                border-color: rgba(102, 126, 234, 0.3);
+            }
+
+            .document-item h4 {
+                color: var(--text-primary);
+                margin-bottom: 0.5rem;
+                font-size: 1.1rem;
+            }
+
+            .document-author {
+                color: var(--text-secondary);
+                margin-bottom: 1rem;
+                font-style: italic;
+            }
+            .view-pdf-btn {
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                border: none;
+                padding: 1rem 2rem;
+                border-radius: 12px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+                position: relative;
+                overflow: hidden;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .view-pdf-btn::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .view-pdf-btn:hover::before {
+                left: 100%;
+            }
+
+            .view-pdf-btn:hover {
+                transform: translateY(-3px) scale(1.05);
+                box-shadow: 0 15px 30px rgba(40, 167, 69, 0.4), 0 5px 15px rgba(32, 201, 151, 0.3);
+            }
+
+            /* PDF Viewer */
+            .pdf-viewer-container {
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                overflow: hidden;
+                height: 80vh;
+            }
+
+            .pdf-viewer-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                background: var(--accent-color);
+                color: white;
+            }
+
+            .close-pdf-btn {
+                background: transparent;
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .close-pdf-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            #pdf-iframe {
+                width: 100%;
+                height: calc(100% - 60px);
+            } /* Videos Section */
+            .video-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 2rem;
+            }
+
+            .video-item {
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+                border-radius: 20px;
+                overflow: hidden;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.05);
+                backdrop-filter: blur(10px);
+                position: relative;
+            }
+
+            .video-item::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #dc3545, #e91e63, #dc3545);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                z-index: 1;
+            }
+
+            .video-item:hover::before {
+                opacity: 1;
+            }
+
+            .video-item:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 15px 35px rgba(220, 53, 69, 0.15);
+                border-color: rgba(220, 53, 69, 0.3);
+            }
+
+            .video-thumbnail {
+                position: relative;
+                height: 200px;
+                overflow: hidden;
+            }
+
+            .video-thumbnail img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .video-item:hover .video-thumbnail img {
+                transform: scale(1.05);
+            }
+
+            .play-overlay {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.7);
+                color: white;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                opacity: 0.8;
+                transition: all 0.3s ease;
+            }
+
+            .video-item:hover .play-overlay {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            .video-info {
+                padding: 1.5rem;
+            }
+
+            .video-info h4 {
+                color: #fff;
+                margin-bottom: 0.5rem;
+                font-size: 1.1rem;
+            }
+
+            .video-info p {
+                margin-bottom: 1rem;
+                line-height: 1.5;
+            }
+            .watch-video-btn {
+                background: linear-gradient(135deg, #dc3545, #e91e63);
+                color: white;
+                border: none;
+                padding: 1rem 2rem;
+                border-radius: 12px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                width: 100%;
+                box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+                position: relative;
+                overflow: hidden;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .watch-video-btn::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .watch-video-btn:hover::before {
+                left: 100%;
+            }
+
+            .watch-video-btn:hover {
+                transform: translateY(-3px) scale(1.05);
+                box-shadow: 0 15px 30px rgba(220, 53, 69, 0.4), 0 5px 15px rgba(233, 30, 99, 0.3);
+            }
+
+            /* Video Modal */
+            .video-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            }
+
+            .video-modal-content {
+                background: var(--bg-secondary);
+                border-radius: 12px;
+                overflow: hidden;
+                width: 100%;
+                max-width: 1200px;
+                max-height: 90vh;
+            }
+
+            .video-modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                background: var(--accent-color);
+                color: white;
+            }
+
+            .close-video-btn {
+                background: transparent;
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .close-video-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .video-player-container {
+                position: relative;
+                height: 70vh;
+            }
+
+            #video-iframe {
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .tab-navigation {
+                    flex-direction: column;
+                }
+
+                .document-list {
+                    grid-template-columns: 1fr;
+                }
+
+                .video-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .video-modal {
+                    padding: 1rem;
+                }
             }
         </style>
     </head>
     <body>
         <!-- Theme Toggle Button -->
         <button id="theme-toggle" class="theme-toggle-btn" aria-label="Chuyển đổi theme sáng/tối">
-            <svg
-                class="sun-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-            >
-                <circle cx="12" cy="12" r="5" />
-                <path
-                    d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
-                />
-            </svg>
-            <svg
-                class="moon-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-            >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
+            <div class="toggle-icons">
+                <svg
+                    class="sun-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <circle cx="12" cy="12" r="5" />
+                    <path
+                        d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+                    />
+                </svg>
+                <svg
+                    class="moon-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </div>
         </button>
 
         <div class="content-container">
@@ -81,80 +645,275 @@
                     <h1>Tài liệu tham khảo</h1>
                 </nav>
             </header>
-
             <div class="references-content">
-                <div class="references-section">
-                    <h3>Sách và tài liệu</h3>
-                    <ul class="reference-list">
-                        <li>
-                            <div class="reference-item">
-                                <div class="reference-title">
-                                    Computer Organization and Design: The Hardware/Software Interface
-                                </div>
-                                <div class="reference-author">David A. Patterson, John L. Hennessy</div>
-                                <div class="reference-publisher">Morgan Kaufmann, 6th Edition, 2021</div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="reference-item">
-                                <div class="reference-title">Modern Computer Architecture and Organization</div>
-                                <div class="reference-author">Jim Ledin</div>
-                                <div class="reference-publisher">Packt Publishing, 2020</div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="reference-item">
-                                <div class="reference-title">Digital Design and Computer Architecture</div>
-                                <div class="reference-author">David Harris, Sarah Harris</div>
-                                <div class="reference-publisher">Morgan Kaufmann, 2022</div>
-                            </div>
-                        </li>
-                    </ul>
+                <!-- Tab Navigation -->
+                <div class="tab-navigation">
+                    <button class="tab-btn active" data-tab="documents" style="color: #fff">📄 Giáo trình</button>
+                    <button class="tab-btn" data-tab="videos" style="color: #fff">📹 Video</button>
                 </div>
 
-                <div class="references-section">
-                    <h3>Tài nguyên trực tuyến</h3>
-                    <ul class="reference-list">
-                        <li>
-                            <div class="reference-item">
-                                <div class="reference-title">How CPU Works</div>
-                                <div class="reference-link">
-                                    <a href="https://www.youtube.com/watch?v=cNN_tTXABUA" target="_blank"
-                                        >YouTube: How CPU Works (Video)</a
-                                    >
+                <!-- Documents Tab -->
+                <div class="tab-content active" id="documents">
+                    <div class="documents-section">
+                        <div class="document-list">
+                            <div class="document-item">
+                                <h4 style="color: #fff">Bài giảng</h4>
+                                <button class="view-pdf-btn" data-pdf="./tailieu/bai2.pdf">📖 Xem PDF</button>
+                            </div>
+                            <div class="document-item">
+                                <h4 style="color: #fff">Giáo trình M2</h4>
+                                <button
+                                    class="view-pdf-btn"
+                                    data-pdf="./tailieu/GiaoTrinh_m2_2020_ban_25_11_2020_Cuoi.pdf"
+                                >
+                                    📖 Xem PDF
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PDF Viewer -->
+                        <div class="pdf-viewer-container" id="pdf-viewer" style="display: none">
+                            <div class="pdf-viewer-header">
+                                <h4 id="pdf-title">Đang xem tài liệu</h4>
+                                <button class="close-pdf-btn">✕ Đóng</button>
+                            </div>
+                            <iframe id="pdf-iframe" src="" title="PDF Viewer" style="border: none"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Videos Tab -->
+                <div class="tab-content" id="videos">
+                    <div class="videos-section">
+                        <div class="video-grid">
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img
+                                        src="https://img.youtube.com/vi/cNN_tTXABUA/maxresdefault.jpg"
+                                        alt="How CPU Works"
+                                    />
+                                    <div class="play-overlay">▶</div>
+                                </div>
+                                <div class="video-info">
+                                    <h4>How a CPU Works</h4>
+                                    <p>Giải thích chi tiết cách thức hoạt động của CPU</p>
+                                    <button class="watch-video-btn" data-video="cNN_tTXABUA">🎥 Xem video</button>
                                 </div>
                             </div>
-                        </li>
-                        <li>
-                            <div class="reference-item">
-                                <div class="reference-title">Computer Memory</div>
-                                <div class="reference-link">
-                                    <a href="https://www.geeksforgeeks.org/computer-memory/" target="_blank"
-                                        >GeeksforGeeks: Computer Memory</a
-                                    >
+
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img
+                                        src="https://img.youtube.com/vi/FZGugFqdr60/maxresdefault.jpg"
+                                        alt="Computer Memory"
+                                    />
+                                    <div class="play-overlay">▶</div>
+                                </div>
+                                <div class="video-info">
+                                    <h4>Computer Memory Explained</h4>
+                                    <p>Tìm hiểu về các loại bộ nhớ máy tính</p>
+                                    <button class="watch-video-btn" data-video="FZGugFqdr60">🎥 Xem video</button>
                                 </div>
                             </div>
-                        </li>
-                        <li>
-                            <div class="reference-item">
-                                <div class="reference-title">ROM (Read-Only Memory)</div>
-                                <div class="reference-link">
-                                    <a
-                                        href="https://www.techtarget.com/whatis/definition/ROM-read-only-memory"
-                                        target="_blank"
-                                        >TechTarget: ROM (Read-Only Memory)</a
-                                    >
+
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img
+                                        src="https://img.youtube.com/vi/7J7X7aZvMXQ/maxresdefault.jpg"
+                                        alt="RAM vs ROM"
+                                    />
+                                    <div class="play-overlay">▶</div>
+                                </div>
+                                <div class="video-info">
+                                    <h4>RAM vs ROM - What's the Difference?</h4>
+                                    <p>So sánh RAM và ROM một cách dễ hiểu</p>
+                                    <button class="watch-video-btn" data-video="7J7X7aZvMXQ">🎥 Xem video</button>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
+
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img
+                                        src="https://img.youtube.com/vi/1GSjbWt0c9M/maxresdefault.jpg"
+                                        alt="Computer Architecture"
+                                    />
+                                    <div class="play-overlay">▶</div>
+                                </div>
+                                <div class="video-info">
+                                    <h4>Computer Architecture Basics</h4>
+                                    <p>Kiến trúc máy tính cơ bản</p>
+                                    <button class="watch-video-btn" data-video="1GSjbWt0c9M">🎥 Xem video</button>
+                                </div>
+                            </div>
+
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img
+                                        src="https://img.youtube.com/vi/Fg00LN30Ezg/maxresdefault.jpg"
+                                        alt="Cache Memory"
+                                    />
+                                    <div class="play-overlay">▶</div>
+                                </div>
+                                <div class="video-info">
+                                    <h4>Cache Memory Explained</h4>
+                                    <p>Bộ nhớ đệm hoạt động như thế nào?</p>
+                                    <button class="watch-video-btn" data-video="Fg00LN30Ezg">🎥 Xem video</button>
+                                </div>
+                            </div>
+
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img
+                                        src="https://img.youtube.com/vi/d86ws7mQYIg/maxresdefault.jpg"
+                                        alt="Assembly Language"
+                                    />
+                                    <div class="play-overlay">▶</div>
+                                </div>
+                                <div class="video-info">
+                                    <h4>Assembly Language Programming</h4>
+                                    <p>Lập trình hợp ngữ cơ bản</p>
+                                    <button class="watch-video-btn" data-video="d86ws7mQYIg">🎥 Xem video</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video Player Modal -->
+                        <div class="video-modal" id="video-modal" style="display: none">
+                            <div class="video-modal-content">
+                                <div class="video-modal-header">
+                                    <h4 id="video-title">Đang phát video</h4>
+                                    <button class="close-video-btn">✕ Đóng</button>
+                                </div>
+                                <div class="video-player-container">
+                                    <iframe
+                                        id="video-iframe"
+                                        src=""
+                                        title="Video Player"
+                                        style="border: none"
+                                        allowfullscreen
+                                    ></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <script>
             document.getElementById("back-to-home").addEventListener("click", function () {
                 window.location.href = "index.html?showVideo=true";
+            }); // Tab functionality
+            document.addEventListener("DOMContentLoaded", function () {
+                const tabBtns = document.querySelectorAll(".tab-btn");
+                const tabContents = document.querySelectorAll(".tab-content");
+
+                // Function to update indicator position
+                function updateIndicator(activeBtn) {
+                    const btnIndex = Array.from(tabBtns).indexOf(activeBtn);
+                    // Update CSS custom property for indicator position
+                    document.documentElement.style.setProperty("--indicator-offset", `${btnIndex * 100}%`);
+                }
+
+                tabBtns.forEach((btn, index) => {
+                    btn.addEventListener("click", function () {
+                        const targetTab = this.getAttribute("data-tab");
+
+                        // Remove active class from all tabs and content
+                        tabBtns.forEach((b) => b.classList.remove("active"));
+                        tabContents.forEach((content) => content.classList.remove("active"));
+
+                        // Add active class to clicked tab and corresponding content
+                        this.classList.add("active");
+                        const targetContent = document.getElementById(targetTab);
+
+                        // Add small delay for smooth animation
+                        setTimeout(() => {
+                            targetContent.classList.add("active");
+                        }, 150);
+
+                        // Update indicator position
+                        updateIndicator(this);
+                    });
+                });
+
+                // Initialize first tab as active
+                if (tabBtns.length > 0) {
+                    tabBtns[0].classList.add("active");
+                    tabContents[0].classList.add("active");
+                    updateIndicator(tabBtns[0]);
+                }
+
+                // PDF viewer functionality
+                const viewPdfBtns = document.querySelectorAll(".view-pdf-btn");
+                const pdfViewer = document.getElementById("pdf-viewer");
+                const pdfIframe = document.getElementById("pdf-iframe");
+                const pdfTitle = document.getElementById("pdf-title");
+                const closePdfBtn = document.querySelector(".close-pdf-btn");
+
+                viewPdfBtns.forEach((btn) => {
+                    btn.addEventListener("click", function () {
+                        const pdfUrl = this.getAttribute("data-pdf");
+                        const documentTitle = this.parentElement.querySelector("h4").textContent;
+
+                        pdfTitle.textContent = `Đang xem: ${documentTitle}`;
+                        pdfIframe.src = pdfUrl;
+                        pdfViewer.style.display = "block";
+
+                        // Scroll to PDF viewer
+                        pdfViewer.scrollIntoView({ behavior: "smooth" });
+                    });
+                });
+
+                closePdfBtn.addEventListener("click", function () {
+                    pdfViewer.style.display = "none";
+                    pdfIframe.src = "";
+                });
+
+                // Video player functionality
+                const watchVideoBtns = document.querySelectorAll(".watch-video-btn");
+                const videoModal = document.getElementById("video-modal");
+                const videoIframe = document.getElementById("video-iframe");
+                const videoTitle = document.getElementById("video-title");
+                const closeVideoBtn = document.querySelector(".close-video-btn");
+
+                watchVideoBtns.forEach((btn) => {
+                    btn.addEventListener("click", function () {
+                        const videoId = this.getAttribute("data-video");
+                        const videoTitleText = this.parentElement.querySelector("h4").textContent;
+
+                        videoTitle.textContent = videoTitleText;
+                        videoIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                        videoModal.style.display = "flex";
+                        document.body.style.overflow = "hidden";
+                    });
+                });
+
+                closeVideoBtn.addEventListener("click", closeVideoModal);
+
+                videoModal.addEventListener("click", function (e) {
+                    if (e.target === videoModal) {
+                        closeVideoModal();
+                    }
+                });
+
+                function closeVideoModal() {
+                    videoModal.style.display = "none";
+                    videoIframe.src = "";
+                    document.body.style.overflow = "auto";
+                }
+
+                // ESC key to close modals
+                document.addEventListener("keydown", function (e) {
+                    if (e.key === "Escape") {
+                        if (videoModal.style.display === "flex") {
+                            closeVideoModal();
+                        }
+                        if (pdfViewer.style.display === "block") {
+                            pdfViewer.style.display = "none";
+                            pdfIframe.src = "";
+                        }
+                    }
+                });
             });
         </script>
     </body>

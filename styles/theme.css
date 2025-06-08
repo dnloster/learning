@@ -60,66 +60,108 @@
     --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
-/* Theme Toggle Button */
+/* Theme Toggle Switch */
 .theme-toggle-btn {
     position: fixed;
-    top: 1.5rem;
-    right: 1.5rem;
+    bottom: 2rem;
+    right: 2rem;
     z-index: 1000;
-    width: 44px;
-    height: 44px;
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
+    width: 70px;
+    height: 36px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #ffa726, #ffcc02);
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0;
-    box-shadow: 0 2px 8px var(--shadow-color);
-    transition: all 0.3s ease;
+    padding: 4px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+    outline: none;
+}
+
+/* Dark theme switch background */
+[data-theme="dark"] .theme-toggle-btn {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
 }
 
 .theme-toggle-btn:hover {
     transform: scale(1.05);
-    background-color: var(--hover-bg);
-    box-shadow: 0 4px 12px var(--shadow-color);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .theme-toggle-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
+}
+
+/* Switch slider */
+.theme-toggle-btn::before {
+    content: "";
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    left: 4px;
+    top: 4px;
+    z-index: 0;
+}
+
+/* Dark theme slider position */
+[data-theme="dark"] .theme-toggle-btn::before {
+    transform: translateX(34px);
+    background: #f39c12;
+}
+
+/* Theme toggle icons container */
+.theme-toggle-btn .toggle-icons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    padding: 0 8px;
 }
 
 /* Theme toggle icons */
 .theme-toggle-btn svg {
-    width: 20px;
-    height: 20px;
-    transition: all 0.3s ease;
+    width: 16px;
+    height: 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    position: relative;
 }
 
 .theme-toggle-btn .sun-icon {
-    opacity: 0;
-    position: absolute;
-    transform: rotate(-90deg) scale(0.5);
+    color: #f39c12;
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
 }
 
 .theme-toggle-btn .moon-icon {
-    opacity: 1;
-    transform: rotate(0) scale(1);
+    color: #ffffff;
+    opacity: 0.5;
+    transform: rotate(-45deg) scale(0.8);
 }
 
-/* Light theme icon states */
-[data-theme="light"] .theme-toggle-btn .sun-icon {
-    opacity: 1;
-    transform: rotate(0) scale(1);
+/* Dark theme icon states */
+[data-theme="dark"] .theme-toggle-btn .sun-icon {
+    color: #ffffff;
+    opacity: 0.5;
+    transform: rotate(45deg) scale(0.8);
 }
 
-[data-theme="light"] .theme-toggle-btn .moon-icon {
-    opacity: 0;
-    transform: rotate(90deg) scale(0.5);
+[data-theme="dark"] .theme-toggle-btn .moon-icon {
+    color: #f39c12;
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
 }
 
 /* Theme Change Message */
