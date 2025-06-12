@@ -1,16 +1,24 @@
 /* Theme Variables */
 :root {
     /* Light theme colors */
+    --text-message: #000000;
     --bg-primary: #ffffff;
     --bg-secondary: #f8f9fa;
-    --text-primary: #212529;
-    --text-secondary: #6c757d;
+    --bg-quiz: #e9ecef;
+    --text-primary: #ffffff;
+    --text-secondary: #b0c4de;
     --border-color: #dee2e6;
-    --accent-color: #0d6efd;
+    --accent-color: #4dabf7;
     --hover-bg: #e9ecef;
-    --card-bg: rgba(255, 255, 255, 0.1);
-    --tooltip-bg: rgba(0, 0, 0, 0.8);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --tooltip-bg: rgba(255, 255, 255, 0.8);
     --overlay-bg: rgba(0, 0, 0, 0.5);
+
+    /* Gradient backgrounds for light theme */
+    --bg-gradient: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 25%, #2a3f7a 50%, #1a1f4a 75%, #0a0e27 100%);
+    --bg-content: #fff;
+    --container-bg: rgba(255, 255, 255, 0.95);
+    --color-tab: #764ba2;
 
     /* New theme colors */
     --sidebar-bg: #f8f9fa;
@@ -21,11 +29,98 @@
     --code-bg: #f8f9fa;
     --blockquote-bg: #f8f9fa;
     --blockquote-border: #dee2e6;
-    --success-color: #198754;
+    --success-color: #28a745;
     --error-color: #dc3545;
     --warning-color: #ffc107;
     --info-color: #0dcaf0;
+    --info-hover: #0aa2c0;
+    --warning-hover: #e0a800;
+    --purple-color: #6f42c1;
+    --success-hover: #157347;
     --shadow-color: rgba(0, 0, 0, 0.1);
+    --nav-item-color: #000;
+
+    /* Enhanced text contrast for light theme */
+    --heading-color: #ffffff;
+    --heading-menu: #000;
+    --nav-text: #ffffff;
+    --button-text: #ffffff;
+    --strong-text: #000000;
+
+    /* Gradient variables for components */
+    --ram-gradient: linear-gradient(45deg, #2196f3, #1976d2);
+    --rom-gradient: linear-gradient(45deg, #ff9800, #f57c00);
+    --button-gradient: linear-gradient(45deg, #198754, #157347);
+    --hero-button-gradient: linear-gradient(45deg, #198754, #0d6efd, #6f42c1, #198754);
+    --button-hover-gradient: linear-gradient(45deg, #157347, #198754);
+    --section-title-gradient: linear-gradient(45deg, #28a745, #78c5ff);
+    --attention-gradient: linear-gradient(90deg, transparent, #198754, transparent);
+
+    /* Shadow variables */
+    --ram-shadow: rgba(33, 150, 243, 0.3);
+    --rom-shadow: rgba(255, 152, 0, 0.3);
+    --button-shadow: rgba(25, 135, 84, 0.3);
+    --hero-button-shadow: rgba(25, 135, 84, 0.5);
+
+    /* 3D model colors */
+    --cpu-background: linear-gradient(135deg, #2c3e50, #34495e);
+    --cpu-border: #198754;
+    --cpu-brand-color: #198754;
+    --cpu-model-color: #ffffff;
+    --cpu-pins: linear-gradient(90deg, #ffd700, #ffa500);
+    --cpu-side: linear-gradient(135deg, #1a252f, #2c3e50);
+    --ram-pcb: linear-gradient(135deg, #2e7d32, #388e3c);
+    --ram-chip: linear-gradient(135deg, #1a1a1a, #333333);
+    --chip-border: #64b5f6;
+
+    /* Text colors for 3D models */
+    --model-text: #ffffff;
+    --model-description: #b0c4de;
+    --model-list-item: #e8f0fe;
+    --list-bullet: #28a745;
+
+    /* Additional 3D component colors */
+    --ram-connector: linear-gradient(90deg, #ffd700, #ffa500);
+    --rom-body: linear-gradient(135deg, #4a148c, #6a1b9a);
+    --rom-border: #9c27b0;
+    --rom-label: #e1bee7;
+    --rom-shadow: rgba(156, 39, 176, 0.4);
+    --storage-gradient: linear-gradient(45deg, #ffd700, #ffa500); /* Topic navigation */
+    --topic-nav-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --topic-btn-bg: rgba(255, 255, 255, 0.1);
+    --topic-btn-hover: rgba(255, 255, 255, 0.2);
+    --topic-btn-active: var(--button-gradient);
+    --topic-nav-text: #ffffff;
+
+    /* Build PC component colors for light theme */
+    --component-name-color: #0dcaf0;
+    --component-gradient: linear-gradient(45deg, #198754, #0dcaf0);
+    --component-hover-gradient: linear-gradient(45deg, #20c997, #17a2b8);
+    --remove-btn: #dc3545;
+    --remove-btn-hover: #c82333;
+    --selected-model-text: #87ceeb;
+    --modal-bg: #ffffff;
+    --modal-text: #212529;
+    --modal-title: #0dcaf0;
+    --modal-btn: #0dcaf0;
+    --modal-btn-hover: #17a2b8;
+    --item-name: #495057;
+    --item-details: #6c757d;
+    --modal-select-gradient: linear-gradient(45deg, #198754, #0d6efd);
+    --modal-select-hover: linear-gradient(45deg, #20c997, #0a58ca);
+
+    /* Quiz page colors for light theme */
+    --quiz-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --quiz-button: #0d6efd;
+    --quiz-title-gradient: linear-gradient(45deg, #198754, #0dcaf0);
+    --quiz-correct: #198754;
+    --quiz-border: #dee2e6;
+    --quiz-text-dark: #333333;
+    --quiz-text-light: #6c757d;
+    --quiz-success-gradient: linear-gradient(135deg, #198754 0%, #157347 50%, #0f5132 100%);
+    --quiz-hover-bg: rgba(13, 110, 253, 0.1);
+    --quiz-filter-bg: rgba(0, 0, 0, 0.2);
+    --quiz-card-bg: rgba(255, 255, 255, 0.9);
 
     /* Animation */
     --transition-duration: 0.3s;
@@ -33,31 +128,126 @@
 
 /* Dark theme colors */
 [data-theme="dark"] {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
+    --text-message: #ffffff;
+    --bg-primary: #0a0e27;
+    --bg-secondary: #1a1f4a;
     --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --border-color: #404040;
+    --text-secondary: #b0c4de;
+    --border-color: #2a3f7a;
     --accent-color: #4dabf7;
-    --hover-bg: #3d3d3d;
-    --card-bg: rgba(0, 0, 0, 0.2);
-    --tooltip-bg: rgba(255, 255, 255, 0.9);
+    --hover-bg: #2a3f7a;
+    --card-bg: rgba(26, 31, 74, 0.8);
+    --tooltip-bg: rgba(0, 0, 0, 0.9);
     --overlay-bg: rgba(0, 0, 0, 0.7);
 
+    /* Gradient backgrounds for dark theme */
+    --bg-gradient: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 25%, #2a3f7a 50%, #1a1f4a 75%, #0a0e27 100%);
+    --bg-content: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 25%, #2a3f7a 50%, #1a1f4a 75%, #0a0e27 100%);
+    --container-bg: rgba(26, 31, 74, 0.95);
+    --bg-quiz: #1a1f4a;
+    --color-tab: #ffffff;
+
     /* New dark theme colors */
-    --sidebar-bg: #2d2d2d;
-    --header-bg: #1a1a1a;
-    --footer-bg: #1a1a1a;
+    --sidebar-bg: #1a1f4a;
+    --header-bg: #0a0e27;
+    --heading-menu: #ffffff;
+    --footer-bg: #0a0e27;
+    --nav-item-color: #fff;
     --link-color: #4dabf7;
     --link-hover-color: #78c5ff;
-    --code-bg: #2d2d2d;
-    --blockquote-bg: #2d2d2d;
-    --blockquote-border: #404040;
+    --code-bg: #1a1f4a;
+    --blockquote-bg: #1a1f4a;
+    --blockquote-border: #2a3f7a;
     --success-color: #28a745;
     --error-color: #dc3545;
     --warning-color: #ffc107;
     --info-color: #17a2b8;
-    --shadow-color: rgba(0, 0, 0, 0.3);
+    --info-hover: #138496;
+    --warning-hover: #d39e00;
+    --purple-color: #9c27b0;
+    --success-hover: #20c997;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+
+    /* Enhanced text contrast for dark theme */
+    --heading-color: #ffffff;
+    --nav-text: #e8f0fe;
+    --button-text: #ffffff;
+    --strong-text: #ffffff;
+
+    /* Gradient variables for dark theme */
+    --ram-gradient: linear-gradient(45deg, #4dabf7, #339af0);
+    --rom-gradient: linear-gradient(45deg, #ffc107, #ffb300);
+    --button-gradient: linear-gradient(45deg, #28a745, #20c997);
+    --hero-button-gradient: linear-gradient(45deg, #28a745, #4dabf7, #9c27b0, #28a745);
+    --button-hover-gradient: linear-gradient(45deg, #20c997, #28a745);
+    --section-title-gradient: linear-gradient(45deg, #28a745, #78c5ff);
+    --attention-gradient: linear-gradient(90deg, transparent, #28a745, transparent);
+
+    /* Shadow variables for dark theme */
+    --ram-shadow: rgba(77, 171, 247, 0.4);
+    --rom-shadow: rgba(255, 193, 7, 0.4);
+    --button-shadow: rgba(40, 167, 69, 0.4);
+    --hero-button-shadow: rgba(40, 167, 69, 0.6);
+
+    /* 3D model colors for dark theme */
+    --cpu-background: linear-gradient(135deg, #1a1f4a, #2a3f7a);
+    --cpu-border: #28a745;
+    --cpu-brand-color: #28a745;
+    --cpu-model-color: #ffffff;
+    --cpu-pins: linear-gradient(90deg, #ffeb3b, #ff9800);
+    --cpu-side: linear-gradient(135deg, #0a0e27, #1a1f4a);
+    --ram-pcb: linear-gradient(135deg, #1b5e20, #2e7d32);
+    --ram-chip: linear-gradient(135deg, #2a3f7a, #4a5d7a);
+    --chip-border: #4dabf7;
+
+    /* Text colors for 3D models in dark theme */
+    --model-text: #ffffff;
+    --model-description: #b0c4de;
+    --model-list-item: #e8f0fe;
+    --list-bullet: #28a745;
+
+    /* Additional 3D component colors for dark theme */
+    --ram-connector: linear-gradient(90deg, #ffeb3b, #ff9800);
+    --rom-body: linear-gradient(135deg, #6a1b9a, #9c27b0);
+    --rom-border: #e1bee7;
+    --rom-label: #f3e5f5;
+    --rom-shadow: rgba(225, 190, 231, 0.5);
+    --storage-gradient: linear-gradient(45deg, #ffeb3b, #ff9800);
+
+    /* Topic navigation for dark theme */
+    --topic-nav-bg: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 100%);
+    --topic-btn-bg: rgba(255, 255, 255, 0.05);
+    --topic-btn-hover: rgba(255, 255, 255, 0.1);
+    --topic-btn-active: var(--button-gradient);
+    --topic-nav-text: #ffffff; /* Build PC component colors for dark theme */
+    --component-name-color: #4dabf7;
+    --component-gradient: linear-gradient(45deg, #28a745, #4dabf7);
+    --component-hover-gradient: linear-gradient(45deg, #20c997, #78c5ff);
+    --remove-btn: #dc3545;
+    --remove-btn-hover: #bb2d3b;
+    --selected-model-text: #90caf9;
+    --modal-bg: #1a1f4a;
+    --modal-text: #ffffff;
+    --modal-title: #4dabf7;
+    --modal-btn: #4dabf7;
+    --modal-btn-hover: #78c5ff;
+    --item-name: #e8f0fe;
+    --item-details: #b0c4de;
+    --modal-select-gradient: linear-gradient(45deg, #28a745, #4dabf7);
+    --modal-select-hover: linear-gradient(45deg, #20c997, #78c5ff);
+
+    /* Quiz page colors for dark theme */
+    --quiz-bg: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 100%);
+    --quiz-button: #4dabf7;
+    --quiz-title-gradient: linear-gradient(45deg, #28a745, #4dabf7);
+    --quiz-correct: #28a745;
+    --quiz-border: #2a3f7a;
+    --quiz-text-dark: #e8f0fe;
+    --quiz-text-light: #b0c4de;
+    --quiz-success-gradient: linear-gradient(135deg, #28a745 0%, #20c997 50%, #17a2b8 100%);
+    --quiz-hover-bg: rgba(77, 171, 247, 0.1);
+    --quiz-filter-bg: rgba(255, 255, 255, 0.05);
+    --quiz-card-bg: rgba(26, 31, 74, 0.6);
 }
 
 /* Theme Toggle Switch */
@@ -65,7 +255,7 @@
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    z-index: 1000;
+    z-index: 2147483647; /* Highest possible z-index */
     width: 70px;
     height: 36px;
     border: none;
@@ -171,7 +361,7 @@
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background: var(--tooltip-bg);
-    color: var(--text-primary);
+    color: var(--text-message);
     padding: 12px 24px;
     border-radius: 25px;
     font-size: 14px;
@@ -194,33 +384,60 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Enhanced Text Contrast and Styling */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--heading-menu) !important;
+    font-weight: 700;
+}
+
+.content-nav h1,
+nav h1 {
+    color: var(--text-message) !important;
+}
+
+strong,
+b {
+    color: var(--strong-text) !important;
+    font-weight: 700;
+}
+
+/* Button and Interactive Element Styling */
+.btn,
+button {
+    color: var(--button-text) !important;
+}
+
+.btn:hover,
+button:hover {
+    color: var(--button-text) !important;
+}
+
+/* Content Container Background */
+.content-container {
+    background: var(--bg-content) !important;
+}
+
+.container {
+    background: var(--container-bg) !important;
+}
+
+/* Navigation Text */
+.nav-btn,
+.chapter-item,
+.quiz-btn {
+    color: var(--nav-text) !important;
+}
+
 /* Cards and Containers */
-.container,
 .card,
 .modal-content {
     background-color: var(--bg-secondary);
     border-color: var(--border-color);
-}
-
-/* Links and Buttons */
-a {
-    color: var(--accent-color);
-}
-
-a:hover {
-    color: var(--accent-color);
-    opacity: 0.8;
-}
-
-.btn {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
-    color: var(--text-primary);
-}
-
-.btn:hover {
-    background-color: var(--hover-bg);
-    border-color: var(--accent-color);
 }
 
 /* Inputs and Forms */
@@ -251,19 +468,6 @@ th {
 
 tr:nth-child(even) {
     background-color: var(--bg-secondary);
-}
-
-/* Custom Video Controls */
-.video-controls-overlay {
-    background: linear-gradient(to top, var(--overlay-bg), transparent);
-}
-
-.progress-bar {
-    background-color: var(--bg-secondary);
-}
-
-.progress-filled {
-    background-color: var(--accent-color);
 }
 
 /* Notes and Bookmarks */
@@ -323,4 +527,75 @@ tr:nth-child(even) {
 /* Transitions */
 * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.content-nav {
+    background: var(--bg-secondary) !important;
+}
+
+.side-nav-item {
+    color: var(--nav-item-color) !important;
+}
+
+.side-nav-item.active {
+    color: #fff !important;
+}
+
+.playlist-header h4 {
+    color: #e3f2fd !important;
+}
+
+.video-info h4 {
+    color: var(--text-primary) !important;
+}
+
+.quiz-header-content-moved .quiz-title-text p,
+.quiz-header-content-moved .stat-label {
+    color: var(--text-message) !important;
+}
+
+.quiz-header-content-moved .stat-item {
+    background: var(--bg-quiz) !important;
+}
+
+.filter-btn {
+    color: var(--text-message) !important;
+}
+.filter-btn.active {
+    color: var(--text-primary) !important;
+}
+
+.category-info p {
+    color: var(--text-message) !important;
+}
+
+dialog.bookmarks-dialog {
+    background: var(--bg-secondary) !important;
+    color: var(--text-message) !important;
+}
+
+.bookmark-info p,
+.bookmark-info span {
+    color: var(--text-message) !important;
+}
+
+.close-dialog,
+.close-dialog:hover {
+    color: var(--text-message) !important;
+}
+
+.member-rank,
+.member-position {
+    color: var(--text-message) !important;
+}
+
+.tab-btn {
+    color: var(--color-tab) !important;
+}
+.tab-btn.active {
+    color: var(--text-primary) !important;
+}
+
+.pdf-viewer-header h4 {
+    color: var(--text-primary) !important;
 }

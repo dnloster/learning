@@ -4,14 +4,14 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #0a0e27; /* Dark theme background */
-    color: #e0e0e0; /* Light default text color for dark theme */
+    background-color: var(--bg-primary); /* Theme background */
+    color: var(--text-primary); /* Theme text color */
 }
 
 header {
-    color: #fff;
+    color: var(--text-primary);
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
 }
 
 header h1 {
@@ -20,14 +20,14 @@ header h1 {
 }
 
 header nav a {
-    color: #b0bec5; /* Lighter nav link color */
+    color: var(--nav-text); /* Theme nav link color */
     text-decoration: none;
     font-size: 1rem;
     transition: color 0.3s ease;
 }
 
 header nav a:hover {
-    color: #ffffff; /* Brighter on hover */
+    color: var(--link-hover-color); /* Theme hover color */
     text-decoration: none;
 }
 
@@ -36,18 +36,18 @@ header nav a:hover {
     max-width: 1600px; /* Max width for large screens, changed from 1200px */
     margin: 30px auto;
     overflow: hidden;
-    background: #1a1f4a; /* Darker card-like background for container */
+    background: var(--container-bg); /* Theme container background */
     border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Softer shadow for dark theme */
+    box-shadow: 0 8px 25px var(--shadow-color); /* Theme shadow */
 }
 
 .content-nav {
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: #fff;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -60,6 +60,7 @@ header nav a:hover {
     flex-wrap: wrap; /* Allow wrapping on smaller screens */
     gap: 30px; /* Space between selection area and summary */
     margin-top: 20px;
+    padding: 0 20px;
     align-items: flex-start; /* Align items to the top */
 }
 
@@ -79,6 +80,7 @@ header nav a:hover {
     height: fit-content; /* Make its height adjust to content */
     position: sticky; /* Make it sticky */
     top: 30px; /* Distance from the top of the viewport */
+    color: var(--text-message); /* Theme text color for messages */
 }
 
 /* Build PC Page Specific Styles */
@@ -119,7 +121,7 @@ header nav a:hover {
 .component-card h4 {
     margin: 10px 0 15px 0; /* Adjusted margin */
     font-size: 1.2em;
-    color: #64b5f6; /* Accent color for component name */
+    color: var(--component-name-color); /* Accent color for component name */
 }
 
 .component-card .action-buttons {
@@ -147,26 +149,26 @@ header nav a:hover {
 }
 
 .component-card .select-btn {
-    background: linear-gradient(45deg, #4caf50, #64b5f6); /* Gradient from theme */
+    background: var(--component-gradient); /* Gradient from theme */
 }
 
 .component-card .select-btn:hover {
-    background: linear-gradient(45deg, #5cb85c, #73c6f7); /* Lighter gradient on hover */
+    background: var(--component-hover-gradient); /* Lighter gradient on hover */
     transform: translateY(-2px);
 }
 
 .component-card .remove-selection-btn {
-    background-color: #d9534f;
+    background-color: var(--remove-btn);
 }
 
 .component-card .remove-selection-btn:hover {
-    background-color: #c9302c;
+    background-color: var(--remove-btn-hover);
     transform: translateY(-2px);
 }
 
 .component-card .selected-model {
     font-size: 0.9em;
-    color: #90caf9; /* Lighter blue for selected model text */
+    color: var(--selected-model-text); /* Lighter blue for selected model text */
     margin-top: 10px;
     font-weight: 500;
 }
@@ -196,8 +198,8 @@ header nav a:hover {
 }
 
 .modal-content {
-    background-color: #12183a;
-    color: #e0e0e0;
+    background-color: var(--modal-bg);
+    color: var(--modal-text);
     margin: 8% auto;
     padding: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -217,7 +219,7 @@ header nav a:hover {
 }
 
 .close-button {
-    color: #aaa;
+    color: var(--text-secondary);
     float: right;
     font-size: 32px; /* Larger close button */
     font-weight: bold;
@@ -229,14 +231,14 @@ header nav a:hover {
 
 .close-button:hover,
 .close-button:focus {
-    color: #fff; /* Brighter on hover */
+    color: var(--text-primary); /* Brighter on hover */
     text-decoration: none;
     cursor: pointer;
 }
 
 #modal-title {
     margin-top: 0;
-    color: #64b5f6; /* Accent color for modal title */
+    color: var(--modal-title); /* Accent color for modal title */
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 15px;
     font-size: 1.5rem; /* Larger modal title */
@@ -258,11 +260,11 @@ header nav a:hover {
     border-radius: 4px;
 }
 .modal-item-list::-webkit-scrollbar-thumb {
-    background: #64b5f6;
+    background: var(--modal-btn);
     border-radius: 4px;
 }
 .modal-item-list::-webkit-scrollbar-thumb:hover {
-    background: #73c6f7;
+    background: var(--modal-btn-hover);
 }
 
 .modal-item {
@@ -298,18 +300,18 @@ header nav a:hover {
 .modal-item-info h5 {
     margin: 0 0 8px 0;
     font-size: 1.1em;
-    color: #b0bec5; /* Lighter text for item name */
+    color: var(--item-name); /* Lighter text for item name */
 }
 
 .modal-item-info p {
     margin: 0;
     font-size: 0.9em;
-    color: #78909c; /* Subtler color for details */
+    color: var(--item-details); /* Subtler color for details */
 }
 
 .modal-item .select-model-btn {
     margin-left: auto;
-    background: linear-gradient(45deg, #4caf50, #2196f3); /* Different gradient for modal select */
+    background: var(--modal-select-gradient); /* Different gradient for modal select */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -321,7 +323,7 @@ header nav a:hover {
 }
 
 .modal-item .select-model-btn:hover {
-    background: linear-gradient(45deg, #5cb85c, #3aa1f4);
+    background: var(--modal-select-hover);
     transform: translateY(-1px);
 }
 
@@ -332,7 +334,7 @@ header nav a:hover {
 
 .selected-components-summary h3 {
     margin-top: 0;
-    color: #64b5f6; /* Accent color */
+    color: var(--modal-title); /* Accent color */
     font-size: 1.3rem;
 }
 
@@ -345,7 +347,7 @@ header nav a:hover {
 .selected-components-summary li {
     padding: 8px 0;
     border-bottom: 1px dashed rgba(100, 181, 246, 0.2);
-    color: #b0bec5; /* Lighter text for summary items */
+    color: var(--item-name); /* Lighter text for summary items */
 }
 
 .selected-components-summary li:last-child {
@@ -353,7 +355,7 @@ header nav a:hover {
 }
 
 .selected-components-summary strong {
-    color: #81d4fa; /* Brighter accent for component type */
+    color: var(--component-name-color); /* Brighter accent for component type */
     font-weight: 500;
 }
 

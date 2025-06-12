@@ -86,9 +86,39 @@
             <div class="quiz-learning-container">
                 <!-- New Main Layout for 2 Columns (Middle and Right) -->
                 <div class="quiz-main-layout">
-                    <!-- Column 2: Exercise Types (Now effectively the first main column) -->
+                    <!-- Column 1: Exercise Grid (Main content area) -->
                     <div class="quiz-column-middle">
                         <div class="exercise-types-section">
+                            <div class="exercise-grid-large">
+                                <!-- Theory Exercises -->
+                                <div class="exercise-category" data-category="theory">
+                                    <div class="exercise-list" id="theory-exercises">
+                                        <!-- Theory exercises will be populated dynamically -->
+                                    </div>
+                                </div>
+
+                                <!-- Thinking Exercises -->
+                                <div class="exercise-category" data-category="thinking">
+                                    <div class="exercise-list" id="thinking-exercises">
+                                        <!-- Thinking exercises will be populated dynamically -->
+                                    </div>
+                                </div>
+
+                                <!-- Visual Exercises -->
+                                <div class="exercise-category" data-category="visual">
+                                    <div class="exercise-list" id="visual-exercises">
+                                        <!-- Visual exercises will be populated dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Column 1: Exercise Grid -->
+
+                    <!-- Column 2: Filter Controls and Progress Overview -->
+                    <div class="quiz-column-right">
+                        <!-- Sidebar Toggle Button -->
+                        <div class="progress-overview-content-wrapper">
                             <div class="exercise-types-header">
                                 <h3>📝 Loại bài tập</h3>
                                 <div class="exercise-filter">
@@ -97,53 +127,9 @@
                                     <button class="filter-btn" data-filter="visual">Bộ nhớ trong</button>
                                 </div>
                             </div>
-
-                            <div class="exercise-grid-large">
-                                <!-- Theory Exercises -->
-                                <div class="exercise-category" data-category="theory">
-                                    <div class="category-header">
-                                        <div class="category-icon">📚</div>
-                                        <div class="category-info">
-                                            <h4>Lý thuyết</h4>
-                                            <p>Kiểm tra kiến thức cơ bản và khái niệm</p>
-                                        </div>
-                                    </div>
-                                    <div class="exercise-list" id="theory-exercises">
-                                        <!-- Theory exercises will be populated dynamically -->
-                                    </div>
-                                </div>
-
-                                <!-- Thinking Exercises -->
-                                <div class="exercise-category" data-category="thinking">
-                                    <div class="category-header">
-                                        <div class="category-icon">🧠</div>
-                                        <div class="category-info">
-                                            <h4>Tư duy</h4>
-                                            <p>Phân tích, suy luận và ứng dụng</p>
-                                        </div>
-                                    </div>
-                                    <div class="exercise-list" id="thinking-exercises">
-                                        <!-- Thinking exercises will be populated dynamically -->
-                                    </div>
-                                </div>
-
-                                <!-- Visual Exercises -->
-                                <div class="exercise-category" data-category="visual">
-                                    <div class="category-header">
-                                        <div class="category-icon">👁️</div>
-                                        <div class="category-info">
-                                            <h4>Hình ảnh</h4>
-                                            <p>Nhận dạng, phân biệt và so sánh</p>
-                                        </div>
-                                    </div>
-                                    <div class="exercise-list" id="visual-exercises">
-                                        <!-- Visual exercises will be populated dynamically -->
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <!-- End of Column 2: Exercise Types -->
+                    <!-- End of Column 2: Filter and Progress -->
                 </div>
                 <!-- End of New Main Layout -->
             </div>

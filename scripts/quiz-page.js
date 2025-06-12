@@ -5,446 +5,135 @@
 
 class QuizPageManager {
     constructor() {
-        // currentTopic is removed
-        this.currentFilter = "theory"; // Default filter
-        this.allExercises = { theory: [], thinking: [], visual: [] }; // Combined exercises
-        this.progress = {
-            theory: { completed: 0, total: 0 },
-            thinking: { completed: 0, total: 0 },
-            visual: { completed: 0, total: 0 },
-        }; // Simplified progress
-        this.quizManager = null;
-
         this.init();
     }
 
-    /**
-     * Initialize the quiz page manager
-     */
     init() {
-        this.setupElements();
-        this.loadAndCombineExercises();
-        this.bindEvents();
-        this.updateProgress();
-        this.updateOverallStats();
-        this.setFilter(this.currentFilter); // Initial call to set filter and render iframe containers visibility
+        this.setupFilterButtons();
+        this.applyInitialFilter();
+        this.loadExercises();
     }
 
-    /**
-     * Setup DOM elements
-     */
-    setupElements() {
-        this.filterButtons = document.querySelectorAll(".filter-btn");
-        // Direct references to header stat elements by ID
-        this.totalExercisesStatElement = document.getElementById("total-exercises-stat");
-        this.completionStatElement = document.getElementById("completion-stat");
+    setupFilterButtons() {
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const categories = document.querySelectorAll(".exercise-category");
 
-        // Exercise list containers per category (used for visibility control)
-        this.theoryExercisesContainer = document.getElementById("theory-exercises");
-        this.thinkingExercisesContainer = document.getElementById("thinking-exercises");
-        this.visualExercisesContainer = document.getElementById("visual-exercises");
+        filterButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                // Remove active class from all buttons
+                filterButtons.forEach((btn) => btn.classList.remove("active"));
 
-        // Progress cards for the sidebar
-        this.progressCards = document.querySelectorAll(".progress-card");
-    }
+                // Add active class to clicked button
+                button.classList.add("active");
 
-    /**
-     * Bind event handlers
-     */
-    bindEvents() {
-        // Filter switching
-        this.filterButtons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                const filter = btn.dataset.filter;
-                this.setFilter(filter);
+                // Get filter value
+                const filterValue = button.getAttribute("data-filter");
+
+                // Filter categories
+                this.filterCategories(filterValue);
             });
         });
     }
 
-    /**
-     * Load and combine exercise data from all topics.
-     */
-    loadAndCombineExercises() {
-        const rawExercisesByTopic = {
-            cpu: {
-                theory: [
-                    {
-                        id: "cpu-theory-1",
-                        title: "Khái niệm cơ bản về CPU",
-                        difficulty: "Dễ",
-                        questions: 10,
-                        completed: false,
-                    },
-                    {
-                        id: "cpu-theory-2",
-                        title: "Kiến trúc von Neumann",
-                        difficulty: "Trung bình",
-                        questions: 12,
-                        completed: false,
-                    },
-                    {
-                        id: "cpu-theory-3",
-                        title: "Chu kỳ máy và chu kỳ lệnh",
-                        difficulty: "Khó",
-                        questions: 15,
-                        completed: false,
-                    },
-                    {
-                        id: "cpu-theory-4",
-                        title: "Bộ nhớ đệm (Cache)",
-                        difficulty: "Trung bình",
-                        questions: 8,
-                        completed: false,
-                    },
-                ],
-                thinking: [
-                    {
-                        id: "cpu-thinking-1",
-                        title: "Phân tích hiệu năng CPU",
-                        difficulty: "Trung bình",
-                        questions: 8,
-                        completed: false,
-                    },
-                    {
-                        id: "cpu-thinking-2",
-                        title: "So sánh kiến trúc RISC vs CISC",
-                        difficulty: "Khó",
-                        questions: 10,
-                        completed: false,
-                    },
-                    {
-                        id: "cpu-thinking-3",
-                        title: "Tối ưu hóa pipeline",
-                        difficulty: "Khó",
-                        questions: 12,
-                        completed: false,
-                    },
-                ],
-                visual: [
-                    {
-                        id: "cpu-visual-1",
-                        title: "Nhận dạng thành phần CPU",
-                        difficulty: "Dễ",
-                        questions: 6,
-                        completed: false,
-                    },
-                    {
-                        id: "cpu-visual-2",
-                        title: "Sơ đồ khối kiến trúc",
-                        difficulty: "Trung bình",
-                        questions: 8,
-                        completed: false,
-                    },
-                    {
-                        id: "cpu-visual-3",
-                        title: "Luồng dữ liệu trong CPU",
-                        difficulty: "Trung bình",
-                        questions: 10,
-                        completed: false,
-                    },
-                ],
-            },
-            ram: {
-                theory: [
-                    {
-                        id: "ram-theory-1",
-                        title: "Khái niệm bộ nhớ RAM",
-                        difficulty: "Dễ",
-                        questions: 8,
-                        completed: false,
-                    },
-                    {
-                        id: "ram-theory-2",
-                        title: "Phân loại RAM: SRAM vs DRAM",
-                        difficulty: "Trung bình",
-                        questions: 10,
-                        completed: false,
-                    },
-                    {
-                        id: "ram-theory-3",
-                        title: "Cơ chế làm tươi DRAM",
-                        difficulty: "Khó",
-                        questions: 12,
-                        completed: false,
-                    },
-                ],
-                thinking: [
-                    {
-                        id: "ram-thinking-1",
-                        title: "Tính toán dung lượng RAM",
-                        difficulty: "Trung bình",
-                        questions: 6,
-                        completed: false,
-                    },
-                    {
-                        id: "ram-thinking-2",
-                        title: "Phân tích băng thông bộ nhớ",
-                        difficulty: "Khó",
-                        questions: 8,
-                        completed: false,
-                    },
-                ],
-                visual: [
-                    {
-                        id: "ram-visual-1",
-                        title: "Nhận dạng loại RAM",
-                        difficulty: "Dễ",
-                        questions: 5,
-                        completed: false,
-                    },
-                    {
-                        id: "ram-visual-2",
-                        title: "Cấu trúc mảng bộ nhớ",
-                        difficulty: "Trung bình",
-                        questions: 7,
-                        completed: false,
-                    },
-                ],
-            },
-            rom: {
-                theory: [
-                    {
-                        id: "rom-theory-1",
-                        title: "Khái niệm bộ nhớ ROM",
-                        difficulty: "Dễ",
-                        questions: 6,
-                        completed: false,
-                    },
-                    {
-                        id: "rom-theory-2",
-                        title: "Phân loại ROM: PROM, EPROM, EEPROM",
-                        difficulty: "Trung bình",
-                        questions: 8,
-                        completed: false,
-                    },
-                ],
-                thinking: [
-                    {
-                        id: "rom-thinking-1",
-                        title: "Ứng dụng ROM trong hệ thống",
-                        difficulty: "Trung bình",
-                        questions: 5,
-                        completed: false,
-                    },
-                ],
-                visual: [
-                    {
-                        id: "rom-visual-1",
-                        title: "Nhận dạng chip ROM",
-                        difficulty: "Dễ",
-                        questions: 4,
-                        completed: false,
-                    },
-                ],
-            },
-        };
+    filterCategories(filterValue) {
+        const categories = document.querySelectorAll(".exercise-category");
 
-        this.allExercises = { theory: [], thinking: [], visual: [] };
-        this.progress = {
-            theory: { completed: 0, total: 0 },
-            thinking: { completed: 0, total: 0 },
-            visual: { completed: 0, total: 0 },
-        };
+        categories.forEach((category) => {
+            const categoryType = category.getAttribute("data-category");
 
-        for (const topic in rawExercisesByTopic) {
-            for (const category in rawExercisesByTopic[topic]) {
-                if (this.allExercises[category]) {
-                    rawExercisesByTopic[topic][category].forEach((exercise) => {
-                        this.allExercises[category].push(exercise);
-                        this.progress[category].total++;
-                    });
-                }
-            }
-        }
-    }
-
-    /**
-     * Set filter for exercises
-     */
-    setFilter(filter) {
-        if (filter === this.currentFilter && filter !== "all") return; // Allow re-filtering for 'all'
-        this.currentFilter = filter;
-
-        this.filterButtons.forEach((btn) => {
-            btn.classList.toggle("active", btn.dataset.filter === filter);
-        });
-
-        this.renderExercises();
-    }
-
-    /**
-     * Render exercises based on the current filter.
-     * This will now primarily control the visibility of category containers (which will host iframes).
-     */
-    renderExercises() {
-        // Hide all category sections initially
-        document.querySelectorAll(".exercise-category").forEach((catEl) => (catEl.style.display = "none"));
-
-        const categoriesToDisplay =
-            this.currentFilter === "all" ? ["theory", "thinking", "visual"] : [this.currentFilter];
-
-        categoriesToDisplay.forEach((category) => {
-            const categoryContainerElement = document.querySelector(`.exercise-category[data-category="${category}"]`);
-            if (categoryContainerElement) {
-                categoryContainerElement.style.display = "block";
-            }
-        });
-    }
-
-    /**
-     * Start an exercise
-     */
-    startExercise(exerciseId, category, exerciseTitle) {
-        if (!this.quizManager && window.QuizManager) {
-            this.quizManager = new window.QuizManager();
-        }
-        if (this.quizManager) {
-            this.quizManager.showPanelWithTab(category, exerciseId, exerciseTitle);
-        } else {
-            console.error("QuizManager not available to start exercise.");
-        }
-    }
-
-    /**
-     * Update progress statistics in the right sidebar.
-     */
-    updateProgress() {
-        const categories = ["theory", "thinking", "visual"];
-
-        categories.forEach((category, index) => {
-            const progressCard = this.progressCards[index];
-            if (!progressCard) return;
-
-            const categoryProgress = this.progress[category];
-            const percentage =
-                categoryProgress.total > 0
-                    ? Math.round((categoryProgress.completed / categoryProgress.total) * 100)
-                    : 0;
-
-            const circle = progressCard.querySelector(".circle");
-            const percentageText = progressCard.querySelector(".percentage");
-            const completedSpan = progressCard.querySelector(".completed");
-            const totalSpan = progressCard.querySelector(".total");
-
-            if (circle) {
-                circle.style.strokeDasharray = `${percentage}, 100`;
-            }
-            if (percentageText) {
-                percentageText.textContent = `${percentage}%`;
-            }
-            if (completedSpan) {
-                completedSpan.textContent = categoryProgress.completed;
-            }
-            if (totalSpan) {
-                totalSpan.textContent = categoryProgress.total;
-            }
-        });
-        this.updateOverallStats();
-    }
-
-    /**
-     * Update overall statistics in the main header.
-     */
-    updateOverallStats() {
-        let totalExercisesAllCategories = 0;
-        let completedExercisesAllCategories = 0;
-
-        for (const category in this.progress) {
-            totalExercisesAllCategories += this.progress[category].total;
-            completedExercisesAllCategories += this.progress[category].completed;
-        }
-
-        const overallPercentage =
-            totalExercisesAllCategories > 0
-                ? Math.round((completedExercisesAllCategories / totalExercisesAllCategories) * 100)
-                : 0;
-
-        if (this.totalExercisesStatElement) {
-            this.totalExercisesStatElement.textContent = totalExercisesAllCategories;
-        }
-        if (this.completionStatElement) {
-            this.completionStatElement.textContent = `${overallPercentage}%`;
-        }
-    }
-
-    /**
-     * Mark exercise as completed
-     */
-    completeExercise(exerciseId) {
-        let exerciseFound = false;
-        let completedCategory = null;
-        for (const category in this.allExercises) {
-            const exercise = this.allExercises[category].find((ex) => ex.id === exerciseId);
-            if (exercise && !exercise.completed) {
-                exercise.completed = true;
-                this.progress[category].completed++;
-                exerciseFound = true;
-                completedCategory = category;
-                break;
-            }
-        }
-
-        if (exerciseFound) {
-            this.updateProgress();
-
-            // Notify the specific iframe to update its display.
-            const iframe = document.querySelector(`.exercise-category[data-category="${completedCategory}"] iframe`);
-            if (iframe && iframe.contentWindow && typeof iframe.contentWindow.markExerciseAsCompleted === "function") {
-                iframe.contentWindow.markExerciseAsCompleted(exerciseId);
-            }
-        }
-    }
-
-    /**
-     * Get exercise statistics (simplified)
-     */
-    getStats() {
-        let totalExercises = 0;
-        Object.values(this.allExercises).forEach((catList) => (totalExercises += catList.length));
-
-        return {
-            currentFilter: this.currentFilter,
-            progress: this.progress,
-            totalExercises: totalExercises,
-        };
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (!window.quizPageManager) {
-        window.quizPageManager = new QuizPageManager();
-    }
-
-    const progressSidebar = document.getElementById("progress-overview-sidebar");
-    const toggleProgressSidebarBtn = document.getElementById("toggle-progress-sidebar-btn");
-
-    if (toggleProgressSidebarBtn && progressSidebar) {
-        toggleProgressSidebarBtn.addEventListener("click", () => {
-            progressSidebar.classList.toggle("collapsed");
-            const isCollapsed = progressSidebar.classList.contains("collapsed");
-            toggleProgressSidebarBtn.setAttribute("aria-expanded", !isCollapsed);
-
-            const icon = toggleProgressSidebarBtn.querySelector(".toggle-icon");
-            if (isCollapsed) {
-                icon.innerHTML = "&laquo;";
+            if (filterValue === "all" || categoryType === filterValue) {
+                category.style.display = "block";
+                category.classList.add("visible");
             } else {
-                icon.innerHTML = "&raquo;";
+                category.style.display = "none";
+                category.classList.remove("visible");
             }
         });
-
-        const isInitiallyCollapsed = progressSidebar.classList.contains("collapsed");
-        toggleProgressSidebarBtn.setAttribute("aria-expanded", !isInitiallyCollapsed);
-        const initialIcon = toggleProgressSidebarBtn.querySelector(".toggle-icon");
-        if (initialIcon) {
-            initialIcon.innerHTML = isInitiallyCollapsed ? "&laquo;" : "&raquo;";
-        }
-    } else {
-        console.warn(
-            "Sidebar toggle elements not found. Ensure IDs 'progress-overview-sidebar' and 'toggle-progress-sidebar-btn' are correct."
-        );
     }
-});
 
-if (typeof module !== "undefined" && module.exports) {
-    module.exports = QuizPageManager;
+    applyInitialFilter() {
+        // Find the active filter button
+        const activeButton = document.querySelector(".filter-btn.active");
+        if (activeButton) {
+            const filterValue = activeButton.getAttribute("data-filter");
+            this.filterCategories(filterValue);
+        }
+    }
+
+    loadExercises() {
+        // Load exercises for each category
+        this.loadTheoryExercises();
+        this.loadThinkingExercises();
+        this.loadVisualExercises();
+    }
+
+    loadTheoryExercises() {
+        const theoryList = document.getElementById("theory-exercises");
+        if (theoryList) {
+            theoryList.innerHTML = `
+                <iframe
+                    src="/quizzes/cpu-1-theory.html"
+                    width="100%"
+                    height="600px"
+                    frameborder="0">
+                </iframe>
+            `;
+        }
+    }
+
+    loadThinkingExercises() {
+        const thinkingList = document.getElementById("thinking-exercises");
+        if (thinkingList) {
+            thinkingList.innerHTML = `
+                <iframe
+                    src="/quizzes/ram-1-theory.html"
+                    width="100%"
+                    height="600px"
+                    frameborder="0">
+                </iframe>
+            `;
+        }
+    }
+
+    loadVisualExercises() {
+        const visualList = document.getElementById("visual-exercises");
+        if (visualList) {
+            visualList.innerHTML = `
+                <iframe
+                    src="/quizzes/cpu-3-theory.html"
+                    width="100%"
+                    height="600px"
+                    frameborder="0">
+                </iframe>
+            `;
+        }
+    }
 }
+
+// Global function for starting quiz
+function startQuiz(type, category) {
+    console.log(`Starting ${type} quiz for ${category}`);
+    // This will integrate with your existing quiz modal system
+    const quizPanel = document.getElementById("quiz-panel");
+    if (quizPanel) {
+        quizPanel.style.display = "block";
+
+        // Switch to appropriate tab
+        const tabs = document.querySelectorAll(".quiz-tab");
+        const contents = document.querySelectorAll(".quiz-tab-content");
+
+        tabs.forEach((tab) => tab.classList.remove("active"));
+        contents.forEach((content) => content.classList.remove("active"));
+
+        const targetTab = document.querySelector(`[data-tab="${type}"]`);
+        const targetContent = document.getElementById(`${type}-content`);
+
+        if (targetTab) targetTab.classList.add("active");
+        if (targetContent) targetContent.classList.add("active");
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+    new QuizPageManager();
+});

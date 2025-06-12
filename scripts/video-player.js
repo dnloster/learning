@@ -11,6 +11,7 @@ class VideoPlayerController {
                     id: "cpu-1",
                     title: "1. Giới thiệu về CPU",
                     src: "videos/cpu-intro.mp4",
+                    thumb: "images/cpu-thumb-1.jpg",
                     duration: "15:30",
                     chapters: [
                         { time: 0, title: "Giới thiệu" },
@@ -26,6 +27,7 @@ class VideoPlayerController {
                     id: "cpu-2",
                     title: "2. Kiến trúc CPU",
                     src: "videos/cpu-architecture.mp4",
+                    thumb: "images/cpu-thumb-2.jpg",
                     duration: "22:45",
                     chapters: [
                         { time: 0, title: "Giới thiệu kiến trúc" },
@@ -42,6 +44,7 @@ class VideoPlayerController {
                     id: "cpu-3",
                     title: "3. Bộ lệnh CPU",
                     src: "videos/cpu-instructions.mp4",
+                    thumb: "images/cpu-thumb-3.jpg",
                     duration: "18:20",
                     chapters: [
                         { time: 0, title: "Tổng quan về bộ lệnh" },
@@ -84,12 +87,12 @@ class VideoPlayerController {
                 },
             ],
             boNhoTrong: [
-                // Danh mục mới: Bộ nhớ trong (RAM + ROM)
+                // Danh mục mới: Bộ nhớ trong (RAM + ROM)                {
                 {
-                    // Videos từ RAM
                     id: "ram-1",
                     title: "1. Giới thiệu về RAM",
                     src: "videos/ram-intro.mp4",
+                    thumb: "images/ram-thumb-1.jpg",
                     duration: "12:30",
                     chapters: [
                         { time: 0, title: "Khái niệm RAM" },
@@ -98,12 +101,13 @@ class VideoPlayerController {
                         { time: 400, title: "Cách thức hoạt động" },
                         { time: 600, title: "Tổng kết" },
                     ],
-                    completed: false, // Added completion status
+                    completed: false,
                 },
                 {
                     id: "ram-2",
                     title: "2. Các loại RAM",
                     src: "videos/ram-types.mp4",
+                    thumb: "images/ram-thumb-2.jpg",
                     duration: "18:45",
                     chapters: [
                         { time: 0, title: "SRAM và DRAM" },
@@ -118,6 +122,7 @@ class VideoPlayerController {
                     id: "ram-3",
                     title: "3. Hiệu năng RAM",
                     src: "videos/ram-performance.mp4",
+                    thumb: "images/ram-thumb-3.jpg",
                     duration: "20:15",
                     chapters: [
                         { time: 0, title: "Các thông số hiệu năng" },
@@ -132,6 +137,7 @@ class VideoPlayerController {
                     id: "ram-4",
                     title: "4. Lắp đặt RAM",
                     src: "videos/ram-installation.mp4",
+                    thumb: "images/ram-thumb-4.jpg",
                     duration: "15:30",
                     chapters: [
                         { time: 0, title: "Chuẩn bị lắp đặt" },
@@ -147,6 +153,7 @@ class VideoPlayerController {
                     id: "rom-1",
                     title: "5. Giới thiệu về ROM", // Đánh số lại title cho phù hợp
                     src: "videos/rom-intro.mp4",
+                    thumb: "images/rom-thumb-1.jpg",
                     duration: "10:20",
                     chapters: [
                         { time: 0, title: "Khái niệm ROM" },
@@ -161,6 +168,7 @@ class VideoPlayerController {
                     id: "rom-2",
                     title: "6. BIOS và UEFI", // Đánh số lại title
                     src: "videos/rom-bios.mp4",
+                    thumb: "images/rom-thumb-2.jpg",
                     duration: "16:40",
                     chapters: [
                         { time: 0, title: "Giới thiệu BIOS" },
@@ -176,6 +184,7 @@ class VideoPlayerController {
                     id: "rom-3",
                     title: "7. Các loại ROM", // Đánh số lại title
                     src: "videos/rom-types.mp4",
+                    thumb: "images/rom-thumb-3.jpg",
                     duration: "14:15",
                     chapters: [
                         { time: 0, title: "ROM truyền thống" },
@@ -189,11 +198,12 @@ class VideoPlayerController {
                 },
             ],
             boNhoNgoai: [
-                // Danh mục: Bộ nhớ ngoài (Ổ cứng, SSD, USB,...)
+                // Danh mục: Bộ nhớ ngoài (Ổ cứng, SSD, USB,...)                {
                 {
                     id: "hdd-1",
                     title: "1. Giới thiệu về ổ cứng HDD",
                     src: "videos/hdd-intro.mp4",
+                    thumb: "images/hdd-thumb-1.jpg",
                     duration: "14:30",
                     chapters: [
                         { time: 0, title: "Khái niệm ổ cứng HDD" },
@@ -209,6 +219,7 @@ class VideoPlayerController {
                     id: "hdd-2",
                     title: "2. Cấu trúc và hoạt động của HDD",
                     src: "videos/hdd-structure.mp4",
+                    thumb: "images/hdd-thumb-2.jpg",
                     duration: "18:15",
                     chapters: [
                         { time: 0, title: "Chi tiết cấu trúc vật lý" },
@@ -224,6 +235,7 @@ class VideoPlayerController {
                     id: "ssd-1",
                     title: "3. Giới thiệu về ổ cứng SSD",
                     src: "videos/ssd-intro.mp4",
+                    thumb: "images/ssd-thumb-1.jpg",
                     duration: "16:20",
                     chapters: [
                         { time: 0, title: "Khái niệm ổ SSD" },
@@ -239,6 +251,7 @@ class VideoPlayerController {
                     id: "ssd-2",
                     title: "4. Công nghệ và hiệu năng SSD",
                     src: "videos/ssd-technology.mp4",
+                    thumb: "images/ssd-thumb-2.jpg",
                     duration: "21:40",
                     chapters: [
                         { time: 0, title: "Các loại chip nhớ" },
@@ -254,6 +267,7 @@ class VideoPlayerController {
                     id: "usb-1",
                     title: "5. Thiết bị lưu trữ di động",
                     src: "videos/usb-storage.mp4",
+                    thumb: "images/usb-thumb-1.jpg",
                     duration: "15:10",
                     chapters: [
                         { time: 0, title: "Tổng quan về lưu trữ di động" },
@@ -269,6 +283,7 @@ class VideoPlayerController {
                     id: "cloud-1",
                     title: "6. Lưu trữ đám mây",
                     src: "videos/cloud-storage.mp4",
+                    thumb: "images/cloud-thumb-1.jpg",
                     duration: "19:25",
                     chapters: [
                         { time: 0, title: "Khái niệm lưu trữ đám mây" },
@@ -284,6 +299,7 @@ class VideoPlayerController {
                     id: "raid-1",
                     title: "7. Công nghệ RAID",
                     src: "videos/raid-tech.mp4",
+                    thumb: "images/raid-thumb-1.jpg",
                     duration: "22:30",
                     chapters: [
                         { time: 0, title: "Khái niệm RAID" },

@@ -9,7 +9,7 @@ class ThemeManager {
         const savedTheme = localStorage.getItem("theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-        this.currentTheme = savedTheme || (prefersDark ? "dark" : "light");
+        this.currentTheme = savedTheme || "dark"; // Default to dark theme
         this.init();
 
         // Lắng nghe thay đổi theme hệ thống
@@ -32,19 +32,19 @@ class ThemeManager {
             toggleBtn.id = "theme-toggle";
             toggleBtn.className = "theme-toggle-btn";
             toggleBtn.innerHTML = `
-                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="5"/>
-                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
+                <div class="toggle-icons">                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </div>
             `;
             toggleBtn.setAttribute("aria-label", "Chuyển đổi theme sáng/tối");
             toggleBtn.title = "Chuyển đổi theme sáng/tối (Ctrl + Shift + D)";
             document.body.appendChild(toggleBtn);
         }
-
         toggleBtn.addEventListener("click", () => {
             this.toggleTheme();
         });
@@ -57,7 +57,6 @@ class ThemeManager {
             }
         });
     }
-
     toggleTheme() {
         const newTheme = this.currentTheme === "dark" ? "light" : "dark";
         this.applyTheme(newTheme);
@@ -98,10 +97,3 @@ class ThemeManager {
         }, 2000);
     }
 }
-
-// Tạo instance toàn cục
-if (typeof window !== "undefined") {
-    window.themeManager = new ThemeManager();
-}
-
-export default ThemeManager;

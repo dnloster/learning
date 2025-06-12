@@ -5,7 +5,7 @@
     padding: 15px;
     min-height: 600px;
     max-height: 600px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 4px 4px 5px rgba(0, 0, 0, 0.1);
 }
 
 .side-nav-header {
@@ -155,7 +155,7 @@
 
 /* References Page Styles */
 .references-content {
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 20px auto;
     padding: 20px;
     background: rgba(255, 255, 255, 0.05);
