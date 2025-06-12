@@ -3,14 +3,14 @@
  */
 class QuizManager {
     constructor() {
-        this.currentExerciseType = "theory";
+        this.currentExerciseType = "cpu";
         this.currentDifficulty = "easy";
         this.currentUnit = 1;
         this.loadingTimeout = null;
         this.progressData = {
-            theory: { easy: [], medium: [], hard: [] },
-            thinking: { easy: [], medium: [], hard: [] },
-            visual: { easy: [], medium: [], hard: [] },
+            cpu: { easy: [], medium: [], hard: [] },
+            BoNhoNgoai: { easy: [], medium: [], hard: [] },
+            BoNhoTrong: { easy: [], medium: [], hard: [] },
         };
 
         this.init();
@@ -31,9 +31,9 @@ class QuizManager {
     setupElements() {
         // Exercise type filters
         this.exerciseButtons = {
-            theory: document.querySelector('[data-filter="theory"]'),
-            thinking: document.querySelector('[data-filter="thinking"]'),
-            visual: document.querySelector('[data-filter="visual"]'),
+            cpu: document.querySelector('[data-filter="cpu"]'),
+            BoNhoNgoai: document.querySelector('[data-filter="BoNhoNgoai"]'),
+            BoNhoTrong: document.querySelector('[data-filter="BoNhoTrong"]'),
         };
 
         // Both sidebar and tab group difficulty buttons
@@ -49,20 +49,20 @@ class QuizManager {
 
         // Progress indicators
         this.progressElements = {
-            theory: {
-                easy: document.querySelector(".theory-progress-easy"),
-                medium: document.querySelector(".theory-progress-medium"),
-                hard: document.querySelector(".theory-progress-hard"),
+            cpu: {
+                easy: document.querySelector(".cpu-progress-easy"),
+                medium: document.querySelector(".cpu-progress-medium"),
+                hard: document.querySelector(".cpu-progress-hard"),
             },
-            thinking: {
-                easy: document.querySelector(".thinking-progress-easy"),
-                medium: document.querySelector(".thinking-progress-medium"),
-                hard: document.querySelector(".thinking-progress-hard"),
+            BoNhoNgoai: {
+                easy: document.querySelector(".BoNhoNgoai-progress-easy"),
+                medium: document.querySelector(".BoNhoNgoai-progress-medium"),
+                hard: document.querySelector(".BoNhoNgoai-progress-hard"),
             },
-            visual: {
-                easy: document.querySelector(".visual-progress-easy"),
-                medium: document.querySelector(".visual-progress-medium"),
-                hard: document.querySelector(".visual-progress-hard"),
+            BoNhoTrong: {
+                easy: document.querySelector(".BoNhoTrong-progress-easy"),
+                medium: document.querySelector(".BoNhoTrong-progress-medium"),
+                hard: document.querySelector(".BoNhoTrong-progress-hard"),
             },
         };
     }
@@ -183,7 +183,7 @@ class QuizManager {
             return new Promise((resolve, reject) => {
                 // Create and set up the new iframe
                 const iframe = document.createElement("iframe");
-                const url = `quizzes/${this.currentExerciseType}-${this.currentUnit}-${this.currentDifficulty}.html`;
+                const url = `quizzes/${this.currentExerciseType}_${this.currentDifficulty}.html`;
                 iframe.src = url;
                 iframe.classList.add("quiz-iframe");
 
@@ -374,9 +374,9 @@ class QuizManager {
 
     getInitialProgressData() {
         return {
-            theory: { easy: [], medium: [], hard: [] },
-            thinking: { easy: [], medium: [], hard: [] },
-            visual: { easy: [], medium: [], hard: [] },
+            cpu: { easy: [], medium: [], hard: [] },
+            BoNhoNgoai: { easy: [], medium: [], hard: [] },
+            BoNhoTrong: { easy: [], medium: [], hard: [] },
         };
     }
 }

@@ -56,7 +56,7 @@ class QuizPageManager {
     applyInitialFilter() {
         // Find the active filter button or default to theory
         const activeButton =
-            document.querySelector(".filter-btn.active") || document.querySelector('[data-filter="theory"]');
+            document.querySelector(".filter-btn.active") || document.querySelector('[data-filter="cpu"]');
         if (activeButton) {
             // Make sure the button is marked as active
             activeButton.classList.add("active");
