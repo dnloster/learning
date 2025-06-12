@@ -88,6 +88,20 @@
                 <div class="quiz-main-layout">
                     <!-- Column 1: Exercise Grid (Main content area) -->
                     <div class="quiz-column-middle">
+                        <!-- Quiz Difficulty Tabs -->
+                        <div class="quiz-difficulty-tabs">
+                            <div class="difficulty-tab-group">
+                                <button class="difficulty-tab active" data-difficulty="easy">
+                                    <span class="difficulty-label">Dễ</span>
+                                </button>
+                                <button class="difficulty-tab" data-difficulty="medium">
+                                    <span class="difficulty-label">Trung bình</span>
+                                </button>
+                                <button class="difficulty-tab" data-difficulty="hard">
+                                    <span class="difficulty-label">Khó</span>
+                                </button>
+                            </div>
+                        </div>
                         <div class="exercise-types-section">
                             <div class="exercise-grid-large">
                                 <!-- Theory Exercises -->
@@ -114,11 +128,11 @@
                         </div>
                     </div>
                     <!-- End of Column 1: Exercise Grid -->
-
                     <!-- Column 2: Filter Controls and Progress Overview -->
                     <div class="quiz-column-right">
                         <!-- Sidebar Toggle Button -->
                         <div class="progress-overview-content-wrapper">
+                            <!-- Exercise Types Section -->
                             <div class="exercise-types-header">
                                 <h3>📝 Loại bài tập</h3>
                                 <div class="exercise-filter">
@@ -134,71 +148,6 @@
                 <!-- End of New Main Layout -->
             </div>
             <!-- End of Quiz Learning Container -->
-        </div>
-
-        <!-- Quiz Modal (reuse the existing modal structure) -->
-        <div class="quiz-panel" id="quiz-panel" style="display: none">
-            <div class="quiz-header">
-                <div class="quiz-title">
-                    <span class="quiz-icon">📝</span>
-                    <span class="quiz-text">Bài tập trắc nghiệm</span>
-                </div>
-                <button class="quiz-close" id="quiz-close" title="Đóng">
-                    <span class="close-icon">✕</span>
-                </button>
-            </div>
-            <div class="quiz-tabs">
-                <button class="quiz-tab active" data-tab="theory">
-                    <span class="tab-icon">📚</span>
-                    <span class="tab-text">Lý thuyết</span>
-                </button>
-                <button class="quiz-tab" data-tab="thinking">
-                    <span class="tab-icon">🧠</span>
-                    <span class="tab-text">Tư duy</span>
-                </button>
-                <button class="quiz-tab" data-tab="visual">
-                    <span class="tab-icon">👁️</span>
-                    <span class="tab-text">Hình ảnh</span>
-                </button>
-            </div>
-            <div class="quiz-content">
-                <div class="quiz-tab-content active" id="theory-content">
-                    <div class="quiz-loading" id="theory-loading">
-                        <div class="loading-spinner"></div>
-                        <p>Đang tải bài tập lý thuyết...</p>
-                    </div>
-                    <iframe
-                        id="theory-iframe"
-                        class="quiz-iframe"
-                        style="display: none"
-                        title="Bài tập lý thuyết"
-                    ></iframe>
-                </div>
-                <div class="quiz-tab-content" id="thinking-content">
-                    <div class="quiz-loading" id="thinking-loading">
-                        <div class="loading-spinner"></div>
-                        <p>Đang tải bài tập tư duy...</p>
-                    </div>
-                    <iframe
-                        id="thinking-iframe"
-                        class="quiz-iframe"
-                        style="display: none"
-                        title="Bài tập tư duy"
-                    ></iframe>
-                </div>
-                <div class="quiz-tab-content" id="visual-content">
-                    <div class="quiz-loading" id="visual-loading">
-                        <div class="loading-spinner"></div>
-                        <p>Đang tải bài tập hình ảnh...</p>
-                    </div>
-                    <iframe
-                        id="visual-iframe"
-                        class="quiz-iframe"
-                        style="display: none"
-                        title="Bài tập hình ảnh"
-                    ></iframe>
-                </div>
-            </div>
         </div>
 
         <!-- Scripts -->

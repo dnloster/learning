@@ -5,13 +5,19 @@
 
 class QuizPageManager {
     constructor() {
-        this.init();
+        if (window.quizManager?.initialized) {
+            this.init();
+        } else {
+            window.addEventListener("quizManagerReady", () => this.init());
+        }
     }
 
     init() {
+        this.quizManager = window.quizManager;
+        // First set up the event listeners
         this.setupFilterButtons();
-        this.applyInitialFilter();
-        this.loadExercises();
+        // Then apply initial filter which will also load the content
+        requestAnimationFrame(() => this.applyInitialFilter());
     }
 
     setupFilterButtons() {
@@ -22,25 +28,21 @@ class QuizPageManager {
             button.addEventListener("click", () => {
                 // Remove active class from all buttons
                 filterButtons.forEach((btn) => btn.classList.remove("active"));
-
                 // Add active class to clicked button
                 button.classList.add("active");
-
                 // Get filter value
                 const filterValue = button.getAttribute("data-filter");
-
-                // Filter categories
+                // Filter and load
                 this.filterCategories(filterValue);
+                this.loadExercisesByType(filterValue);
             });
         });
     }
 
     filterCategories(filterValue) {
         const categories = document.querySelectorAll(".exercise-category");
-
         categories.forEach((category) => {
             const categoryType = category.getAttribute("data-category");
-
             if (filterValue === "all" || categoryType === filterValue) {
                 category.style.display = "block";
                 category.classList.add("visible");
@@ -52,61 +54,39 @@ class QuizPageManager {
     }
 
     applyInitialFilter() {
-        // Find the active filter button
-        const activeButton = document.querySelector(".filter-btn.active");
+        // Find the active filter button or default to theory
+        const activeButton =
+            document.querySelector(".filter-btn.active") || document.querySelector('[data-filter="theory"]');
         if (activeButton) {
+            // Make sure the button is marked as active
+            activeButton.classList.add("active");
             const filterValue = activeButton.getAttribute("data-filter");
+            // Apply filter and load content immediately
             this.filterCategories(filterValue);
+            this.loadExercisesByType(filterValue);
         }
     }
+    loadExercisesByType(type) {
+        // Get the target exercise list and make sure it's ready
+        const exerciseList = document.getElementById(`${type}-exercises`);
+        if (!exerciseList) return;
 
-    loadExercises() {
-        // Load exercises for each category
-        this.loadTheoryExercises();
-        this.loadThinkingExercises();
-        this.loadVisualExercises();
-    }
-
-    loadTheoryExercises() {
-        const theoryList = document.getElementById("theory-exercises");
-        if (theoryList) {
-            theoryList.innerHTML = `
-                <iframe
-                    src="/quizzes/cpu-1-theory.html"
-                    width="100%"
-                    height="600px"
-                    frameborder="0">
-                </iframe>
-            `;
+        // Make sure the container is visible first
+        const category = exerciseList.closest(".exercise-category");
+        if (category) {
+            category.style.display = "block";
+            category.classList.add("visible");
         }
-    }
 
-    loadThinkingExercises() {
-        const thinkingList = document.getElementById("thinking-exercises");
-        if (thinkingList) {
-            thinkingList.innerHTML = `
-                <iframe
-                    src="/quizzes/ram-1-theory.html"
-                    width="100%"
-                    height="600px"
-                    frameborder="0">
-                </iframe>
-            `;
-        }
-    }
+        // Hide other category containers
+        const otherCategories = document.querySelectorAll(`.exercise-category:not([data-category="${type}"])`);
+        otherCategories.forEach((cat) => {
+            cat.style.display = "none";
+            cat.classList.remove("visible");
+        });
 
-    loadVisualExercises() {
-        const visualList = document.getElementById("visual-exercises");
-        if (visualList) {
-            visualList.innerHTML = `
-                <iframe
-                    src="/quizzes/cpu-3-theory.html"
-                    width="100%"
-                    height="600px"
-                    frameborder="0">
-                </iframe>
-            `;
-        }
+        // Let quiz manager handle the state change and content loading
+        window.quizManager?.switchExerciseType(type);
     }
 }
 

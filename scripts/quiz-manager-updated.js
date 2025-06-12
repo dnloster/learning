@@ -15,17 +15,12 @@ class QuizManager {
 
         this.init();
     }
-    async init() {
+
+    init() {
         this.setupElements();
         this.bindEvents();
         this.loadProgress();
-        // Mark as initialized before loading content
-        this.initialized = true;
-        // Load content and wait for it to complete
-        await this.loadContent();
-        this.updateAllProgressIndicators();
-        // Notify page that initialization is complete
-        window.dispatchEvent(new CustomEvent("quizManagerReady"));
+        this.showInitialContent();
     }
 
     setupElements() {
@@ -120,31 +115,16 @@ class QuizManager {
             this.loadingTimeout = null;
         }
     }
+
     switchExerciseType(type) {
         if (type === this.currentExerciseType) return;
 
-        // Update exercise type buttons
         Object.values(this.exerciseButtons).forEach((button) => {
             button?.classList.remove("active");
         });
         this.exerciseButtons[type]?.classList.add("active");
 
-        // Set current exercise type
         this.currentExerciseType = type;
-
-        // Ensure current difficulty is properly reflected in UI
-        const activeDifficultyBtn = document.querySelector(".difficulty-tab.active");
-        if (activeDifficultyBtn) {
-            this.currentDifficulty = activeDifficultyBtn.getAttribute("data-difficulty");
-            // Update all difficulty buttons to match current state
-            Object.values(this.difficultyButtons).forEach((buttons) => {
-                buttons.forEach((btn) => {
-                    btn.classList.toggle("active", btn.getAttribute("data-difficulty") === this.currentDifficulty);
-                });
-            });
-        }
-
-        // Load content with current settings
         this.loadContent();
         this.updateAllProgressIndicators();
     }
@@ -161,69 +141,47 @@ class QuizManager {
         this.currentDifficulty = difficulty;
         this.loadContent();
     }
+
     async loadContent() {
         this.showLoading();
 
         try {
-            // Find the container for this exercise type
-            const container = document.getElementById(`${this.currentExerciseType}-exercises`);
-            if (!container) {
-                throw new Error(`Container for ${this.currentExerciseType} exercises not found`);
+            const existingIframe = this.contentArea.querySelector("iframe");
+            if (existingIframe) {
+                existingIframe.remove();
             }
 
-            // Clear the container
-            container.innerHTML = "";
+            const iframe = document.createElement("iframe");
+            const url = `quizzes/${this.currentExerciseType}-${this.currentUnit}-${this.currentDifficulty}.html`;
 
-            // Create loading placeholder
-            const loadingPlaceholder = document.createElement("div");
-            loadingPlaceholder.className = "quiz-loading-placeholder";
-            loadingPlaceholder.textContent = "Đang tải bài tập...";
-            container.appendChild(loadingPlaceholder);
+            iframe.src = url;
+            iframe.classList.add("quiz-iframe");
 
-            return new Promise((resolve, reject) => {
-                // Create and set up the new iframe
-                const iframe = document.createElement("iframe");
-                const url = `quizzes/${this.currentExerciseType}-${this.currentUnit}-${this.currentDifficulty}.html`;
-                iframe.src = url;
-                iframe.classList.add("quiz-iframe");
+            iframe.addEventListener("load", () => {
+                this.hideLoading();
+                iframe.style.display = "block";
 
-                // Add load event listener before setting src
-                iframe.addEventListener("load", () => {
-                    // Remove loading placeholder
-                    loadingPlaceholder.remove();
-
-                    // Show iframe
-                    iframe.style.display = "block";
-
-                    // Send current progress to the iframe
-                    const currentProgress = this.progressData[this.currentExerciseType][this.currentDifficulty];
-                    iframe.contentWindow.postMessage(
-                        {
-                            type: "progressUpdate",
-                            progress: currentProgress,
-                        },
-                        "*"
-                    );
-
-                    this.hideLoading();
-                    resolve();
-                });
-
-                iframe.addEventListener("error", (error) => {
-                    loadingPlaceholder.remove();
-                    this.hideLoading();
-                    this.showError("Không thể tải bài tập. Vui lòng thử lại.");
-                    reject(error);
-                });
-
-                // Add iframe to container
-                container.appendChild(iframe);
+                // Send current progress to the iframe
+                const currentProgress = this.progressData[this.currentExerciseType][this.currentDifficulty];
+                iframe.contentWindow.postMessage(
+                    {
+                        type: "progressUpdate",
+                        progress: currentProgress,
+                    },
+                    "*"
+                );
             });
+
+            iframe.addEventListener("error", () => {
+                this.hideLoading();
+                this.showError("Không thể tải bài tập. Vui lòng thử lại.");
+            });
+
+            this.contentArea.appendChild(iframe);
         } catch (error) {
             console.error("Error loading quiz content:", error);
             this.hideLoading();
             this.showError("Đã xảy ra lỗi khi tải bài tập.");
-            throw error;
         }
     }
 
@@ -384,6 +342,4 @@ class QuizManager {
 // Initialize quiz manager when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
     window.quizManager = new QuizManager();
-    // Dispatch event to notify quiz-page.js
-    window.dispatchEvent(new CustomEvent("quizManagerReady"));
 });
